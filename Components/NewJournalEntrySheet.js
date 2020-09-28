@@ -7,7 +7,7 @@ import * as Haptics from 'expo-haptics';
 import NewJournalEntryForm from "./NewJournalEntryForm";
 
 const NewJournalEntrySheet = (props) => {
-    const openHeight = Dimensions.get('window').height - 100;
+    const openHeight = Dimensions.get('window').height - 50;
     const sheetRef = React.useRef(null);
     const bottomSnapHeight = 120;
     const [open, setOpen] = useState(false)
@@ -35,11 +35,8 @@ const NewJournalEntrySheet = (props) => {
     })
 
     const ClosedSheetContent = () => (
-
             <TouchableWithoutFeedback style={styles.button}
-
                               onPress={() => {
-
                                   setOpen(true);
                                   sheetRef.current.snapTo(1);
                               }}>
@@ -54,7 +51,7 @@ const NewJournalEntrySheet = (props) => {
 
     const OpenSheetContent = () => (
         <View>
-            <Button mode="contained"
+            <Button mode="flat"
                 onPress={() => {
                     setOpen(false);
                     setCanMove(true);
@@ -77,7 +74,7 @@ const NewJournalEntrySheet = (props) => {
     );
 
     return(
-        <View style={{ backgroundColor: themeColors.background, height: "100%"}}>
+        <View style={{ backgroundColor: themeColors.background_main, height: "100%"}}>
         <BottomSheet
             onCloseEnd={() => {
                 setOpen(false)
@@ -89,7 +86,7 @@ const NewJournalEntrySheet = (props) => {
             ref={sheetRef}
             renderContent={newJournalEntry}
             snapPoints={[bottomSnapHeight, openHeight]}
-            borderRadius={30}
+            borderRadius={20}
         />
         </View>
         )

@@ -1,45 +1,61 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
-import {withTheme, Button, TextInput} from "react-native-paper";
+import {withTheme, Button, TextInput, Title } from "react-native-paper";
+
 
 const NewJournalEntryForm = (props) => {
     const themeColors = props.theme.colors;
-    const { control, handleSubmit, errors } = useForm();
+    const { control, handleSubmit, errors, formState } = useForm({
+        mode: "onChange"
+    });
     const onSubmit = (d) => {console.log(d)}
 
     console.log(errors)
 
     return(
         <View>
-            <View style={styles.container}>
-                <Text style={{color: "white"}}> Title </Text>
-                <Controller
-                    name="title"
-                    control={control}
-                    rules={{required: true}}
-                    render={(props) =>
-                        <TextInput {...props}
-                                   onChangeText={(value) => {props.onChange(value)}}
+            <Title>
+                New Entry
+            </Title>
+            <Controller
+                name="title"
+                control={control}
+                rules={{required: true}}
+                defaultValue={""}
+                render={(props) =>
+                    <TextInput
+                        mode={"flat"}
+                        label={"Title"}
+                        onChangeText={(value) => {props.onChange(value)}}
+                        value={props.value}
+                        error={errors.title}
+                    />}
+            />
 
-                        />
-                    }
-                />
-            </View>
+            <Controller
+                name="description"
+                control={control}
+                rules={{required: true}}
+                defaultValue={""}
+                render={(props) =>
+                    <TextInput
+                        mode={"flat"}
+                        label={"Description"}
+                        multiline={true}
+                        error={errors.description}
+                        onChangeText={(value) => {props.onChange(value)}}
+                        value={props.value}
+                    />}
+            />
 
-            <Button color={themeColors.buttonAccent} dark mode="contained" onPress={handleSubmit(onSubmit)}> Submit </Button>
+            <Button
+                mode="contained"
+                onPress={handleSubmit(onSubmit)}>
+                Submit
+            </Button>
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        color: "white",
-    },
-
-    button: {
-
-    }
-})
 
 export default withTheme(NewJournalEntryForm);

@@ -5,6 +5,7 @@ import { Button, Text, withTheme} from "react-native-paper";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as Haptics from 'expo-haptics';
 import NewJournalEntryForm from "./NewJournalEntryForm";
+import DrawingCanvas from "./DrawingCanvas";
 
 const NewJournalEntrySheet = (props) => {
     const openHeight = Dimensions.get('window').height - 50;
@@ -23,7 +24,6 @@ const NewJournalEntrySheet = (props) => {
         },
         largeButtonText:{
             fontSize: 30,
-            color: "#ffffff",
             fontWeight: "bold",
             textAlign: "center",
         },
@@ -41,8 +41,8 @@ const NewJournalEntrySheet = (props) => {
                                   sheetRef.current.snapTo(1);
                               }}>
                 <View style={styles.innerViewStyle}>
-                    <Icon name="pencil" size={30} color="#ffffff" />
-                    <Text style={styles.largeButtonText}> New Entry </Text>
+                    <Icon name="pencil" size={30} color={themeColors.text} />
+                    <Text style={styles.largeButtonText} color={themeColors.text}> New Entry </Text>
                 </View>
 
             </TouchableWithoutFeedback>
@@ -50,7 +50,7 @@ const NewJournalEntrySheet = (props) => {
     )
 
     const OpenSheetContent = () => (
-        <View>
+        <View style={{height: "100%"}}>
             <Button mode="flat"
                 onPress={() => {
                     setOpen(false);
@@ -75,11 +75,14 @@ const NewJournalEntrySheet = (props) => {
 
     return(
         <View style={{ backgroundColor: themeColors.background_main, height: "100%"}}>
-        <BottomSheet
+            <DrawingCanvas />
+            <BottomSheet
             onCloseEnd={() => {
                 setOpen(false)
                 setCanMove(false)
             }}
+            enabledContentTapInteraction={false}
+            enabledContentGestureInteraction={false}
             onOpenStart={() => setOpen(true)}
             onOpenEnd={() => setCanMove(true)}
             enabledGestureInteraction={canMove}

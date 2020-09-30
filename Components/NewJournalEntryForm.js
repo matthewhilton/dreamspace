@@ -1,9 +1,11 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
-import {withTheme, Button, TextInput, Title } from "react-native-paper";
+import {withTheme, Button, TextInput, Title, Text} from "react-native-paper";
 import Slider from '@react-native-community/slider';
 import * as Haptics from 'expo-haptics';
+import { PIXI } from 'expo-pixi';
+import DrawingCanvas from "./DrawingCanvas";
 
 const NewJournalEntryForm = (props) => {
     const themeColors = props.theme.colors;
@@ -13,9 +15,9 @@ const NewJournalEntryForm = (props) => {
     const onSubmit = data => console.log(data);
 
     return(
-        <View>
+        <View style={{flex: 1, flexDirection: 'column', margin: 10}}>
 
-            <Title>
+            <Title style={{fontSize: 30, fontWeight: 'bold'}}>
                 New Entry
             </Title>
             <Controller
@@ -57,20 +59,31 @@ const NewJournalEntryForm = (props) => {
                 rules={{required: true}}
                 defaultValue={5}
                 render={(props) =>
-                   <Slider
-                       {...props}
-                       minimumValue={1}
-                       maximumValue={10}
-                       step={1}
-                       onValueChange={(value) => {
-                           Haptics.selectionAsync()
-                           props.onChange(value)
-                       }}
-                       value={props.value}
-                       thumbTintColor={themeColors.text}
-                       minimumTrackTintColor={themeColors.primary}
-                   />}
+                    <View style={{flex: 1}}>
+                    <View style={{flex: 1, flexDirection: 'row', alignContent: "center"}}>
+                       <Slider
+                           {...props}
+                           minimumValue={1}
+                           maximumValue={10}
+                           step={1}
+                           style={{flex: 1}}
+                           onValueChange={(value) => {
+                               Haptics.selectionAsync()
+                               props.onChange(value)
+                           }}
+                           value={props.value}
+                           thumbTintColor={themeColors.text}
+                           minimumTrackTintColor={themeColors.primary}
+                       />
+                       <Text style={{padding: 13}}> {props.value} </Text>
+                    </View>
+                    </View>
+                }
             />
+
+            <View style={{ height: 200}}>
+                <DrawingCanvas />
+            </View>
 
             <Button
                 type={"submit"}
@@ -78,6 +91,8 @@ const NewJournalEntryForm = (props) => {
                 onPress={handleSubmit(onSubmit)}>
                 Submit
             </Button>
+
+            <View style={{flex: 5}}/>
         </View>
     )
 }

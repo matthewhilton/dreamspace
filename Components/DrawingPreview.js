@@ -1,6 +1,6 @@
 import React from 'react'
-import { View,Dimensions } from 'react-native'
-import {IconButton, withTheme} from "react-native-paper";
+import { View,Dimensions, TouchableOpacity } from 'react-native'
+import { withTheme} from "react-native-paper";
 import Image from 'react-native-scalable-image';
 
 const DrawingPreview = (props) =>(
@@ -13,14 +13,9 @@ const DrawingPreview = (props) =>(
         marginLeft: 0,
         alignItems: 'center'
     }}>
-        <IconButton
-            icon={"delete"}
-            style={{position: 'absolute', left: 2, top: 2}}
-
-            color={props.theme.colors.placeholder}
-            onPress={() => console.log("hello")}
-        />
+      <TouchableOpacity onLongPress={() => props.onLongPress()}>
         <Image source={{uri: props.uri}} width={Dimensions.get('window').width * 0.75}/>
+      </TouchableOpacity>
     </View>
 )
 

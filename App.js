@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View} from 'react-native';
 import NewJournalEntrySheet from "./Components/NewJournalEntrySheet";
 import { DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet'
 
 const theme = {
 
@@ -23,16 +24,18 @@ const theme = {
 export default function App() {
     return (
         <>
-            <PaperProvider theme={theme}>
-            <View>
+            <ActionSheetProvider>
+                <PaperProvider theme={theme}>
+                    <View>
 
-                {// Router / Navigation here
-                    //
-                }
+                        {// Router / Navigation here
+                            //
+                        }
 
-                <NewJournalEntrySheet />
-            </View>
-            </PaperProvider>
+                        <NewJournalEntrySheet />
+                    </View>
+                </PaperProvider>
+            </ActionSheetProvider>
         </>
     );
 }

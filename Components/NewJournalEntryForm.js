@@ -1,22 +1,24 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { useState} from 'react';
+import { View, ScrollView, Image} from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import {withTheme, Button, TextInput, Title, Text} from "react-native-paper";
 import Slider from '@react-native-community/slider';
 import * as Haptics from 'expo-haptics';
-import { PIXI } from 'expo-pixi';
 import DrawingCanvas from "./DrawingCanvas";
+import DrawingPreview from "./DrawingPreview";
 
 const NewJournalEntryForm = (props) => {
     const themeColors = props.theme.colors;
-    const { control, handleSubmit, errors, formState } = useForm({
+    const { control, handleSubmit, errors } = useForm({
         mode: "onChange"
     });
+    const [drawingOpen, setDrawingOpen] = useState(false)
     const onSubmit = data => console.log(data);
 
     return(
         <View style={{flex: 1, flexDirection: 'column', margin: 10}}>
-
+            <ScrollView
+            canCancelContentTouches={!drawingOpen}>
             <Title style={{fontSize: 30, fontWeight: 'bold'}}>
                 New Entry
             </Title>
@@ -81,9 +83,28 @@ const NewJournalEntryForm = (props) => {
                 }
             />
 
-            <View style={{ height: 200}}>
-                <DrawingCanvas />
-            </View>
+            <Controller
+                name={"drawing"}
+                control={control}
+                defaultValue={[]}
+                render={(props) =>
+                    <View style={{flex: 1}}>
+
+                        {drawingOpen ? <DrawingCanvas onSubmit={(data) => {
+                            var newData = props.value;
+                            newData.push(data)
+                            props.onChange(newData)
+                            setDrawingOpen(false)
+                        }}/> : <Button icon="plus" mode={"outlined"} onPress={() => setDrawingOpen(true)}> Add Drawing </Button>}
+
+                        {
+                            props.value.map((data) => (
+                                <DrawingPreview uri={data.uri} />
+                            ))
+                        }
+                    </View>
+                }
+            />
 
             <Button
                 type={"submit"}
@@ -92,7 +113,7 @@ const NewJournalEntryForm = (props) => {
                 Submit
             </Button>
 
-            <View style={{flex: 5}}/>
+            </ScrollView>
         </View>
     )
 }

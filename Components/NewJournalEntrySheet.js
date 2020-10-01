@@ -75,7 +75,7 @@ const NewJournalEntrySheet = (props) => {
 
     return(
         <View style={{ backgroundColor: themeColors.background_main, height: "100%"}}>
-            <DrawingCanvas />
+
             <BottomSheet
             onCloseEnd={() => {
                 setOpen(false)

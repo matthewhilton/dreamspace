@@ -6,6 +6,9 @@ import Slider from '@react-native-community/slider';
 import * as Haptics from 'expo-haptics';
 import DrawingCanvas from "./DrawingCanvas";
 import DrawingPreview from "./DrawingPreview";
+import HorizontalGallery from "./HorizontalGallery";
+import 'react-native-get-random-values'
+import { nanoid } from 'nanoid'
 
 const NewJournalEntryForm = (props) => {
     const themeColors = props.theme.colors;
@@ -18,7 +21,8 @@ const NewJournalEntryForm = (props) => {
     return(
         <View style={{flex: 1, flexDirection: 'column', margin: 10}}>
             <ScrollView
-            canCancelContentTouches={!drawingOpen}>
+            canCancelContentTouches={!drawingOpen}
+            showsVerticalScrollIndicator={false}>
             <Title style={{fontSize: 30, fontWeight: 'bold'}}>
                 New Entry
             </Title>
@@ -96,12 +100,21 @@ const NewJournalEntryForm = (props) => {
                             props.onChange(newData)
                             setDrawingOpen(false)
                         }}/> : <Button icon="plus" mode={"outlined"} onPress={() => setDrawingOpen(true)}> Add Drawing </Button>}
-
+                        <HorizontalGallery>
                         {
-                            props.value.map((data) => (
-                                <DrawingPreview uri={data.uri} />
+                            props.value.map((data, index) => (
+                                <DrawingPreview
+                                    key={nanoid()}
+                                    uri={data.uri}
+                                    onDelete={() => {
+                                        console.log("deleteing image preview!")
+                                        let newArray = props.value;
+                                        newArray.splice(index, 1);
+                                        props.onChange(newArray)
+                                }}/>
                             ))
                         }
+                        </HorizontalGallery>
                     </View>
                 }
             />

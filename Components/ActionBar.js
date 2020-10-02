@@ -2,7 +2,7 @@ import React from 'react';
 import {View } from 'react-native';
 import {IconButton} from 'react-native-paper';
 
-const SketchActionBar = ({onClose=function(){}, onSubmit=function(){}}) => {
+const ActionBar = ({onClose=function(){}, onSubmit=function(){}}) => {
 
     return(
         <View style={{flex: 1, flexDirection: "row", justifyContent: "space-between"}}>
@@ -12,4 +12,4 @@ const SketchActionBar = ({onClose=function(){}, onSubmit=function(){}}) => {
     )
 }
 
-export default SketchActionBar;
+export default ActionBar;

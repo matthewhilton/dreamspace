@@ -4,13 +4,14 @@ import { useForm, Controller } from 'react-hook-form';
 import {withTheme, Button, TextInput, Title, Text} from "react-native-paper";
 import Slider from '@react-native-community/slider';
 import * as Haptics from 'expo-haptics';
-import DrawingCanvas from "./DrawingCanvas";
-import DrawingPreview from "./DrawingPreview";
+import DrawingCanvas from "./Drawing/DrawingCanvas";
+import DrawingPreview from "./Drawing/DrawingPreview";
 import HorizontalGallery from "./HorizontalGallery";
 import {useActionSheet} from "@expo/react-native-action-sheet";
 import 'react-native-get-random-values';
 import uuid from 'uuid';
-import DrawingForm from "./DrawingForm";
+import DrawingForm from "./Drawing/DrawingForm";
+import AudioForm from "./VoiceRecording/AudioForm";
 
 const NewJournalEntryForm = (props) => {
     const themeColors = props.theme.colors;
@@ -107,8 +108,15 @@ const NewJournalEntryForm = (props) => {
                 )}
                 />
 
-
-
+                <Controller
+                    name={"audioRecordings"}
+                    control={control}
+                    defaultValue={[]}
+                    render={(props) => (
+                        <AudioForm
+                        onChange={(data) => props.onChange(data)}/>
+                    )}
+                />
 
             <Button
                 type={"submit"}

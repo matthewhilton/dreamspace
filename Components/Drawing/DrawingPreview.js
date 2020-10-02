@@ -14,7 +14,7 @@ const DrawingPreview = (props) =>(
         alignItems: 'center'
     }}>
       <TouchableOpacity onLongPress={() => props.onLongPress()}>
-        <Image source={{uri: props.uri}} width={Dimensions.get('window').width * 0.75}/>
+        <Image source={{uri: props.uri}} width={Dimensions.get('window').width * 0.30}/>
       </TouchableOpacity>
     </View>
 )

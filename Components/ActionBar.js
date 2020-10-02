@@ -1,15 +1,21 @@
 import React from 'react';
 import {View } from 'react-native';
-import {IconButton} from 'react-native-paper';
+import {Button, IconButton, withTheme} from 'react-native-paper';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
-const ActionBar = ({onClose=function(){}, onSubmit=function(){}}) => {
+const ActionBar = ({onClose=function(){}, onSubmit=function(){},saveDisabled=false,exitDisabled=false, ...props}) => {
 
     return(
-        <View style={{flex: 1, flexDirection: "row", justifyContent: "space-between"}}>
-            <IconButton icon={"close"} onPress={() => onClose()}/>
-            <IconButton icon={"check"} onPress={() => onSubmit()}/>
+        <View style={{flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
+            <View style={{flex: 1, flexDirection: "row"}}>
+                <IconButton icon={"close"} onPress={() => onClose()} disabled={exitDisabled} />
+            </View>
+
+            <View style={{flex: 1, flexDirection: "row", justifyContent: "flex-end", margin: 5, alignItems: 'center'}}>
+                <Button onPress={() => onSubmit()} color={props.theme.colors.text} labelStyle={{fontSize: 16}} disabled={saveDisabled}> Save </Button>
+            </View>
         </View>
     )
 }
 
-export default ActionBar;
+export default withTheme(ActionBar);

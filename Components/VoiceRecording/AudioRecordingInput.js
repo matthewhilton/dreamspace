@@ -12,7 +12,6 @@ const AudioRecordingInput = (props) => {
     const [isRecording, setIsRecording] = useState(false)
     const [recordingStatus, setRecordingStatus] = useState({})
     const [recording, setRecording] = useState(new Audio.Recording())
-
     const [recordingData, setRecordingData] = useState(null)
 
     // On mount check permissions level
@@ -21,9 +20,12 @@ const AudioRecordingInput = (props) => {
         Audio.getPermissionsAsync().then((result) => {
             if(isMounted) setPermissions(result)
         })
-
         // Hook clean up function
-        return () => (isMounted = false);
+        return () => {
+            isMounted = false;
+            // Close audio recording object (ignore result)
+            recording.stopAndUnloadAsync().then(r => {}).catch(e => console.log(e))
+        };
     }, [])
 
     // On permissions change, check if not granted, and see if can ask
@@ -108,6 +110,26 @@ const AudioRecordingInput = (props) => {
         props.onChange(recordingData)
     }
 
+    async function tryClose() {
+        // If there is a recording check if user is ok with discard it
+        if (recordingData != null) {
+            const choice = await AlertAsync(
+                "Discard Recording?",
+                "A recording exists but it has not been saved yet. Exiting will discard the recording.",
+                [
+                    {text: 'Discard', onPress: () => 'yes', style: 'destructive'},
+                    {text: 'Cancel', onPress: () => 'no', style: 'cancel'},
+                ],
+            );
+
+            if(choice == 'no'){
+                return;
+            }
+        }
+
+        props.onClose()
+    }
+
 
     if(permissions.status == "denied"){
         return(null);
@@ -117,10 +139,11 @@ const AudioRecordingInput = (props) => {
                 flex: 1,
                 borderRadius: 5,
                 backgroundColor: LightenDarkenColor(props.theme.colors.background_sheet, 10)}}>
-                <ActionBar onClose={() => props.onClose()} onSubmit={() => submitRecording()}/>
-                <View style={{alignSelf: 'center', alignContent: "center", flex: 1}}>
-                    <RecordingButton color={props.theme.colors.recordingButton} onPress={() => toggleRecording()} recording={isRecording}/>
+                <ActionBar onClose={() => tryClose()} onSubmit={() => submitRecording()} saveDisabled={recordingData == null || isRecording} exitDisabled={isRecording}/>
+                <View style={{alignSelf: 'center', alignContent: "center", flex: 1, paddingBottom: 10}}>
+
                     {recordingStatus.durationMillis ? <Text style={{fontSize: 50, alignSelf: "center"}}> {Math.round(recordingStatus.durationMillis / 1000) + "s"} </Text> : null }
+                    <RecordingButton color={props.theme.colors.recordingButton} onPress={() => toggleRecording()} recording={isRecording}/>
 
                 </View>
             </View>
@@ -128,12 +151,12 @@ const AudioRecordingInput = (props) => {
     }
 }
 
-const RecordingButton = ({recording = false, size=100, color="red", onPress=function(){}}) => {
-    if(recording){
-        return( <Button compact onPress={() => onPress()} icon={() => <Icon name={"square"} size={size} color={color}/> }  /> )
-    } else {
-        return( <Button compact onPress={() => onPress()} icon={() => <Icon name={"circle"} size={size} color={color}/> }  /> )
-    }
-}
+const RecordingButton = ({recording = false, size=100, color="red", onPress=function(){}}) => (
+    <View>
+        {recording ? <Button compact onPress={() => onPress()} icon={() => <Icon name={"square"} size={size} color={color}/> }  />
+        :  <Button compact onPress={() => onPress()} icon={() => <Icon name={"circle"} size={size} color={color}/> }  />}
+    </View>
+)
+
 
 export default withTheme(AudioRecordingInput);

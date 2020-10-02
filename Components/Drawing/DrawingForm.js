@@ -36,9 +36,7 @@ const DrawingForm = (props) => {
 
                 <HorizontalGallery>
                     {
-
                         drawings.map((data, index) => (
-
                             <DrawingPreview
                                 key={data.uri}
                                 uri={data.uri}
@@ -58,7 +56,6 @@ const DrawingForm = (props) => {
                                         })
                                 }}
                             />
-
                         ))
                     }
                 </HorizontalGallery>

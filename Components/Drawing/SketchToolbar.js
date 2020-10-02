@@ -1,6 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import {IconButton, withTheme} from 'react-native-paper';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const SketchToolbar = (props) => {
     const icon = "brush"
@@ -8,7 +9,7 @@ const SketchToolbar = (props) => {
 
     return(
         <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', padding: 5}}>
-            <IconButton onPress={() => props.onUndo()} icon={"undo"} />
+            <IconButton onPress={() => props.onUndo()} icon={() => <Icon name={"undo"} color={props.theme.colors.text} />} />
             {presetColors.map((color) => (
                 <IconButton style={{backgroundColor: props.selectedColor == color ? props.theme.colors.background_sheet : null}} key={color} icon={icon} color={color} onPress={() => props.onColorChange(color)}/>
             ))}

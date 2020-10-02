@@ -4,14 +4,12 @@ import ExpoPixi from 'expo-pixi';
 import { withTheme} from "react-native-paper";
 import {LightenDarkenColor} from "lighten-darken-color";
 import SketchToolbar from "./SketchToolbar";
-import SketchActionBar from "./SketchActionBar";
+import ActionBar from "../ActionBar";
 
 const DrawingCanvas = (props) => {
     const themeColors = props.theme.colors;
     const canvasRef = React.useRef(null);
-    const [image, setImage] = useState(null)
     const [penColor, setPenColor] = useState("#ffffff")
-
 
     function snapshot() {
         canvasRef.current.takeSnapshotAsync({format: 'png'}).then((data) => {
@@ -25,7 +23,7 @@ const DrawingCanvas = (props) => {
             borderRadius: 5,
             backgroundColor: LightenDarkenColor(themeColors.background_sheet, 10)}}>
 
-            <SketchActionBar
+            <ActionBar
                 onClose={() => props.onClose()}
                 onSubmit={() => snapshot()}
             />

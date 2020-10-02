@@ -19,6 +19,7 @@ const theme = {
         error: "#db6143",
         primary: "#DABC61",
         accent: "#a5ffd6",
+        recordingButton: "#db5a44"
     }
 }
 export default function App() {

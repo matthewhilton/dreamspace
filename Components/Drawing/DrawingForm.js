@@ -3,7 +3,7 @@ import DrawingCanvas from "./DrawingCanvas";
 import {Button} from "react-native-paper";
 import {View} from "react-native";
 import DrawingPreview from "./DrawingPreview";
-import HorizontalGallery from "./HorizontalGallery";
+import HorizontalGallery from "../HorizontalGallery";
 import {useActionSheet} from "@expo/react-native-action-sheet";
 
 const DrawingForm = (props) => {
@@ -36,9 +36,7 @@ const DrawingForm = (props) => {
 
                 <HorizontalGallery>
                     {
-
                         drawings.map((data, index) => (
-
                             <DrawingPreview
                                 key={data.uri}
                                 uri={data.uri}
@@ -58,7 +56,6 @@ const DrawingForm = (props) => {
                                         })
                                 }}
                             />
-
                         ))
                     }
                 </HorizontalGallery>

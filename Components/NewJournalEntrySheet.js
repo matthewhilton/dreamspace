@@ -5,7 +5,7 @@ import { Button, Text, withTheme} from "react-native-paper";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as Haptics from 'expo-haptics';
 import NewJournalEntryForm from "./NewJournalEntryForm";
-import DrawingCanvas from "./DrawingCanvas";
+import DrawingCanvas from "./Drawing/DrawingCanvas";
 
 const NewJournalEntrySheet = (props) => {
     const openHeight = Dimensions.get('window').height - 50;

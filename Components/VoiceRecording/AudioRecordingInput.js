@@ -53,7 +53,6 @@ const AudioRecordingInput = (props) => {
         if (!isRecording) {
             // Check if user is ok with overriding current recording
             if(recordingData != null){
-                console.log("recording already exists")
                 const choice = await AlertAsync(
                     "Override Recording?",
                     "A recording exists but it has not been saved yet. Starting a new recording will override the current one.",

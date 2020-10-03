@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@expo/react-native-action-sheet": "^3.8.0",
+    "@react-native-community/datetimepicker": "3.0.0",
     "@react-native-community/masked-view": "0.1.10",
     "@react-native-community/slider": "3.0.3",
     "expo": "^39.0.0",
@@ -20,6 +21,7 @@
     "react-native-gesture-handler": "~1.7.0",
     "react-native-get-random-values": "^1.5.0",
     "react-native-haptic-feedback": "^1.10.0",
+    "react-native-modal-datetime-picker": "^9.0.0",
     "react-native-paper": "^4.2.0",
     "react-native-reanimated": "~1.13.0",
     "react-native-safe-area-context": "3.1.4",

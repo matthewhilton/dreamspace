@@ -7,4 +7,5 @@ export default {
     resizeMode: "contain",
     backgroundColor: "#ffffff",
   },
+  userInterfaceStyle: 'automatic',
 };

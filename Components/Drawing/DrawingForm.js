@@ -23,7 +23,7 @@ const DrawingForm = (props) => {
 
     return(
         <>
-            <View style={{flex: 1}}>
+            <View style={{flex: 1, marginTop: 5, }}>
 
                 {drawingOpen ? <DrawingCanvas
                     onClose={() => {

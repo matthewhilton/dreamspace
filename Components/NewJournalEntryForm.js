@@ -1,44 +1,39 @@
 import React, { useState} from 'react';
-import { View, ScrollView, Image} from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import {withTheme, Button, TextInput, Title, Text} from "react-native-paper";
-import Slider from '@react-native-community/slider';
-import * as Haptics from 'expo-haptics';
-import DrawingCanvas from "./Drawing/DrawingCanvas";
-import DrawingPreview from "./Drawing/DrawingPreview";
-import HorizontalGallery from "./HorizontalGallery";
-import {useActionSheet} from "@expo/react-native-action-sheet";
 import 'react-native-get-random-values';
-import uuid from 'uuid';
 import DrawingForm from "./Drawing/DrawingForm";
 import AudioForm from "./VoiceRecording/AudioForm";
+import SliderForm from "./SliderForm";
+import HorizontalRule from "./HorizontalRule";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DatePickerForm from "./DatePickerForm";
 
 const NewJournalEntryForm = (props) => {
-    const themeColors = props.theme.colors;
-    const { control, handleSubmit, errors , getValues, setValue} = useForm({
+    const { control, handleSubmit, errors } = useForm({
         mode: "onChange"
     });
     const [drawingOpen, setDrawingOpen] = useState(false)
-    const [drawings, setDrawings] = useState([])
     const onSubmit = data => console.log(data);
-
-
-
-    console.log("rerendered!");
 
     return(
         <View style={{flex: 1, flexDirection: 'column', margin: 10}}>
             <ScrollView
-
             canCancelContentTouches={!drawingOpen}
             showsVerticalScrollIndicator={false}>
             <Title style={{fontSize: 30, fontWeight: 'bold'}}>
                 New Entry
             </Title>
+
+            <HorizontalRule />
+
+            <Title style={{fontSize:20, marginBottom: 5, marginTop: 20}}>
+                Describe your dream
+            </Title>
             <Controller
                 name="title"
                 control={control}
-                rules={{required: true}}
                 defaultValue={""}
                 render={(props) =>
                     <TextInput
@@ -68,33 +63,7 @@ const NewJournalEntryForm = (props) => {
                     />}
             />
 
-            <Controller
-                name="dreamRating"
-                control={control}
-                rules={{required: true}}
-                defaultValue={5}
-                render={(props) =>
-                    <View style={{flex: 1}}>
-                        <View style={{flex: 1, flexDirection: 'row', alignContent: "center"}}>
-                           <Slider
-                               {...props}
-                               minimumValue={1}
-                               maximumValue={10}
-                               step={1}
-                               style={{flex: 1}}
-                               onValueChange={(value) => {
-                                   Haptics.selectionAsync()
-                                   props.onChange(value)
-                               }}
-                               value={props.value}
-                               thumbTintColor={themeColors.text}
-                               minimumTrackTintColor={themeColors.primary}
-                           />
-                           <Text style={{padding: 13}}> {props.value} </Text>
-                        </View>
-                    </View>
-                }
-            />
+
 
             <Controller
                 name={"drawings"}
@@ -118,12 +87,59 @@ const NewJournalEntryForm = (props) => {
                     )}
                 />
 
+                <Title style={{fontSize:20, marginBottom: 5, marginTop: 20}}>
+                    Rate your dream
+                </Title>
+
+                <Controller
+                    name="vividness"
+                    control={control}
+                    rules={{required: true}}
+                    defaultValue={5}
+                    render={(props) =>
+                        <SliderForm onChange={(data) => props.onChange(data)} value={props.value} label={"Vividness"} />
+                    }
+                />
+
+                <Controller
+                    name="lucidity"
+                    control={control}
+                    rules={{required: true}}
+                    defaultValue={5}
+                    render={(props) =>
+                        <SliderForm onChange={(data) => props.onChange(data)} value={props.value} label={"Lucidity"} />
+                    }
+                />
+
+                <Title style={{fontSize:20, marginBottom: 5, marginTop: 20}}>
+                    Details
+                </Title>
+
+                <Controller
+                    name="date"
+                    control={control}
+                    rules={{required: true}}
+                    defaultValue={new Date()}
+                    render={(props) =>
+                        <DatePickerForm
+                            onChange={(date) => props.onChange(date)}
+                            date={props.value}
+                        />
+                    }
+                />
+
             <Button
                 type={"submit"}
                 mode="contained"
-                onPress={handleSubmit(onSubmit)}>
-                Submit
+                onPress={handleSubmit(onSubmit)}
+                labelStyle={{fontSize: 15, fontWeight: "bold", padding: 10}}
+                style={{marginTop: 30}}
+                color={props.theme.colors.primary}
+            >
+                Record Dream
             </Button>
+
+
 
             </ScrollView>
         </View>

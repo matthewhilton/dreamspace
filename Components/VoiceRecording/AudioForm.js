@@ -19,9 +19,9 @@ const AudioForm = (props) => {
 
     return(
         <>
-            {open ?
-            <View>
-                <AudioRecordingInput
+
+            <View style={{flex: 1, marginTop: 5, }}>
+                {open ?   <AudioRecordingInput
                     onPermissionDenied={() => setOpen(false)}
                     onClose={() => setOpen(false)}
                     onChange={(data) => {
@@ -29,7 +29,7 @@ const AudioForm = (props) => {
                         setOpen(false)
                     }}
                 />
-            </View>
+
             :
             <Button icon={"microphone-plus"} mode={"outlined"} onPress={() => setOpen(true)}> Add Recording </Button>
             }
@@ -57,6 +57,7 @@ const AudioForm = (props) => {
                     />
                 ))}
             </HorizontalGallery>
+            </View>
         </>
     )
 }

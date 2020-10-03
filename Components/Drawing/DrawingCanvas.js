@@ -5,11 +5,13 @@ import { withTheme} from "react-native-paper";
 import {LightenDarkenColor} from "lighten-darken-color";
 import SketchToolbar from "./SketchToolbar";
 import ActionBar from "../ActionBar";
+import AlertAsync from "react-native-alert-async";
 
 const DrawingCanvas = (props) => {
     const themeColors = props.theme.colors;
     const canvasRef = React.useRef(null);
     const [penColor, setPenColor] = useState("#ffffff")
+    const [hasDrawingBegun, setHasDrawingBegun] = useState(false)
 
     function snapshot() {
         canvasRef.current.takeSnapshotAsync({format: 'png'}).then((data) => {
@@ -17,18 +19,37 @@ const DrawingCanvas = (props) => {
         })
     }
 
+    async function shouldClose() {
+        if (hasDrawingBegun) {
+            const choice = await AlertAsync(
+                "Discard Drawing?",
+                "A drawing has been started. Exiting will discard the current drawing.",
+                [
+                    {text: 'Discard', onPress: () => 'yes', style: 'destructive'},
+                    {text: 'Cancel', onPress: () => 'no', style: 'cancel'},
+                ],
+            );
+
+            if (choice == 'no') {
+                return;
+            }
+        }
+
+        props.onClose();
+    }
+
     return (
         <View style={{
             flex: 1,
             borderRadius: 5,
             backgroundColor: LightenDarkenColor(themeColors.background_sheet, 10)}}>
-
             <ActionBar
-                onClose={() => props.onClose()}
+                onClose={() => shouldClose()}
                 onSubmit={() => snapshot()}
+                saveDisabled={!hasDrawingBegun}
             />
             <ExpoPixi.Sketch
-                onChange={() => console.log("Image changed")}
+                onChange={() => setHasDrawingBegun(true)}
                 ref={canvasRef}
                 strokeColor={penColor.replace("#", "0x")}
                 strokeWidth={15}

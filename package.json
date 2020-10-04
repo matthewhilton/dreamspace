@@ -23,6 +23,7 @@
     "react-native-haptic-feedback": "^1.10.0",
     "react-native-modal-datetime-picker": "^9.0.0",
     "react-native-paper": "^4.2.0",
+    "react-native-raw-bottom-sheet": "^2.2.0",
     "react-native-reanimated": "~1.13.0",
     "react-native-safe-area-context": "3.1.4",
     "react-native-scalable-image": "^1.0.0",
@@ -31,6 +32,8 @@
     "react-native-vector-icons": "^7.1.0",
     "react-native-web": "~0.13.7",
     "reanimated-bottom-sheet": "^1.0.0-alpha.22",
+    "retext": "^7.0.1",
+    "retext-keywords": "^6.0.0",
     "uuid": "^3.4.0"
   },
   "devDependencies": {

@@ -11,6 +11,7 @@ const theme = {
     colors: {
         ...DefaultTheme,
         text: "#D5CBA8",
+        subtext: "#918b73",
         background: "#2c2627",
         background_main: "#151414",
         background_sheet:'#2c2627',

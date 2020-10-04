@@ -9,6 +9,7 @@ import SliderForm from "./SliderForm";
 import HorizontalRule from "./HorizontalRule";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import DatePickerForm from "./DatePickerForm";
+import TagPickerForm from "./TagPicker/TagPickerForm";
 
 const NewJournalEntryForm = (props) => {
     const { control, handleSubmit, errors } = useForm({
@@ -32,22 +33,6 @@ const NewJournalEntryForm = (props) => {
                 Describe your dream
             </Title>
             <Controller
-                name="title"
-                control={control}
-                defaultValue={""}
-                render={(props) =>
-                    <TextInput
-                        {...props}
-                        mode={"outlined"}
-                        label={"Title"}
-                        onChangeText={(value) => {props.onChange(value)}}
-                        value={props.value}
-                        error={errors.title}
-                    />}
-            />
-
-
-            <Controller
                 name="description"
                 control={control}
                 defaultValue={""}
@@ -62,9 +47,6 @@ const NewJournalEntryForm = (props) => {
                         value={props.value}
                     />}
             />
-
-
-
             <Controller
                 name={"drawings"}
                 control={control}
@@ -114,6 +96,33 @@ const NewJournalEntryForm = (props) => {
                 <Title style={{fontSize:20, marginBottom: 5, marginTop: 20}}>
                     Details
                 </Title>
+
+                <Controller
+                    name="title"
+                    control={control}
+                    defaultValue={""}
+                    render={(props) =>
+                        <TextInput
+                            {...props}
+                            mode={"outlined"}
+                            label={"Title"}
+                            onChangeText={(value) => {props.onChange(value)}}
+                            value={props.value}
+                            error={errors.title}
+                        />}
+                />
+
+                <Controller
+                    name="tags"
+                    control={control}
+                    rules={{required: true}}
+                    defaultValue={[]}
+                    render={(props) =>
+                       <TagPickerForm />
+                    }
+                />
+
+
 
                 <Controller
                     name="date"

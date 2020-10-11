@@ -1,11 +1,11 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
 const defaultTags = [
-    { name: "False Awakening", used: 0, pressed: false, color: "#f27844" },
-    { name: "Flying", used: 0, pressed: false, color: "#62e3dc" },
-    { name: "Recurring", used: 0, pressed: false, color: "#5dde68" },
-    { name: "Nightmare", used: 0, pressed: false, color: "#635c5c" },
-    { name: "Sleep Paralysis", used: 0, pressed: false, color: "#b440cf" }
+    { name: "False Awakening", used: 0, selected: false, color: "#f27844" },
+    { name: "Flying", used: 0, selected: false, color: "#62e3dc" },
+    { name: "Recurring", used: 0, selected: false, color: "#5dde68" },
+    { name: "Nightmare", used: 0, selected: false, color: "#635c5c" },
+    { name: "Sleep Paralysis", used: 0, selected: false, color: "#b440cf" }
 ]
 
 const tagAsyncStorageKey = 'tagUsage';

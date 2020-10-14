@@ -19,10 +19,17 @@ const NewJournalEntryForm = (props) => {
         mode: "onChange"
     });
     const [drawingOpen, setDrawingOpen] = useState(false)
+    const [formSubmitState, setFormSubmitState] = useState({
+        loading: false,
+        error: false,
+        success: false
+    })
+    
     const onSubmit = data => {
-        console.log(data)
-        JournalDatabase.saveEntry(data, "v1")
-        Haptics.notificationAsync("success")
+        // Save entry, then notify user.
+        // TODO update state while saving entry
+        JournalDatabase.saveEntry(data).then((entryId) => console.log("entry id: ", entryId))
+        //Haptics.notificationAsync("success")
     }
 
     return(
@@ -59,6 +66,7 @@ const NewJournalEntryForm = (props) => {
                     name="title"
                     control={control}
                     defaultValue={""}
+                    rules={{required: true}}
                     render={(props) =>
                         <TextInput
                             {...props}

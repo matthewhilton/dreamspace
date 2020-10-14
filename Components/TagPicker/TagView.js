@@ -2,9 +2,11 @@ import React from "react"
 import { View, ScrollView, Dimensions } from "react-native";
 import {ActivityIndicator, Chip, Text, Title, withTheme} from "react-native-paper";
 import {LightenDarkenColor} from "lighten-darken-color";
+import * as Haptics from 'expo-haptics';
+
 var Color = require('color');
 
-const TagView = ({tags=[], emptyContent=<Text />,loading=false,onPressed=function(){},filter=null,antiFilter=null, ...props}) => {
+const TagView = ({tags=[], emptyContent=<Text />,loading=false,onPressed=function(){},filter=null,antiFilter=null, persistentTag=<Text />,...props}) => {
 
     const filteredTags = tags.filter((item) => {
         if(filter == null && antiFilter == null) return true;
@@ -15,6 +17,10 @@ const TagView = ({tags=[], emptyContent=<Text />,loading=false,onPressed=functio
         return false;
     })
 
+    function tagPressed(itemName){
+        onPressed(itemName);
+    }
+
     return(
         <View>
             {props.children}
@@ -23,6 +29,7 @@ const TagView = ({tags=[], emptyContent=<Text />,loading=false,onPressed=functio
             {(filteredTags.length == 0 && !loading) ? emptyContent : null}
 
                 <View style={{flexDirection: "row", flexWrap: true, marginBottom: 10}}>
+                        
                         {filteredTags.map((item) => (
                             <Chip key={item.name}
                                   style={{
@@ -30,11 +37,13 @@ const TagView = ({tags=[], emptyContent=<Text />,loading=false,onPressed=functio
                                       backgroundColor: item.selected ? item.color : Color(item.color).darken(0.4).hex(),
                                   }}
                                   selectedColor={Color(item.color).darken(0.7).hex()}
-                                  onPress={() => onPressed(item.name)}
+                                  onPress={() => {tagPressed(item.name)}}
                                   selected={item.selected}
                                     mode={"flat"}
                             > {item.name} </Chip>
                         ) )}
+
+                    {persistentTag}     
                 </View>
 
         </View>

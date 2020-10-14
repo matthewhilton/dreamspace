@@ -10,13 +10,19 @@ import HorizontalRule from "./HorizontalRule";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import DatePickerForm from "./DatePickerForm";
 import TagPickerForm from "./TagPicker/TagPickerForm";
+import * as Haptics from 'expo-haptics';
+
 
 const NewJournalEntryForm = (props) => {
     const { control, handleSubmit, errors } = useForm({
         mode: "onChange"
     });
     const [drawingOpen, setDrawingOpen] = useState(false)
-    const onSubmit = data => console.log(data);
+    const onSubmit = data => {
+        console.log(data)
+
+        Haptics.notificationAsync("success")
+    }
 
     return(
         <View style={{flex: 1, flexDirection: 'column', margin: 10}}>
@@ -47,6 +53,22 @@ const NewJournalEntryForm = (props) => {
                         value={props.value}
                     />}
             />
+
+            <Controller
+                    name="title"
+                    control={control}
+                    defaultValue={""}
+                    render={(props) =>
+                        <TextInput
+                            {...props}
+                            mode={"outlined"}
+                            label={"Title"}
+                            onChangeText={(value) => {props.onChange(value)}}
+                            value={props.value}
+                            error={errors.title}
+                        />}
+                />
+
             <Controller
                 name={"drawings"}
                 control={control}
@@ -97,20 +119,7 @@ const NewJournalEntryForm = (props) => {
                     Details
                 </Title>
 
-                <Controller
-                    name="title"
-                    control={control}
-                    defaultValue={""}
-                    render={(props) =>
-                        <TextInput
-                            {...props}
-                            mode={"outlined"}
-                            label={"Title"}
-                            onChangeText={(value) => {props.onChange(value)}}
-                            value={props.value}
-                            error={errors.title}
-                        />}
-                />
+                
 
                 <Controller
                     name="tags"
@@ -118,7 +127,9 @@ const NewJournalEntryForm = (props) => {
                     rules={{required: true}}
                     defaultValue={[]}
                     render={(props) =>
-                       <TagPickerForm />
+                       <TagPickerForm onSubmit={(tagsSelected) => {
+                           props.onChange(tagsSelected)
+                       }}/>
                     }
                 />
 

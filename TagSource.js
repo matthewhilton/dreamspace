@@ -20,13 +20,18 @@ class TagSource {
                 AsyncStorage.getItem(tagAsyncStorageKey).then((data) => {
                     console.log("tag data: ", data);
                     // Sort all tags by their most used
-                    let dataArray = JSON.parse(data)
+
+
 
                     if(data == null){
                         dataArray = defaultTags;
                         console.log("tag data was null, setting to default tags")
                         AsyncStorage.setItem(tagAsyncStorageKey, JSON.stringify(defaultTags))
+                        resolve(dataArray)
+                        return;
                     }
+
+                    let dataArray = JSON.parse(data)
 
                     dataArray.sort((a, b) => {
                         if(a.used < b.used){
@@ -38,8 +43,10 @@ class TagSource {
                         }
                     })
                     resolve(dataArray)
+                    return;
                 }).catch((e) => {
                     reject(e)
+                    return;
                 })
             } catch(e) {
                 console.error(e)

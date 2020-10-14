@@ -6,7 +6,6 @@ import HorizontalRule from "../HorizontalRule";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import TagView from "./TagView";
 import TagSource from "../../TagSource";
-import {Keyboard} from "react-native-web";
 
 const TagPickerForm = (props) => {
     const sheetRef = useRef(null)
@@ -17,6 +16,14 @@ const TagPickerForm = (props) => {
 
     function submitForm(){
         // TODO call props.onsubmit
+        const tagNamesSelected = tagQuery.data.filter((item) => {
+            if (item.selected) {
+                return item.name
+            }
+        })
+
+        props.onSubmit(tagNamesSelected)
+
         sheetRef.current.close();
     }
 
@@ -74,9 +81,12 @@ const TagPickerForm = (props) => {
     return(
         <View style={{marginTop: 5}}>
             <Text> Tags </Text>
-            <View style={{flex: 1, flexDirection: "row", flexWrap: true, marginVertical: 5}}>
-                <Chip icon={"plus"} onPress={() => sheetRef.current.open()}> Add Tags </Chip>
-            </View>
+
+            <TagView
+                title={""}
+                tags={tagQuery.data.filter((item) => {if(item.selected) return item })}
+                persistentTag={<Chip icon={"plus"} onPress={() => sheetRef.current.open()}> Edit Tags </Chip>}
+              />
 
             <RBSheet
                 height={sheetHeight}

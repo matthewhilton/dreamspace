@@ -11,6 +11,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import DatePickerForm from "./DatePickerForm";
 import TagPickerForm from "./TagPicker/TagPickerForm";
 import * as Haptics from 'expo-haptics';
+import JournalDatabase from '../Functions/journalDatabase';
 
 
 const NewJournalEntryForm = (props) => {
@@ -20,7 +21,7 @@ const NewJournalEntryForm = (props) => {
     const [drawingOpen, setDrawingOpen] = useState(false)
     const onSubmit = data => {
         console.log(data)
-
+        JournalDatabase.saveEntry(data, "v1")
         Haptics.notificationAsync("success")
     }
 
@@ -148,19 +149,16 @@ const NewJournalEntryForm = (props) => {
                     }
                 />
 
-            <Button
-                type={"submit"}
-                mode="contained"
-                onPress={handleSubmit(onSubmit)}
-                labelStyle={{fontSize: 15, fontWeight: "bold", padding: 10}}
-                style={{marginTop: 30}}
-                color={props.theme.colors.primary}
-            >
-                Record Dream
-            </Button>
-
-
-
+                <Button
+                    type={"submit"}
+                    mode="contained"
+                    onPress={handleSubmit(onSubmit)}
+                    labelStyle={{fontSize: 15, fontWeight: "bold", padding: 10}}
+                    style={{marginTop: 30}}
+                    color={props.theme.colors.primary}
+                >
+                    Record Dream
+                </Button>
             </ScrollView>
         </View>
     )

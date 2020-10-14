@@ -36,7 +36,8 @@
     "reanimated-bottom-sheet": "^1.0.0-alpha.22",
     "retext": "^7.0.1",
     "retext-keywords": "^6.0.0",
-    "uuid": "^3.4.0"
+    "uuid": "^3.4.0",
+    "expo-sqlite": "~8.4.0"
   },
   "devDependencies": {
     "@babel/core": "7.9.0"

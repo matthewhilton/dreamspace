@@ -1,1 +1,1 @@
-export default db_name="journal_store"
+export default db_name="journal_store_dev_2"

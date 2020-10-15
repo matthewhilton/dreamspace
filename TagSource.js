@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
+import JournalDatabase from './Functions/journalDatabase';
 
 const defaultTags = [
     { name: "False Awakening", used: 0, selected: false, color: "#f27844" },
@@ -15,25 +16,20 @@ class TagSource {
     // Gets all tags from a store somewhere
     static getAllTags(){
         return new Promise((resolve, reject) => {
-            // Get tags user has already used from async storage
+            // Get tags user has already used from the sqlite db
             try {
-                AsyncStorage.getItem(tagAsyncStorageKey).then((data) => {
-                    console.log("tag data: ", data);
-                    // Sort all tags by their most used
-
-
-
-                    if(data == null){
-                        dataArray = defaultTags;
-                        console.log("tag data was null, setting to default tags")
-                        AsyncStorage.setItem(tagAsyncStorageKey, JSON.stringify(defaultTags))
-                        resolve(dataArray)
-                        return;
+                // DEBUG DEBUG DEBUG
+                console.log("tag source getting tags, also trying to query from SQ lite ")
+                JournalDatabase.getTags().then((data) => {
+                    if(data.length === 0){
+                        console.log("Tag data in SQlite was null, setting to the default tags")
+                        JournalDatabase.saveTags(defaultTags).then(() => {
+                            resolve(defaultTags)
+                            return;
+                        })
                     }
 
-                    let dataArray = JSON.parse(data)
-
-                    dataArray.sort((a, b) => {
+                    data.sort((a, b) => {
                         if(a.used < b.used){
                             return(-1)
                         } else if(a.used > b.used){
@@ -42,12 +38,11 @@ class TagSource {
                             return(0)
                         }
                     })
-                    resolve(dataArray)
+
+                    resolve(data)
                     return;
-                }).catch((e) => {
-                    reject(e)
-                    return;
-                })
+                }).catch(e => reject(e))
+
             } catch(e) {
                 console.error(e)
                 reject(e)

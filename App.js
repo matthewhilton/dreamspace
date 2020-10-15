@@ -3,6 +3,7 @@ import { View} from 'react-native';
 import NewJournalEntrySheet from "./Components/NewJournalEntrySheet";
 import { DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet'
+import JournalDatabase from './Functions/journalDatabase';
 
 const theme = {
 
@@ -24,6 +25,14 @@ const theme = {
     }
 }
 export default function App() {
+
+    React.useEffect(() => {
+        console.log("Mounted, querying all entries")
+        JournalDatabase.getAllEntryies().then((data) => {
+            console.log("Entries: ", data)
+        })
+    }, [])
+
     return (
         <>
             <ActionSheetProvider>

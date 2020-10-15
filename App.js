@@ -1,9 +1,13 @@
 import * as React from 'react';
 import { View} from 'react-native';
 import NewJournalEntrySheet from "./Components/NewJournalEntrySheet";
-import { DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
+import { DefaultTheme, Provider as PaperProvider, Snackbar} from 'react-native-paper';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet'
-import JournalDatabase from './Functions/journalDatabase';
+import { PersistGate } from 'redux-persist/integration/react';
+import { Provider } from 'react-redux';
+import JournalViewer from "./Components/JournalViewer"
+import { store, persistor } from "./Redux/store.js"
+
 
 const theme = {
 
@@ -24,29 +28,32 @@ const theme = {
         recordingButton: "#db5a44"
     }
 }
-export default function App() {
 
-    React.useEffect(() => {
-        console.log("Mounted, querying all entries")
-        JournalDatabase.getAllEntryies().then((data) => {
-            console.log("Entries: ", data)
-        })
-    }, [])
+
+export default function App() {
 
     return (
         <>
-            <ActionSheetProvider>
-                <PaperProvider theme={theme}>
-                    <View>
+            <Provider store={store}>
+                <PersistGate loading={null} persistor={persistor}>
+                    <ActionSheetProvider>
+                        <PaperProvider theme={theme}>
+                            <View>
 
-                        {// Router / Navigation here
-                            //
-                        }
-
-                        <NewJournalEntrySheet />
-                    </View>
-                </PaperProvider>
-            </ActionSheetProvider>
+                                {// Router / Navigation here
+                                    //
+                                }
+                               
+                                <NewJournalEntrySheet>
+                                    <JournalViewer />
+                                    <Snackbar wrapperStyle={{position: "absolute", left: 0, bottom: 500}}> Journal Entry Saved! </Snackbar>
+                                </NewJournalEntrySheet>
+                                
+                            </View>
+                        </PaperProvider>
+                    </ActionSheetProvider>
+                </PersistGate>
+            </Provider>
         </>
     );
 }

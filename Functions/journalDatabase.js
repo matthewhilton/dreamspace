@@ -71,6 +71,10 @@ class JournalDatabase {
              allEntries[indexOfCorrespondingEntry].recordings = [...currentRecordings, recording];
         }
 
+        // And now attach the tags using the tag associations 
+        const allTags = await Tag.query();
+        //TODO 
+        
         return(allEntries);
     }
 

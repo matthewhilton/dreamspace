@@ -12,24 +12,23 @@ import DatePickerForm from "./DatePickerForm";
 import TagPickerForm from "./TagPicker/TagPickerForm";
 import * as Haptics from 'expo-haptics';
 import JournalDatabase from '../Functions/journalDatabase';
-
+import { connect, useDispatch } from "react-redux";
 
 const NewJournalEntryForm = (props) => {
     const { control, handleSubmit, errors } = useForm({
         mode: "onChange"
     });
     const [drawingOpen, setDrawingOpen] = useState(false)
-    const [formSubmitState, setFormSubmitState] = useState({
-        loading: false,
-        error: false,
-        success: false
-    })
+
+    const dispatch = useDispatch();
     
     const onSubmit = data => {
         // Save entry, then notify user.
         // TODO update state while saving entry
-        JournalDatabase.saveEntry(data).then((entryId) => console.log("entry id: ", entryId))
+        //JournalDatabase.saveEntry(data).then((entryId) => console.log("entry id: ", entryId))
         //Haptics.notificationAsync("success")
+        dispatch({type: "INSERT", object: "JOURNAL", data: data})
+        props.onSubmit()
     }
 
     return(
@@ -171,5 +170,6 @@ const NewJournalEntryForm = (props) => {
         </View>
     )
 }
+
 
 export default withTheme(NewJournalEntryForm);

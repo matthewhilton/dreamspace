@@ -14,7 +14,7 @@ const JournalViewer = (props) => {
     console.log(journal)
 
     return(
-        <SafeAreaView style={{flex: 1}}>
+        <View>
             <Button mode="contained" onPress={() => dispatch({type: "NUKE"})}> Nuke Redux Store </Button>
 
             {journal.map((item) => (
@@ -22,7 +22,7 @@ const JournalViewer = (props) => {
                     <Text> {item.title} </Text>
               </View>
             ))}
-        </SafeAreaView>
+        </View>
     )
 }
 

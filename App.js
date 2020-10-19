@@ -1,13 +1,18 @@
 import * as React from 'react';
 import { View} from 'react-native';
 import NewJournalEntrySheet from "./Components/NewJournalEntrySheet";
-import { DefaultTheme, Provider as PaperProvider, Snackbar} from 'react-native-paper';
+import { Button, DefaultTheme, withTheme, Provider as PaperProvider, Snackbar, Title} from 'react-native-paper';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet'
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
 import JournalViewer from "./Components/JournalViewer"
 import { store, persistor } from "./Redux/store.js"
-
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import MenuHamburger from './Components/MenuHamburger';
+import JournalLibrary from './Components/JournalLibrary';
+import HeaderWithNav from './Components/HeaderWithNav';
 
 const theme = {
 
@@ -29,6 +34,25 @@ const theme = {
     }
 }
 
+const Drawer = createDrawerNavigator();
+
+const MainScreen = (props) => (
+    <NewJournalEntrySheet>
+        <SafeAreaView>
+            <MenuHamburger />
+            <JournalViewer />
+        </SafeAreaView>
+    </NewJournalEntrySheet>
+)
+
+const JournalLibraryScreen = (props) => {
+    return(
+        <SafeAreaView style={{backgroundColor: props.theme.colors.background_main, height: '100%'}}>
+            
+            <JournalLibrary />
+        </SafeAreaView>
+    )
+}
 
 export default function App() {
 
@@ -38,18 +62,13 @@ export default function App() {
                 <PersistGate loading={null} persistor={persistor}>
                     <ActionSheetProvider>
                         <PaperProvider theme={theme}>
-                            <View>
-
-                                {// Router / Navigation here
-                                    //
-                                }
-                               
-                                <NewJournalEntrySheet>
-                                    <JournalViewer />
-                                    <Snackbar wrapperStyle={{position: "absolute", left: 0, bottom: 500}}> Journal Entry Saved! </Snackbar>
-                                </NewJournalEntrySheet>
-                                
-                            </View>
+                            <NavigationContainer>
+                                <Drawer.Navigator initialRouteName="Main">
+                                    <Drawer.Screen name="Main" component={withTheme(MainScreen)} />
+                                    <Drawer.Screen name="Journal Library" component={withTheme(JournalLibraryScreen)} />
+                                    
+                                </Drawer.Navigator>
+                            </NavigationContainer>
                         </PaperProvider>
                     </ActionSheetProvider>
                 </PersistGate>

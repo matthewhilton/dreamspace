@@ -31,7 +31,7 @@ const SpaceWalk = (props) => {
                     isMoved={isScaledUpward} 
                     startX={coordinates.x} 
                     startY={coordinates.y} 
-                    endY={coordinates.y-(planetMovementOffset*((screenHeight-coordinates.y)/screenHeight*0.1)+15)} 
+                    endY={coordinates.y-(planetMovementOffset*((screenHeight-coordinates.y)/screenHeight*0.04))} 
                     duration={300}
                     />
                 ))}

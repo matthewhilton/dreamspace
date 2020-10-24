@@ -6,7 +6,7 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet'
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
 import JournalViewer from "./Components/JournalViewer"
-import { store, persistor } from "./Redux/store.js"
+import { store, persistor } from "./Redux/store"
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';

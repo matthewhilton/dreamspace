@@ -18,7 +18,6 @@ const DatePickerForm = (props) => {
             <DateTimePickerModal
             isVisible={visible}
             mode={"date"}
-
             onCancel={() => setVisible(false)}
             onConfirm={(date) => {
                 props.onChange(date)

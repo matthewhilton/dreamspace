@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import MenuHamburger from './Components/MenuHamburger';
 import JournalLibrary from './Components/JournalLibrary';
 import HeaderWithNav from './Components/HeaderWithNav';
+import SpaceWalk from './Components/SpaceWalk';
 
 const theme = {
 
@@ -37,12 +38,7 @@ const theme = {
 const Drawer = createDrawerNavigator();
 
 const MainScreen = (props) => (
-    <NewJournalEntrySheet>
-        <SafeAreaView>
-            <MenuHamburger />
-            <JournalViewer />
-        </SafeAreaView>
-    </NewJournalEntrySheet>
+    <SpaceWalk />
 )
 
 const JournalLibraryScreen = (props) => {

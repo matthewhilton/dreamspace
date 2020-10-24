@@ -10,13 +10,26 @@ import HorizontalRule from "./HorizontalRule";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import DatePickerForm from "./DatePickerForm";
 import TagPickerForm from "./TagPicker/TagPickerForm";
+import * as Haptics from 'expo-haptics';
+import JournalDatabase from '../Functions/journalDatabase';
+import { connect, useDispatch } from "react-redux";
 
 const NewJournalEntryForm = (props) => {
     const { control, handleSubmit, errors } = useForm({
         mode: "onChange"
     });
     const [drawingOpen, setDrawingOpen] = useState(false)
-    const onSubmit = data => console.log(data);
+
+    const dispatch = useDispatch();
+    
+    const onSubmit = data => {
+        // Save entry, then notify user.
+        // TODO update state while saving entry
+        //JournalDatabase.saveEntry(data).then((entryId) => console.log("entry id: ", entryId))
+        //Haptics.notificationAsync("success")
+        dispatch({type: "INSERT", object: "JOURNAL", data: data})
+        props.onSubmit()
+    }
 
     return(
         <View style={{flex: 1, flexDirection: 'column', margin: 10}}>
@@ -47,6 +60,23 @@ const NewJournalEntryForm = (props) => {
                         value={props.value}
                     />}
             />
+
+            <Controller
+                    name="title"
+                    control={control}
+                    defaultValue={""}
+                    rules={{required: true}}
+                    render={(props) =>
+                        <TextInput
+                            {...props}
+                            mode={"outlined"}
+                            label={"Title"}
+                            onChangeText={(value) => {props.onChange(value)}}
+                            value={props.value}
+                            error={errors.title}
+                        />}
+                />
+
             <Controller
                 name={"drawings"}
                 control={control}
@@ -97,20 +127,7 @@ const NewJournalEntryForm = (props) => {
                     Details
                 </Title>
 
-                <Controller
-                    name="title"
-                    control={control}
-                    defaultValue={""}
-                    render={(props) =>
-                        <TextInput
-                            {...props}
-                            mode={"outlined"}
-                            label={"Title"}
-                            onChangeText={(value) => {props.onChange(value)}}
-                            value={props.value}
-                            error={errors.title}
-                        />}
-                />
+                
 
                 <Controller
                     name="tags"
@@ -118,7 +135,9 @@ const NewJournalEntryForm = (props) => {
                     rules={{required: true}}
                     defaultValue={[]}
                     render={(props) =>
-                       <TagPickerForm />
+                       <TagPickerForm onSubmit={(tagsSelected) => {
+                           props.onChange(tagsSelected)
+                       }}/>
                     }
                 />
 
@@ -137,22 +156,20 @@ const NewJournalEntryForm = (props) => {
                     }
                 />
 
-            <Button
-                type={"submit"}
-                mode="contained"
-                onPress={handleSubmit(onSubmit)}
-                labelStyle={{fontSize: 15, fontWeight: "bold", padding: 10}}
-                style={{marginTop: 30}}
-                color={props.theme.colors.primary}
-            >
-                Record Dream
-            </Button>
-
-
-
+                <Button
+                    type={"submit"}
+                    mode="contained"
+                    onPress={handleSubmit(onSubmit)}
+                    labelStyle={{fontSize: 15, fontWeight: "bold", padding: 10}}
+                    style={{marginTop: 30}}
+                    color={props.theme.colors.primary}
+                >
+                    Record Dream
+                </Button>
             </ScrollView>
         </View>
     )
 }
+
 
 export default withTheme(NewJournalEntryForm);

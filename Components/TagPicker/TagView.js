@@ -1,22 +1,52 @@
 import React from "react"
-import { View, Dimensions } from "react-native";
-import {Chip, Text, Title, withTheme} from "react-native-paper";
+import { View, ScrollView, Dimensions } from "react-native";
+import {ActivityIndicator, Chip, Text, Title, withTheme} from "react-native-paper";
+import {LightenDarkenColor} from "lighten-darken-color";
+import * as Haptics from 'expo-haptics';
 
-const TagView = ({tags=[], title="Current Tags", emptyContent=<View />, ...props}) => {
+var Color = require('color');
+
+const TagView = ({tags=[], emptyContent=<Text />,loading=false,onPressed=function(){},filter=null,antiFilter=null, persistentTag=<Text />,...props}) => {
+
+    const filteredTags = tags.filter((item) => {
+        if(filter == null && antiFilter == null) return true;
+
+        if(filter != null && item.grouping == filter) return true;
+        if(antiFilter != null && item.grouping != antiFilter) return true;
+
+        return false;
+    })
+
+    function tagPressed(itemName){
+        onPressed(itemName);
+    }
+
     return(
-        <View style={{minHeight: Dimensions.get("screen").height/6}}>
-            <Title style={{fontWeight: "bold"}}> {title} </Title>
+        <View>
             {props.children}
-            {tags.length == 0 ?
-                emptyContent
-                : null}
-            <View style={{flex: 1, flexDirection: "row", alignContent: "center"}}>
-                {tags.map((item) => (
-                    <Chip onPress={() => props.onPressed(item.id)}> {item.text} </Chip>
-                ))}
-            </View>
-        </View>
 
+            {loading ? <ActivityIndicator size="small" animating={true} style={{flex: 1, alignSelf: "flex-start", margin: 0, padding: 0}}/> : null  }
+            {(filteredTags.length == 0 && !loading) ? emptyContent : null}
+
+                <View style={{flexDirection: "row", flexWrap: true, marginBottom: 10}}>
+                        
+                        {filteredTags.map((item) => (
+                            <Chip key={item.name}
+                                  style={{
+                                      margin: 1,
+                                      backgroundColor: item.selected ? item.color : Color(item.color).darken(0.4).hex(),
+                                  }}
+                                  selectedColor={Color(item.color).darken(0.7).hex()}
+                                  onPress={() => {tagPressed(item.name)}}
+                                  selected={item.selected}
+                                    mode={"flat"}
+                            > {item.name} </Chip>
+                        ) )}
+
+                    {persistentTag}     
+                </View>
+
+        </View>
     )
 }
 

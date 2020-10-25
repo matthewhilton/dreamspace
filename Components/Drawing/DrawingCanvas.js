@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
+import { View, Dimensions} from 'react-native';
 import ExpoPixi from 'expo-pixi';
 import { withTheme} from "react-native-paper";
 import {LightenDarkenColor} from "lighten-darken-color";
@@ -54,7 +54,7 @@ const DrawingCanvas = (props) => {
                 strokeColor={penColor.replace("#", "0x")}
                 strokeWidth={15}
                 strokeAlpha={1}
-                style={{ flex: 1, minHeight: 300}}
+                style={{ flex: 1, minHeight: Dimensions.get('screen').height * 0.5}}
             />
             <SketchToolbar
                 onColorChange={(color) => {

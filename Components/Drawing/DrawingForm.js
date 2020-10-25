@@ -33,7 +33,7 @@ const DrawingForm = (props) => {
                         setDrawings([...drawings, data])
                         setDrawingOpen(false)
                     }}/> : <Button icon="plus" mode={"outlined"} onPress={() => setDrawingOpen(true)}> Add Drawing </Button>}
-
+                
                 <HorizontalGallery>
                     {
                         drawings.map((data, index) => (
@@ -58,7 +58,7 @@ const DrawingForm = (props) => {
                             />
                         ))
                     }
-                </HorizontalGallery>
+                </HorizontalGallery> 
             </View>
         </>
     )

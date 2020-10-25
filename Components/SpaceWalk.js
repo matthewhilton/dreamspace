@@ -26,8 +26,9 @@ const SpaceWalk = (props) => {
     return(
         <View style={{height: "200%"}}>
             <View style={{flexDirection: "row"}}>
-                {planetPositions.map(coordinates => (
+                {planetPositions.map((coordinates, i) => (
                     <AnimatedPlanet 
+                    key={i}
                     isMoved={isScaledUpward} 
                     startX={coordinates.x} 
                     startY={coordinates.y} 
@@ -52,8 +53,8 @@ const SpaceWalk = (props) => {
             </View>
 
 
-            <AnimatedPopupForm isMoved={isScaledUpward} startX={0} startY={screenHeight} endY={0} duration={300}>
-            <SectionedJournalEntryForm onClose={() => setIsScaledUpward(false)} />
+            <AnimatedPopupForm isMoved={isScaledUpward} startX={0} startY={screenHeight} endY={0} duration={300} >
+                <SectionedJournalEntryForm onClose={() => setIsScaledUpward(false)} />
             </AnimatedPopupForm>
         </View>
     )

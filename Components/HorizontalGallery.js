@@ -2,7 +2,7 @@ import React, {useRef, useEffect, useState} from 'react';
 import { ScrollView } from 'react-native';
 
 const HorizontalGallery = (props) => {
-    const galleryRef = useRef(null);
+    const galleryRef = useRef();
 
     const [prevLength, setPrevLength] = useState(-1)
 

@@ -1,50 +1,70 @@
 import React, {useState, useRef, useEffect} from "react";
-import { View, Dimensions, SafeAreaView, KeyboardAvoidingView, ScrollView} from "react-native";
+import { View, Dimensions, SafeAreaView, KeyboardAvoidingView, ScrollView, TextInputComponent} from "react-native";
 import {Chip, Text, Title, withTheme, Button, TextInput, Snackbar} from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux"
 import RBSheet from "react-native-raw-bottom-sheet";
 import HorizontalRule from "../HorizontalRule";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import TagView from "./TagView";
-import TagSource from "../../TagSource";
-
+import AlertAsync from "react-native-alert-async"
+import KeyboardSpacer from "react-native-keyboard-spacer";
 const TagPickerForm = (props) => {
     const sheetRef = useRef(null)
-    const sheetHeight = Dimensions.get("screen").height*0.85;
-
-    const [tagQuery, setTagQuery] = useState({loading: true, data: []})
+    const sheetHeight = Dimensions.get("screen").height*0.8;
     const [customTagText, setCustomTagText] = useState(null)
 
+    const tagNamesSelected = props.value.map((item) => item.name)
+
+    // Connect to redux store
+    const dispatch = useDispatch()
+    let tags = useSelector(state => state.tags)
+    if(tags == null) tags = [];
+
     function submitForm(){
-        // TODO call props.onsubmit
-        const tagNamesSelected = tagQuery.data.filter((item) => {
-            if (item.selected) {
-                return item.name
-            }
-        })
-
-        props.onSubmit(tagNamesSelected)
-
         sheetRef.current.close();
     }
 
-    useEffect(() => {
-        TagSource.getAllTags().then((data) => {
-            setTagQuery({
-                loading: false,
-                data: data
-            })
-        })
-    }, [])
-
     function tagPressed(tagPressedName){
-        let tagState = {...tagQuery}
-
-        for(const [i, tag] of tagState.data.entries()){
-            if(tag.name === tagPressedName){
-                tagState.data[i].selected = !tagState.data[i].selected;
+        // Get the currently selected tags (from props.value)
+        let currentSelected = [...props.value]
+        for(const [i, tag] of currentSelected.entries()){
+            if(tag.name == tagPressedName){
+                // Is already in the list (so should remove it and update controller via props)
+                currentSelected.splice(i, 1);
+                props.onChange(currentSelected);
+                return;
             }
         }
-        setTagQuery(tagState);
+
+        // Tag not found on list already, so add it (and then update controller via props)
+        // First get the tag data 
+        const tagPressedData = tags.find(tag => tag.name == tagPressedName)
+        props.onChange([...props.value, tagPressedData])
+    }
+
+    async function tagLongPressed(tagName){
+        // On long press, show alert to delete tag
+
+        const choice = await AlertAsync(
+            "Delete Tag?",
+            "Deleting a tag will remove it from any other dreams that have been tagged with it",
+            [
+                {text: 'Delete', onPress: () => 'yes', style: 'destructive'},
+                {text: 'Cancel', onPress: () => 'no', style: 'cancel'},
+            ],
+        );
+
+        if (choice == 'no') {
+            return;
+        }
+
+        // Else continue on deleting tag
+        dispatch({type: "DELETE", object: "TAG", data: tagName})
+
+        // Also delete from prop controller if exists there
+        let newValue = [...props.value]
+        newValue = newValue.filter((item) => {if(item.name != tagName) return item})
+        props.onChange(newValue)
     }
 
     function createNewTag(){
@@ -54,38 +74,63 @@ const TagPickerForm = (props) => {
         }
 
         // User typed a tag that is already in the list, so just select it
-        if(tagQuery.data.some(item => item.name == customTagText)){
+        if(tags.some(item => item.name == customTagText)){
             tagPressed(customTagText)
             setCustomTagText(null)
             return;
         }
 
-        let newTagState = [...tagQuery.data]
         const tagColor = "white"
 
-        newTagState.push({
+        // New tag - dispatch to redux store and add to list of tags selected
+        const tagData = {
             name: customTagText,
             used: 0,
-            selected: true,
             color: tagColor
-        })
+        }
 
-        setTagQuery({
-            loading: false,
-            data: newTagState
-        })
+        dispatch({type: "INSERT", object: "TAG", data: tagData})
+        // Also update controller via props
+        props.onChange([...props.value, tagData])
+
         setCustomTagText(null)
     }
 
+    const tagsWithSelectedProperty = tags.map((item) => {
+        if(tagNamesSelected.includes(item.name)){
+            item.selected = true;
+        } else {
+            item.selected = false;
+        }
+
+        return item;
+    })
+
+    function addDefaultTags() {
+        const defaultTags = [
+            { name: "False Awakening", used: 0, selected: false, color: "#f27844" },
+            { name: "Flying", used: 0, selected: false, color: "#62e3dc" },
+            { name: "Recurring", used: 0, selected: false, color: "#5dde68" },
+            { name: "Nightmare", used: 0, selected: false, color: "#635c5c" },
+            { name: "Sleep Paralysis", used: 0, selected: false, color: "#b440cf" }
+        ]
+
+        // Dispatch all these to the redux store
+        defaultTags.forEach((defaultTag) => {
+            dispatch({type: "INSERT", object: "TAG", data: defaultTag})
+        })
+    }
 
     return(
         <View style={{marginTop: 5}}>
-            <Text> Tags </Text>
+            <Title style={{fontWeight: "bold"}}> Tags </Title>
+            <HorizontalRule />
 
             <TagView
                 title={""}
-                tags={tagQuery.data.filter((item) => {if(item.selected) return item })}
-                persistentTag={<Chip icon={"plus"} onPress={() => sheetRef.current.open()}> Edit Tags </Chip>}
+                tags={props.value}
+                onPressed={() => sheetRef.current.open()}
+                persistentTag={<Chip icon={"plus"} onPress={() => sheetRef.current.open()} style={{margin: 3}}> Tags </Chip>}
               />
 
             <RBSheet
@@ -95,47 +140,57 @@ const TagPickerForm = (props) => {
                 customStyles={{
                     container: {
                         backgroundColor: props.theme.colors.background_sheet,
-                        height: sheetHeight
                     },
                 }}
             >
-                <SafeAreaView style={{height: "100%", flex: 1}}>
+               
+                <SafeAreaView style={{height: sheetHeight, flex: 1}}>
                     <View style={{padding: 10, flex: 1, justifyContent: "flex-start"}}>
                         <View style={{flexDirection: "row", justifyContent: "space-between",alignContent: 'center', marginVertical: 5}}>
                             <Title style={{fontSize: 30, fontWeight: "bold"}}> Add Tags </Title>
                             <Button mode={"contained"} onPress={submitForm}> Done </Button>
                         </View>
                         <HorizontalRule />
-                        <TextInput
-                            value={customTagText}
-                            onChangeText={(text) => setCustomTagText(text)}
-                            mode={"outlined"}
-                            label={"New Tag"}
-                            onSubmitEditing={() => createNewTag()}
-                            blurOnSubmit={false}
-                        />
-                        <ScrollView>
+                        
+                        <ScrollView contentContainerStyle={{justifyContent: "space-between"}}>
+                            
                             <TagView
                             title={""}
-                            tags={tagQuery.data}
-                            loading={tagQuery.loading}
+                            tags={tagsWithSelectedProperty}
                             onPressed={(tagName) => tagPressed(tagName)}
+                            onLongPressed={(tagName) => tagLongPressed(tagName)}
                             emptyContent={
-                                <Text style={{color: props.theme.colors.subtext, fontSize: 17}}> No Tags Found </Text>
+                                <View style={{alignItems: "center"}}>
+                                    <Text style={{textAlign: "center", color: props.theme.colors.subtext}}> Looks like you don't have any tags yet. Would you like to add some common ones? </Text>
+                                    <Button mode="outlined" onPress={addDefaultTags}> Add Common Tags </Button>
+                                </View>
+                                
                             }>
                                 <View style={{flexDirection: "row", alignContent: "center", marginVertical: 7}}>
                                     <Text style={{color: props.theme.colors.subtext, fontSize: 17}}> Tap to select </Text>
                                     <Icon name={"gesture-tap"} color={props.theme.colors.subtext} size={20}/>
                                 </View>
                             </TagView>
+                            
+                            <TextInput
+                            value={customTagText}
+                            onChangeText={(text) => setCustomTagText(text)}
+                            mode={"outlined"}
+                            label={"New Tag"}
+                            onSubmitEditing={() => createNewTag()}
+                            blurOnSubmit={false}
+                            />
+                            <KeyboardSpacer />
+                           
                         </ScrollView>
 
                         <Text style={{
                             color: props.theme.colors.placeholder,
                             textAlign: "center"
-                        }}> To customise and modify tags, go to the tag management screen in settings.</Text>
+                        }}> Long press to delete tag. To customise and modify tags, go to the tag management screen in settings.</Text>
                     </View>
-                </SafeAreaView>
+                </SafeAreaView> 
+                    
             </RBSheet>
         </View>
     )

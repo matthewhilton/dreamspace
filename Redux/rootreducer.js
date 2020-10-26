@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import journal from './journalReducer'
+import tags from './tagReducer'
 
 function rootReducer(state = {}, action){
     if(action.type == "NUKE"){
@@ -10,7 +11,7 @@ function rootReducer(state = {}, action){
 }
 
 const appReducer = combineReducers({
-    journal
+    journal, tags
   });
 
   export default rootReducer;

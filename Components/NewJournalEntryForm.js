@@ -135,9 +135,10 @@ const NewJournalEntryForm = (props) => {
                     rules={{required: true}}
                     defaultValue={[]}
                     render={(props) =>
-                       <TagPickerForm onSubmit={(tagsSelected) => {
-                           props.onChange(tagsSelected)
-                       }}/>
+                       <TagPickerForm 
+                        updateValue={(data) => props.onChange(data)}
+                        value={props.value}
+                       />
                     }
                 />
 

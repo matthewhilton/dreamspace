@@ -28,6 +28,7 @@
     "react-native-gesture-handler": "~1.7.0",
     "react-native-get-random-values": "^1.5.0",
     "react-native-haptic-feedback": "^1.10.0",
+    "react-native-keyboard-spacer": "^0.4.1",
     "react-native-modal-datetime-picker": "^9.0.0",
     "react-native-paper": "^4.2.0",
     "react-native-raw-bottom-sheet": "^2.2.0",

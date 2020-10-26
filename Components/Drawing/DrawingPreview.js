@@ -5,7 +5,6 @@ import Image from 'react-native-scalable-image';
 
 const DrawingPreview = (props) =>(
     <View style={{
-        flex: 1,
         borderColor: props.theme.colors.placeholder,
         borderWidth: 1,
         borderRadius: 5,

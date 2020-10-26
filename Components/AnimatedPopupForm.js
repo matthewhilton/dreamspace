@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState } from "react"
 import {View} from "react-native"
 import Animated, { Easing } from "react-native-reanimated";
 
-const AnimatedPopupForm = ({isMoved: isPoppedUp, duration=500, startX=100, startY=100, endY=200, color="red", isRendered=true,...props}) => {
+const AnimatedPopupForm = ({isMoved: isPoppedUp, duration=500, startX=100, startY=100, endY=200, color="red", isRendered=true,onAnimatedBottomFinish=function(){}, ...props}) => {
     const formAnimationRef = useRef(new Animated.Value(0)).current;
     
     const yVal = formAnimationRef.interpolate({
@@ -31,6 +31,7 @@ const AnimatedPopupForm = ({isMoved: isPoppedUp, duration=500, startX=100, start
               // After closing form, wait for animation to finish before de-rendering
               if(isPoppedUp == false){
                   setIsFormRendered(false)
+                  onAnimatedBottomFinish()
               } 
           });
 

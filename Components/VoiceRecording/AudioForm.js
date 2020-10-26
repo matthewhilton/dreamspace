@@ -8,14 +8,7 @@ import {useActionSheet} from "@expo/react-native-action-sheet";
 
 const AudioForm = (props) => {
     const [open, setOpen] = useState(false)
-    const [recordings, setRecordings] = useState([])
     const { showActionSheetWithOptions } = useActionSheet();
-
-    // Update parent controller whenever drawings changes
-    useEffect(() => {
-        props.onChange(recordings)
-    }, [JSON.stringify(recordings)])
-
 
     return(
         <>
@@ -25,17 +18,17 @@ const AudioForm = (props) => {
                     onPermissionDenied={() => setOpen(false)}
                     onClose={() => setOpen(false)}
                     onChange={(data) => {
-                        setRecordings([...recordings, data])
+                        props.onChange([...props.value, data])
                         setOpen(false)
                     }}
                 />
 
             :
-            <Button icon={"microphone-plus"} mode={"outlined"} onPress={() => setOpen(true)}> Add Recording </Button>
+            <Button icon={"plus"} mode={"outlined"} onPress={() => setOpen(true)} style={{padding: 5}}> Recording </Button>
             }
 
             <HorizontalGallery>
-                {recordings.map((data, index) => (
+                {props.value.map((data, index) => (
                     <RecordingPreview
                         key={data.uri || null}
                         data={data}
@@ -50,7 +43,7 @@ const AudioForm = (props) => {
                                         // Button index 1 is delete button, so delete this image
                                         let newArray = [...recordings];
                                         newArray.splice(index, 1);
-                                        setRecordings(newArray);
+                                        props.onChange(newArray);
                                     }
                                 })
                         }}

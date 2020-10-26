@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react"
-import { View, Dimensions, SafeAreaView} from "react-native"
-import { Title, Button, TextInput, withTheme, IconButton} from "react-native-paper"
+import React, {useEffect, useState, useRef} from "react"
+import { View, Dimensions } from "react-native"
+import { Title, Button, TextInput, withTheme, IconButton, Text } from "react-native-paper"
 import SectionProgressBar from "./SectionProgressBar"
 import { useForm, Controller } from 'react-hook-form';
 import DrawingForm from "./Drawing/DrawingForm";
@@ -10,6 +10,12 @@ import AlertAsync from "react-native-alert-async";
 import SliderForm from "./SliderForm";
 import TagPickerForm from "./TagPicker/TagPickerForm";
 import DatePickerForm from "./DatePickerForm";
+import HorizontalRule from "./HorizontalRule";
+import KeyboardSpacer from "react-native-keyboard-spacer";
+import * as Haptics from 'expo-haptics';
+
+import { FormResultsPreview } from "./FormResultsPreview";
+import Animated from "react-native-reanimated";
 
 const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
 
@@ -17,21 +23,23 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
 
     const [drawingOpen, setDrawingOpen] = useState(false)
 
+    const [keyboardSpacing, setKeyboardSpacing] = useState(0)
+
     const sectionHeaders = [
         'Story',
         'Rating',
         'General'
     ]
 
-    const { control, handleSubmit, errors, formState} = useForm({
-        mode: "onChange",
+    const { control, handleSubmit, errors, formState, getValues} = useForm({
+        mode: "all",
         shouldUnregister: false
     });
 
     useEffect(() => {
-        if(section >= sectionHeaders.length){
+        if(section >= sectionHeaders.length + 1){
             //TODO submit form
-            resetComponentState()
+ 
             props.onClose();
         }
     }, [section])
@@ -39,6 +47,20 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
     function continueForm(amount){
         setSection(section + amount)
     }
+
+    function saveForm(){
+        // TODO save using redux reducer
+        props.onSaveForm();
+    }
+
+    console.log("keyboard ", keyboardSpacing)
+
+    useEffect(() => {
+        if(keyboardSpacing != 0){
+            setTimeout(() => storyScrollRef.current.scrollToEnd(), 300)
+        }
+        
+    }, [keyboardSpacing])
 
     async function shouldCloseForm(){
         // If user has started editing already, ask for confirmation before leaving (and deleting data)
@@ -58,148 +80,203 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
         props.onClose()
     }
 
-    console.log("isDirty ", formState.isDirty)
+    const storyScrollRef = useRef(null)
 
     return(
-        <View style={{height: Dimensions.get('screen').height, width: "100%"}}>
-            
-            <View style={{backgroundColor: "black", margin: 10, height: "90%", borderRadius: 25, padding: 15}}>
-            {isVisible ? <>
-            <View style={{flexDirection: 'row'}}>
-                <IconButton onPress={shouldCloseForm} icon="close" />
-                <View style={{flex: 1}}>
-                    <SectionProgressBar section={section} sectionHeaders={sectionHeaders} />   
+            <View style={{height: Dimensions.get('screen').height, width: "100%"}}>
+                
+                <View style={{backgroundColor: props.theme.colors.background_sheet, margin: 10, height: "90%", borderRadius: 25, padding: 15}}>
+                {isVisible ? <>
+                <View style={{flexDirection: 'row'}}>
+                    <IconButton onPress={shouldCloseForm} icon="close" />
+                    <View style={{flex: 1}}>
+                        <SectionProgressBar section={section} sectionHeaders={sectionHeaders} />   
+                    </View>
                 </View>
-            </View>
-                {section == 0 ? 
-                <ScrollView 
-                    scrollEnabled={!drawingOpen}
-                    showsVerticalScrollIndicator={false}>     
-                        <Controller
-                            name="description"
-                            control={control}
-                            defaultValue={""}
-                            render={(props) =>
-                                <TextInput
-                                    {...props}
-                                    mode={"outlined"}
-                                    label={"Description"}
-                                    multiline={true}
-                                    error={errors.description}
-                                    onChangeText={(value) => {props.onChange(value)}}
-                                    value={props.value}
-                                />}
-                        />
-
-                        <Controller
-                            name={"drawings"}
-                            control={control}
-                            defaultValue={[]}
-                            render={(props) => (
-                                <DrawingForm
-                                    onChange={(data) => props.onChange(data)}
-                                    onOpenChange={(val) => setDrawingOpen(val)}
-                                />
-                            )}
-                            />
-
-                        <Controller
-                            name={"audioRecordings"}
-                            control={control}
-                            defaultValue={[]}
-                            render={(props) => (
-                                <AudioForm
-                                onChange={(data) => props.onChange(data)}/>
-                            )}
-                        />           
-                    </ScrollView> : null}
-
-                    { section == 1 ? 
-                        <ScrollView scrollEnabled={false}> 
-                            <Controller
-                            name="vividness"
-                            control={control}
-                            rules={{required: true}}
-                            defaultValue={5}
-                            render={(props) =>
-                                    <SliderForm onChange={(data) => props.onChange(data)} value={props.value} label={"Vividness"} />
-                                }
-                            />
+                    {section == 0 ? 
+                    <ScrollView 
+                        ref={storyScrollRef}
+                        alwaysBounceVertical={false}
+                        scrollEnabled={!drawingOpen}
+                        showsVerticalScrollIndicator={false}
+                        scrollToOverflowEnabled={false}
+                        keyboardShouldPersistTaps="handled"
+                        >     
+                            <Title style={{fontWeight: "bold"}}> Dream Story </Title>
+                            <Text> Describe the story of your dream. </Text>
+                            <HorizontalRule />
 
                             <Controller
-                                name="lucidity"
+                                name={"drawings"}
                                 control={control}
-                                rules={{required: true}}
-                                defaultValue={5}
-                                render={(props) =>
-                                    <SliderForm onChange={(data) => props.onChange(data)} value={props.value} label={"Lucidity"} />
-                                }
-                            />
-
-                            <Controller
-                                name="memory"
-                                control={control}
-                                rules={{required: true}}
-                                defaultValue={5}
-                                render={(props) =>
-                                    <SliderForm onChange={(data) => props.onChange(data)} value={props.value} label={"Memory"} />
-                                }
-                            />
-                        </ScrollView>
-                     : null}
-
-                     { section == 2 ? 
-                        <ScrollView scrollEnabled={false}>
-                            <Controller
-                                name="tags"
-                                control={control}
-                                rules={{required: true}}
                                 defaultValue={[]}
-                                render={(props) =>
-                                <TagPickerForm onSubmit={(tagsSelected) => {
-                                    props.onChange(tagsSelected)
-                                }}/>
-                                }
-                            />
-
-                            <Controller
-                                name="date"
-                                control={control}
-                                rules={{required: true}}
-                                defaultValue={new Date()}
-                                render={(props) =>
-                                    <DatePickerForm
-                                        onChange={(date) => props.onChange(date)}
-                                        date={props.value}
+                                render={(props) => (
+                                    <DrawingForm
+                                        value={props.value}
+                                        onChange={(data) => props.onChange(data)}
+                                        onOpenChange={(val) => setDrawingOpen(val)}
                                     />
-                                }
-                            />
+                                )}
+                                />
 
                             <Controller
-                                name="title"
+                                name={"audioRecordings"}
+                                control={control}
+                                defaultValue={[]}
+                                render={(props) => (
+                                    <AudioForm
+                                    onChange={(data) => props.onChange(data)}
+                                    value={props.value}
+                                    />
+                                )}
+                            />    
+                        
+                        
+                            <Controller
+                                name="description"
                                 control={control}
                                 defaultValue={""}
-                                rules={{required: true}}
                                 render={(props) =>
                                     <TextInput
                                         {...props}
                                         mode={"outlined"}
-                                        label={"Title"}
+                                        label={"Description"}
+                                        multiline={true}
+                                        error={errors.description}
                                         onChangeText={(value) => {props.onChange(value)}}
                                         value={props.value}
-                                        error={errors.title}
                                     />}
-                            />
-                        </ScrollView>
-                    : null}
+                            />       
+                            <KeyboardSpacer onToggle={(enabled, height) => setKeyboardSpacing(height)} />
+                        </ScrollView> : null}
 
-                    <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-                        <Button onPress={() => continueForm(-1)} > Back </Button>
-                        <Button onPress={() => continueForm(1)} mode="contained" style={{flex: 1}}> Next </Button>
+                        { section == 1 ? 
+                            <ScrollView scrollEnabled={false}> 
+                                <Title style={{fontWeight: "bold"}}> Dream Rating </Title>
+                                <Text> Rate aspects about your dream </Text>
+                                <HorizontalRule />
+
+                                <Controller
+                                name="vividness"
+                                control={control}
+                                rules={{required: true}}
+                                defaultValue={5}
+                                render={(props) =>
+                                        <SliderForm 
+                                        lowerText={"Blurry"}
+                                        upperText={"Vivid"}
+                                        icon={"sun"}
+                                        onChange={(data) => props.onChange(data)} 
+                                        value={props.value} 
+                                        label={"Vividness"}
+                                        description={"How clear was the dream?"}
+                                        />
+                                    }
+                                />
+
+                                <Controller
+                                    name="memory"
+                                    control={control}
+                                    rules={{required: true}}
+                                    defaultValue={5}
+                                    render={(props) =>
+                                        <SliderForm 
+                                        lowerText={"Hard"}
+                                        upperText={"Easy"}
+                                        onChange={(data) => props.onChange(data)} 
+                                        value={props.value} 
+                                        label={"Memory"} 
+                                        icon={"brain"}
+                                        description={"How easy was it to remember the dream?"}
+                                        />
+                                    }
+                                />
+
+                                <Controller
+                                    name="lucidity"
+                                    control={control}
+                                    rules={{required: true}}
+                                    defaultValue={5}
+                                    render={(props) =>
+                                        <SliderForm 
+                                        lowerText={"Not"}
+                                        upperText={"Very"}
+                                        onChange={(data) => props.onChange(data)} 
+                                        value={props.value} 
+                                        label={"Lucidity"} 
+                                        icon={"eye"} 
+                                        maxValue={10}
+                                        description={"How lucid were you in the dream?"}/>
+                                    }
+                                />
+                            </ScrollView>
+                        : null}
+
+                        { section == 2 ? 
+                            <ScrollView scrollEnabled={false}>
+                                <Title style={{fontWeight: "bold"}}> General </Title>
+                                <Text> Add tags and a title to your dream </Text>
+                                <HorizontalRule />
+
+                                <Controller
+                                    name="title"
+                                    control={control}
+                                    defaultValue={""}
+                                    rules={{required: true}}
+                                    render={(props) =>
+                                        <TextInput
+                                            {...props}
+                                            mode={"outlined"}
+                                            label={"Title"}
+                                            onChangeText={(value) => {props.onChange(value)}}
+                                            value={props.value}
+                                            error={errors.title}
+                                        />}
+                                />
+                                <Controller
+                                    name="date"
+                                    control={control}
+                                    rules={{required: true}}
+                                    defaultValue={new Date()}
+                                    render={(props) =>
+                                        <DatePickerForm
+                                            onChange={(date) => props.onChange(date)}
+                                            date={props.value}
+                                        />
+                                    }
+                                />
+                                <Controller
+                                    name="tags"
+                                    control={control}
+                                    rules={{required: true}}
+                                    defaultValue={[]}
+                                    render={(props) =>
+                                    <TagPickerForm 
+                                    value={props.value}
+                                    onChange={(tagsSelected) => props.onChange(tagsSelected)}/>
+                                    }
+                                />
+
+                            </ScrollView>
+                        : null}
+
+                        {section == 3 ? 
+                            <View style={{flex: 1}}>
+                                <FormResultsPreview formData={getValues()} />
+                            </View>
+                        : null}
+                        
+                        {section >= sectionHeaders.length ? 
+                            <Button labelStyle={{fontSize: 25, fontWeight: "bold"}} mode="contained" onPress={saveForm}> Save </Button>
+                        : null}
+
+                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                            {section > 0 ? <Button onPress={() => continueForm(-1)} > Back </Button> : null}
+                            {section < sectionHeaders.length ? <Button onPress={() => continueForm(1)} mode="contained" style={{flex: 1}} color={props.theme.colors.accent}> Next </Button> : null }
                     </View>
-                </>: null }
-            </View> 
-        </View>
+                    </>: null }
+                </View> 
+            </View>
     )
 }
 

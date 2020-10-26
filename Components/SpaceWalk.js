@@ -4,11 +4,13 @@ import { Button, IconButton, Text } from "react-native-paper"
 import Animated, { Easing } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { circle } from "react-native/Libraries/Animated/src/Easing";
+import { useDispatch } from "react-redux";
 import AnimatedPlanet from "./AnimatedPlanet";
 import AnimatedPopupForm from "./AnimatedPopupForm";
 import Circle from "./Circle";
 import SectionedJournalEntryForm from "./SectionedJournalEntryForm";
 
+import FormSuccessIndicator from "./FormSuccessIndicator"
 
 const SpaceWalk = (props) => {
     const screenHeight = Dimensions.get("screen").height;
@@ -22,7 +24,18 @@ const SpaceWalk = (props) => {
 
     const planetMovementOffset = 500;
 
+    const dispatch = useDispatch();
+
     const [isScaledUpward, setIsScaledUpward ] = useState(false)
+    const [formSuccessIndicatorVisible, setFormSuccessIndicatorVisible] = useState(false)
+
+    function formSuccessAnimation(){
+        setIsScaledUpward(false)
+        setTimeout(() => {
+            setFormSuccessIndicatorVisible(true)
+        }, 500)
+    }
+
     return(
         <View style={{height: "200%"}}>
             <View style={{flexDirection: "row"}}>
@@ -37,8 +50,12 @@ const SpaceWalk = (props) => {
                     />
                 ))}
            </View>
+
+           
         
             <View style={{position: "absolute", width: "100%", bottom: screenHeight, left: 0}}>
+            <Button mode="contained" onPress={() => dispatch({type: "NUKE"})}> Nuke Redux Store </Button>
+            
                 <SafeAreaView style={{flexDirection: "row", width: "100%", alignItems: 'center'}}>
                     <View style={{flex: 1, margin: 5}}>
                         <Button onPress={() => {
@@ -52,10 +69,12 @@ const SpaceWalk = (props) => {
                 </SafeAreaView>
             </View>
 
-
-            <AnimatedPopupForm isMoved={isScaledUpward} startX={0} startY={screenHeight} endY={0} duration={300} >
-                <SectionedJournalEntryForm onClose={() => setIsScaledUpward(false)} />
+           
+            <AnimatedPopupForm isMoved={isScaledUpward} startX={0} startY={screenHeight} endY={0} duration={300}>
+                <SectionedJournalEntryForm onClose={() => setIsScaledUpward(false)} onSaveForm={formSuccessAnimation}/>
             </AnimatedPopupForm>
+            
+            { formSuccessIndicatorVisible ? <FormSuccessIndicator onFinish={() => setFormSuccessIndicatorVisible(false)} /> : null}
         </View>
     )
 }

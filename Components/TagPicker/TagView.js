@@ -6,7 +6,7 @@ import * as Haptics from 'expo-haptics';
 
 var Color = require('color');
 
-const TagView = ({tags=[], emptyContent=<Text />,loading=false,onPressed=function(){},filter=null,antiFilter=null, persistentTag=<Text />,...props}) => {
+const TagView = ({tags=[], emptyContent=<Text />,loading=false,onPressed=function(){}, onLongPressed=function(){},filter=null,antiFilter=null, persistentTag=<Text />,...props}) => {
 
     const filteredTags = tags.filter((item) => {
         if(filter == null && antiFilter == null) return true;
@@ -16,10 +16,6 @@ const TagView = ({tags=[], emptyContent=<Text />,loading=false,onPressed=functio
 
         return false;
     })
-
-    function tagPressed(itemName){
-        onPressed(itemName);
-    }
 
     return(
         <View>
@@ -33,11 +29,12 @@ const TagView = ({tags=[], emptyContent=<Text />,loading=false,onPressed=functio
                         {filteredTags.map((item) => (
                             <Chip key={item.name}
                                   style={{
-                                      margin: 1,
-                                      backgroundColor: item.selected ? item.color : Color(item.color).darken(0.4).hex(),
+                                      margin: 3,
+                                      backgroundColor: item.selected ? item.color : Color(item.color).darken(0.5).hex(),
                                   }}
-                                  selectedColor={Color(item.color).darken(0.7).hex()}
-                                  onPress={() => {tagPressed(item.name)}}
+                                  selectedColor={Color(item.color).darken(0.9).hex()}
+                                  onPress={() => onPressed(item.name)}
+                                  onLongPress={() => onLongPressed(item.name)}
                                   selected={item.selected}
                                     mode={"flat"}
                             > {item.name} </Chip>

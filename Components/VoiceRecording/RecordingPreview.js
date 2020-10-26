@@ -43,7 +43,6 @@ const RecordingPreview = (props) => {
     return(
         <View
             style={{
-                flex: 1,
                 borderColor: props.theme.colors.placeholder,
                 borderWidth: 1,
                 borderRadius: 5,
@@ -63,7 +62,6 @@ const RecordingPreview = (props) => {
                 <View
                 style={{
                     padding: 15,
-                    flex: 1,
                     flexDirection: 'column',
                     alignItems: 'center',
                     alignContent: 'center'

@@ -47,7 +47,8 @@
     "redux-persist-sqlite-storage": "^1.0.4",
     "retext": "^7.0.1",
     "retext-keywords": "^6.0.0",
-    "uuid": "^3.4.0"
+    "uuid": "^3.4.0",
+    "lottie-react-native": "~2.6.1"
   },
   "devDependencies": {
     "@babel/core": "7.9.0",

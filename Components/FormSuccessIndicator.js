@@ -1,38 +1,49 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useRef} from 'react'
 import { Dimensions, View } from 'react-native'
 import { Text } from "react-native-paper"
 import * as Haptics from "expo-haptics"
+import LottieView from 'lottie-react-native';
+import { RECORDING_OPTION_IOS_BIT_RATE_STRATEGY_CONSTANT } from 'expo-av/build/Audio';
 
 const FormSuccessIndicator = (props) => {
-
-    useEffect(() => {
-        Haptics.notificationAsync("success")
-
-        setTimeout(() => {
-            props.onFinish()
-        }, 2000)
-    }, [])
-
     const screenHeight = Dimensions.get("screen").height;
     const screenWidth = Dimensions.get("screen").width;
 
     const height = screenHeight / 3;
     const width = screenWidth / 2;
 
+    const lottieRef = useRef();
+
+    useEffect(() => {
+        lottieRef.current.play()
+        setTimeout(() => Haptics.notificationAsync("success"), 850)
+    }, [])
+
+    function animationFinished(){
+        props.onFinish()
+    }
+    
     return(
         <View style={{
             position: "absolute", 
             left: (screenWidth/2-(width/2)), 
             top: (screenHeight/2-(height/2)), 
-            backgroundColor: "red",
+            backgroundColor: 'rgba(0,0,0,0.8)',
             width: width,
-            height: height,
+            height: width,
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
             }}>
-            <Text>
-                Success!
-            </Text>
+            <View style={{height: "100%", width: "100%", padding: 40}}>
+                <LottieView 
+                
+                    ref={lottieRef}
+                    autoPlay={false}
+                    loop={false}
+                    onAnimationFinish={() => animationFinished()}
+                    source={require('../Animations/7698-success.json')}
+                />
+            </View>
         </View>
     )
 }

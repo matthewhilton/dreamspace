@@ -13,9 +13,10 @@ import DatePickerForm from "./DatePickerForm";
 import HorizontalRule from "./HorizontalRule";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import * as Haptics from 'expo-haptics';
+import LottieView from 'lottie-react-native';
 
 import { FormResultsPreview } from "./FormResultsPreview";
-import Animated from "react-native-reanimated";
+import Animated, { Easing } from "react-native-reanimated";
 
 const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
 
@@ -37,9 +38,8 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
     });
 
     useEffect(() => {
-        if(section >= sectionHeaders.length + 1){
+        if(section >= sectionHeaders.length + 2){
             //TODO submit form
- 
             props.onClose();
         }
     }, [section])
@@ -47,13 +47,6 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
     function continueForm(amount){
         setSection(section + amount)
     }
-
-    function saveForm(){
-        // TODO save using redux reducer
-        props.onSaveForm();
-    }
-
-    console.log("keyboard ", keyboardSpacing)
 
     useEffect(() => {
         if(keyboardSpacing != 0){
@@ -82,17 +75,40 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
 
     const storyScrollRef = useRef(null)
 
+    const screenHeight = Dimensions.get('screen').height;
+
+    const [interpolateValue] = useState(new Animated.Value(0))
+    const interpolateHeight = interpolateValue.interpolate({
+        inputRange: [0, 1],
+        outputRange: ["90%", "50%"]
+    })
+
+    function formStatusAnimation(){
+        console.log("running animation")
+        Animated.timing(interpolateHeight, {
+            toValue: 1,
+            duration:  300,
+            useNativeDriver: true,
+            easing: Easing.bezier(0.455, 0.03, 0.515, 0.955)
+        }).start();
+
+        // TODO add callback 
+    }
+
+
     return(
             <View style={{height: Dimensions.get('screen').height, width: "100%"}}>
                 
-                <View style={{backgroundColor: props.theme.colors.background_sheet, margin: 10, height: "90%", borderRadius: 25, padding: 15}}>
+                <View style={{backgroundColor: props.theme.colors.background_sheet, margin: 10, borderRadius: 25, padding: 15, height: screenHeight*0.9}}>
                 {isVisible ? <>
-                <View style={{flexDirection: 'row'}}>
-                    <IconButton onPress={shouldCloseForm} icon="close" />
-                    <View style={{flex: 1}}>
-                        <SectionProgressBar section={section} sectionHeaders={sectionHeaders} />   
-                    </View>
-                </View>
+                    {section < sectionHeaders.length + 1 ?
+                        <View style={{flexDirection: 'row'}}>
+                            <IconButton onPress={shouldCloseForm} icon="close" />
+                            <View style={{flex: 1}}>
+                                <SectionProgressBar section={section} sectionHeaders={sectionHeaders} /> 
+                            </View>
+                        </View>
+                        : null }
                     {section == 0 ? 
                     <ScrollView 
                         ref={storyScrollRef}
@@ -266,14 +282,30 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
                             </View>
                         : null}
                         
-                        {section >= sectionHeaders.length ? 
-                            <Button labelStyle={{fontSize: 25, fontWeight: "bold"}} mode="contained" onPress={saveForm}> Save </Button>
+                        {section == sectionHeaders.length ? 
+                            <Button labelStyle={{fontSize: 25, fontWeight: "bold"}} mode="contained" onPress={() => continueForm(1)}> Save </Button>
                         : null}
 
+                        {section == (sectionHeaders.length + 1) ? 
+                        <View style={{height: "100%", width: "100%", padding: 40}}>
+                            <LottieView 
+                                autoPlay={true}
+                                loop={false}
+                                source={require('../Animations/7698-success.json')}
+                            />
+
+                            <Animated.View style={{height: interpolateHeight}}>
+                                <View style={{height: "100%", width: "100%", backgroundColor: "red"}}>
+                                    <Button onPress={() => formStatusAnimation()}> Start animation </Button>
+                                    <Text> Inteprolated height  </Text>
+                                </View>
+                            </Animated.View>
+                        </View> : null }
+
                         <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-                            {section > 0 ? <Button onPress={() => continueForm(-1)} > Back </Button> : null}
+                            {(section > 0 && section != (sectionHeaders.length + 1))? <Button onPress={() => continueForm(-1)} > Back </Button> : null}
                             {section < sectionHeaders.length ? <Button onPress={() => continueForm(1)} mode="contained" style={{flex: 1}} color={props.theme.colors.accent}> Next </Button> : null }
-                    </View>
+                        </View>
                     </>: null }
                 </View> 
             </View>

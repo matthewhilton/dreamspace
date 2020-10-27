@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef} from "react"
-import { View, Dimensions } from "react-native"
+import { View, Dimensions, Animated, LayoutAnimation, SafeAreaView, Alert } from "react-native"
 import { Title, Button, TextInput, withTheme, IconButton, Text } from "react-native-paper"
 import SectionProgressBar from "./SectionProgressBar"
 import { useForm, Controller } from 'react-hook-form';
@@ -16,7 +16,6 @@ import * as Haptics from 'expo-haptics';
 import LottieView from 'lottie-react-native';
 
 import { FormResultsPreview } from "./FormResultsPreview";
-import Animated, { Easing } from "react-native-reanimated";
 
 const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
 
@@ -36,6 +35,30 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
         mode: "all",
         shouldUnregister: false
     });
+
+    // Form functions
+    const onSubmit = (data, e) => {
+        console.log("Form data, ", data)
+        // TODO save data to redux,
+        const success = true;// <- get value from redux, test if stored correctly
+
+        if(success){
+            // Continue the form to the success animation
+            continueForm(1)
+            setTimeout(() => Haptics.notificationAsync("success"), 700);
+
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            setFormHeight("10%")
+        } else {
+            // TODO something with the error - alert maybe? Shouldn't ever error here really
+            Haptics.notificationAsync("error")
+        }
+    }
+
+    const onError = (data, e) => {
+        console.error("Form error: ", e)
+    }
+    ///////
 
     useEffect(() => {
         if(section >= sectionHeaders.length + 2){
@@ -75,31 +98,34 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
 
     const storyScrollRef = useRef(null)
 
-    const screenHeight = Dimensions.get('screen').height;
+    const screenHeight = Dimensions.get("screen").height;
+    const screenWidth = Dimensions.get("screen").width;
+    const [formHeight, setFormHeight] = useState("100%")
 
-    const [interpolateValue] = useState(new Animated.Value(0))
-    const interpolateHeight = interpolateValue.interpolate({
-        inputRange: [0, 1],
-        outputRange: ["90%", "50%"]
-    })
-
-    function formStatusAnimation(){
-        console.log("running animation")
-        Animated.timing(interpolateHeight, {
-            toValue: 1,
-            duration:  300,
-            useNativeDriver: true,
-            easing: Easing.bezier(0.455, 0.03, 0.515, 0.955)
-        }).start();
-
-        // TODO add callback 
+    function successAnimationFinished(){
+        Haptics.notificationAsync("success")
+        setTimeout(() => props.onClose, 300)
     }
 
 
     return(
-            <View style={{height: Dimensions.get('screen').height, width: "100%"}}>
+      
+            <View style={{
+                width: "100%",
+                height: screenHeight-60,
+                justifyContent: formHeight == "10%" ? "flex-end" : null, 
+                alignItems: "center", 
+                alignSelf: "flex-start",
+                padding: 10
+                }}>
                 
-                <View style={{backgroundColor: props.theme.colors.background_sheet, margin: 10, borderRadius: 25, padding: 15, height: screenHeight*0.9}}>
+                <View style={{
+                    
+                    backgroundColor: props.theme.colors.background_sheet, 
+                    borderRadius: 25, 
+                    height: formHeight, 
+                    width: "100%",
+                    padding: 15}}>
                 {isVisible ? <>
                     {section < sectionHeaders.length + 1 ?
                         <View style={{flexDirection: 'row'}}>
@@ -283,23 +309,17 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
                         : null}
                         
                         {section == sectionHeaders.length ? 
-                            <Button labelStyle={{fontSize: 25, fontWeight: "bold"}} mode="contained" onPress={() => continueForm(1)}> Save </Button>
+                            <Button labelStyle={{fontSize: 25, fontWeight: "bold"}} mode="contained" onPress={handleSubmit(onSubmit, onError)}> Submit </Button>
                         : null}
 
                         {section == (sectionHeaders.length + 1) ? 
-                        <View style={{height: "100%", width: "100%", padding: 40}}>
+                        <View style={{height: "100%", width: "100%", padding: 10}}>
                             <LottieView 
                                 autoPlay={true}
                                 loop={false}
                                 source={require('../Animations/7698-success.json')}
+                                onAnimationFinish={() => props.onClose()}
                             />
-
-                            <Animated.View style={{height: interpolateHeight}}>
-                                <View style={{height: "100%", width: "100%", backgroundColor: "red"}}>
-                                    <Button onPress={() => formStatusAnimation()}> Start animation </Button>
-                                    <Text> Inteprolated height  </Text>
-                                </View>
-                            </Animated.View>
                         </View> : null }
 
                         <View style={{flexDirection: "row", justifyContent: "space-between"}}>
@@ -309,6 +329,7 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
                     </>: null }
                 </View> 
             </View>
+       
     )
 }
 

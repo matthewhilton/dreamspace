@@ -27,13 +27,16 @@ const SpaceWalk = (props) => {
     const dispatch = useDispatch();
 
     const [isScaledUpward, setIsScaledUpward ] = useState(false)
-    const [formSuccessIndicatorVisible, setFormSuccessIndicatorVisible] = useState(false)
+    const [backgroundScaledUpward, setBackgroundIsScaledUpward] = useState(false)
 
     function formSuccessAnimation(){
         setIsScaledUpward(false)
-        setTimeout(() => {
-            setFormSuccessIndicatorVisible(true)
-        }, 500)
+        setBackgroundIsScaledUpward(false)
+    }
+
+    function formClose(){
+        setIsScaledUpward(false)
+        setBackgroundIsScaledUpward(false)
     }
 
     return(
@@ -42,7 +45,7 @@ const SpaceWalk = (props) => {
                 {planetPositions.map((coordinates, i) => (
                     <AnimatedPlanet 
                     key={i}
-                    isMoved={isScaledUpward} 
+                    isMoved={backgroundScaledUpward} 
                     startX={coordinates.x} 
                     startY={coordinates.y} 
                     endY={coordinates.y-(planetMovementOffset*((screenHeight-coordinates.y)/screenHeight*0.04))} 
@@ -60,6 +63,7 @@ const SpaceWalk = (props) => {
                     <View style={{flex: 1, margin: 5}}>
                         <Button onPress={() => {
                             setIsScaledUpward(!isScaledUpward)
+                            setBackgroundIsScaledUpward(!backgroundScaledUpward)
                             }} mode="contained" > New Entry </Button>
                     </View>
 
@@ -71,10 +75,12 @@ const SpaceWalk = (props) => {
 
            
             <AnimatedPopupForm isMoved={isScaledUpward} startX={0} startY={screenHeight} endY={0} duration={300}>
-                <SectionedJournalEntryForm onClose={() => setIsScaledUpward(false)} onSaveForm={formSuccessAnimation}/>
+                <SectionedJournalEntryForm 
+                onClose={() => formClose()} 
+                onSaveForm={formSuccessAnimation}
+                onAnimationHasReducedSize={() => setBackgroundIsScaledUpward(false)}
+                />
             </AnimatedPopupForm>
-            
-            { formSuccessIndicatorVisible ? <FormSuccessIndicator onFinish={() => setFormSuccessIndicatorVisible(false)} /> : null}
         </View>
     )
 }

@@ -49,6 +49,7 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
 
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             setFormHeight("10%")
+            props.onAnimationHasReducedSize()
         } else {
             // TODO something with the error - alert maybe? Shouldn't ever error here really
             Haptics.notificationAsync("error")
@@ -122,10 +123,10 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
                 <View style={{
                     
                     backgroundColor: props.theme.colors.background_sheet, 
-                    borderRadius: 25, 
+                    borderRadius: 15, 
                     height: formHeight, 
                     width: "100%",
-                    padding: 15}}>
+                    padding: 20}}>
                 {isVisible ? <>
                     {section < sectionHeaders.length + 1 ?
                         <View style={{flexDirection: 'row'}}>
@@ -308,9 +309,7 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
                             </View>
                         : null}
                         
-                        {section == sectionHeaders.length ? 
-                            <Button labelStyle={{fontSize: 25, fontWeight: "bold"}} mode="contained" onPress={handleSubmit(onSubmit, onError)}> Submit </Button>
-                        : null}
+                        
 
                         {section == (sectionHeaders.length + 1) ? 
                         <View style={{height: "100%", width: "100%", padding: 10}}>
@@ -318,13 +317,23 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
                                 autoPlay={true}
                                 loop={false}
                                 source={require('../Animations/7698-success.json')}
+                                colorFilters={[{
+                                    keypath: "Fill 1",
+                                    color: "#ffffff"
+                                  }]}
                                 onAnimationFinish={() => props.onClose()}
                             />
                         </View> : null }
 
-                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                        <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: 'center'}}>
+                    
                             {(section > 0 && section != (sectionHeaders.length + 1))? <Button onPress={() => continueForm(-1)} > Back </Button> : null}
-                            {section < sectionHeaders.length ? <Button onPress={() => continueForm(1)} mode="contained" style={{flex: 1}} color={props.theme.colors.accent}> Next </Button> : null }
+                            
+                            {section < sectionHeaders.length ? <Button onPress={() => continueForm(1)} style={{borderRadius: 30}} contentStyle={{padding: 2, borderRadius: 30}} labelStyle={{fontWeight: "bold", fontSize: 20}}  mode="contained" style={{flex: 1}} color={props.theme.colors.accent}> Next </Button> : null }
+                        
+                            {section == sectionHeaders.length ? 
+                                <Button onPress={handleSubmit(onSubmit, onError)} style={{borderRadius: 30}} contentStyle={{padding: 2, borderRadius: 30}} labelStyle={{fontWeight: "bold", fontSize: 20}}  mode="contained" style={{flex: 1}} color={props.theme.colors.accent}> Submit </Button>
+                            : null}
                         </View>
                     </>: null }
                 </View> 

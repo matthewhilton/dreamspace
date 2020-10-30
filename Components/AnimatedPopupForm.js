@@ -39,13 +39,13 @@ const AnimatedPopupForm = ({isMoved: isPoppedUp, duration=500, startX=100, start
               setIsFormRendered(true)
           }
     }, [isPoppedUp])
-
-    console.log("Form rendered: ", isFormRendered)
     
     return(
-        <Animated.View style={animStyle}>
-            {isFormRendered ? props.children : null}
-        </Animated.View>
+        <View style={{position: "absolute", top: 0, left: 0, right: 0}} >
+            <Animated.View style={animStyle}>
+                {isFormRendered ? props.children : null}
+            </Animated.View>
+        </View>
     )
 }
 

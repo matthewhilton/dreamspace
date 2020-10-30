@@ -3,7 +3,7 @@ import { View, ScrollView } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import {withTheme, Button, TextInput, Title, Text} from "react-native-paper";
 import 'react-native-get-random-values';
-import DrawingForm from "./Drawing/DrawingForm";
+import DrawingForm from "../Drawing/DrawingForm";
 import AudioForm from "./VoiceRecording/AudioForm";
 import SliderForm from "./SliderForm";
 import HorizontalRule from "./HorizontalRule";

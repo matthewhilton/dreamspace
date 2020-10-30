@@ -13,7 +13,7 @@ const JournalLibaryEntry = ({data, theme}) => {
                 alignItems: "center", 
                 justifyContent:"space-between", 
                 padding: 13, 
-                backgroundColor: Color(theme.colors.background_sheet).darken(0.05).hex(),
+                backgroundColor: Color(theme.colors.journalFormBackground).darken(0.05).hex(),
                 borderRadius: 5,
                 marginBottom: 5,
                 flex: 1

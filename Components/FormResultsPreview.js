@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, ScrollView } from 'react-native'
 import { Title, Text, Searchbar } from 'react-native-paper';
-import DrawingPreview from './Drawing/DrawingPreview';
+import DrawingPreview from '../Drawing/DrawingPreview';
 import HorizontalGallery from './HorizontalGallery';
 import HorizontalRule from './HorizontalRule';
 import TagView from './TagPicker/TagView';

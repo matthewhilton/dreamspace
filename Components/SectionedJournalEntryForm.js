@@ -3,7 +3,7 @@ import { View, Dimensions, Animated, LayoutAnimation, SafeAreaView, Alert } from
 import { Title, Button, TextInput, withTheme, IconButton, Text } from "react-native-paper"
 import SectionProgressBar from "./SectionProgressBar"
 import { useForm, Controller } from 'react-hook-form';
-import DrawingForm from "./Drawing/DrawingForm";
+import DrawingForm from "../Drawing/DrawingForm";
 import AudioForm from "./VoiceRecording/AudioForm";
 import { ScrollView } from "react-native-gesture-handler";
 import AlertAsync from "react-native-alert-async";
@@ -122,7 +122,7 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
                 
                 <View style={{
                     
-                    backgroundColor: props.theme.colors.background_sheet, 
+                    backgroundColor: props.theme.colors.journalFormBackground || "#ffffff", 
                     borderRadius: 15, 
                     height: formHeight, 
                     width: "100%",
@@ -188,6 +188,7 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
                                         error={errors.description}
                                         onChangeText={(value) => {props.onChange(value)}}
                                         value={props.value}
+                                        style={{marginVertical: 5}}
                                     />}
                             />       
                             <KeyboardSpacer onToggle={(enabled, height) => setKeyboardSpacing(height)} />
@@ -317,10 +318,6 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
                                 autoPlay={true}
                                 loop={false}
                                 source={require('../Animations/7698-success.json')}
-                                colorFilters={[{
-                                    keypath: "Fill 1",
-                                    color: "#ffffff"
-                                  }]}
                                 onAnimationFinish={() => props.onClose()}
                             />
                         </View> : null }
@@ -332,7 +329,7 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
                             {section < sectionHeaders.length ? <Button onPress={() => continueForm(1)} style={{borderRadius: 30}} contentStyle={{padding: 2, borderRadius: 30}} labelStyle={{fontWeight: "bold", fontSize: 20}}  mode="contained" style={{flex: 1}} color={props.theme.colors.accent}> Next </Button> : null }
                         
                             {section == sectionHeaders.length ? 
-                                <Button onPress={handleSubmit(onSubmit, onError)} style={{borderRadius: 30}} contentStyle={{padding: 2, borderRadius: 30}} labelStyle={{fontWeight: "bold", fontSize: 20}}  mode="contained" style={{flex: 1}} color={props.theme.colors.accent}> Submit </Button>
+                                <Button onPress={handleSubmit(onSubmit, onError)} style={{borderRadius: 30}} contentStyle={{padding: 2, borderRadius: 30}} labelStyle={{fontWeight: "bold", fontSize: 20}}  mode="contained" style={{flex: 1}} color={props.theme.colors.accent2 || "#ffffff"}> Submit </Button>
                             : null}
                         </View>
                     </>: null }

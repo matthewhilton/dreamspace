@@ -137,7 +137,7 @@ const AudioRecordingInput = (props) => {
             <View style={{
                 flex: 1,
                 borderRadius: 5,
-                backgroundColor: LightenDarkenColor(props.theme.colors.background_sheet, 10)}}>
+                backgroundColor: LightenDarkenColor(props.theme.colors.journalFormBackground, 10)}}>
                 <ActionBar onClose={() => tryClose()} onSubmit={() => submitRecording()} saveDisabled={recordingData == null || isRecording} exitDisabled={isRecording}/>
                 <View style={{alignSelf: 'center', alignContent: "center", flex: 1, paddingBottom: 10}}>
 

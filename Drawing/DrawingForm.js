@@ -3,7 +3,7 @@ import DrawingCanvas from "./DrawingCanvas";
 import {Button, withTheme} from "react-native-paper";
 import {View} from "react-native";
 import DrawingPreview from "./DrawingPreview";
-import HorizontalGallery from "../HorizontalGallery";
+import HorizontalGallery from "../Components/HorizontalGallery";
 import {useActionSheet} from "@expo/react-native-action-sheet";
 
 const DrawingForm = (props) => {

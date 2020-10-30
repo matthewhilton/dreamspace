@@ -4,7 +4,7 @@ import ExpoPixi from 'expo-pixi';
 import { withTheme} from "react-native-paper";
 import {LightenDarkenColor} from "lighten-darken-color";
 import SketchToolbar from "./SketchToolbar";
-import ActionBar from "../ActionBar";
+import ActionBar from "../Components/ActionBar";
 import AlertAsync from "react-native-alert-async";
 
 const DrawingCanvas = (props) => {
@@ -42,7 +42,7 @@ const DrawingCanvas = (props) => {
         <View style={{
             flex: 1,
             borderRadius: 5,
-            backgroundColor: LightenDarkenColor(themeColors.background_sheet, 10)}}>
+            backgroundColor: LightenDarkenColor(themeColors.journalFormBackground, 10)}}>
             <ActionBar
                 onClose={() => shouldClose()}
                 onSubmit={() => snapshot()}

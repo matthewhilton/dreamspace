@@ -11,7 +11,7 @@ const SketchToolbar = (props) => {
         <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', padding: 5}}>
             <IconButton onPress={() => props.onUndo()} icon={() => <Icon name={"undo"} color={props.theme.colors.text} />} />
             {presetColors.map((color) => (
-                <IconButton style={{backgroundColor: props.selectedColor == color ? props.theme.colors.background_sheet : null}} key={color} icon={icon} color={color} onPress={() => props.onColorChange(color)}/>
+                <IconButton style={{backgroundColor: props.selectedColor == color ? props.theme.colors.journalFormBackground : null}} key={color} icon={icon} color={color} onPress={() => props.onColorChange(color)}/>
             ))}
         </View>
     )

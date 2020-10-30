@@ -139,7 +139,7 @@ const TagPickerForm = (props) => {
                 closeOnDragDown={true}
                 customStyles={{
                     container: {
-                        backgroundColor: props.theme.colors.background_sheet,
+                        backgroundColor: props.theme.colors.journalFormBackground,
                     },
                 }}
             >

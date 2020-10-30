@@ -21,34 +21,21 @@ const theme = {
     dark: true,
     colors: {
         ...DefaultTheme,
+        mainScreenBackground: "#0A0A0A",
+        journalFormBackground: "#141414",
         text: "#D5CBA8",
         subtext: "#918b73",
-        background: "#242424",
-        background_main: "#151414",
-        background_sheet:'#242424',
+        background: "#141414",
         disabled: "#78686B",
-        placeholder: "#78686B",
+        placeholder: "#595959",
         error: "#db6143",
-        primary: "#DABC61",
-        accent: "#a5ffd6",
+        primary: "#e2856e",
+        accent: "#E2856E",
+        accent2: "#F39C6B",
         recordingButton: "#db5a44"
     }
 }
 
-const Drawer = createDrawerNavigator();
-
-const MainScreen = (props) => (
-    <SpaceWalk />
-)
-
-const JournalLibraryScreen = (props) => {
-    return(
-        <SafeAreaView style={{backgroundColor: props.theme.colors.background_main, height: '100%'}}>
-            
-            <JournalLibrary />
-        </SafeAreaView>
-    )
-}
 
 export default function App() {
 
@@ -58,13 +45,7 @@ export default function App() {
                 <PersistGate loading={null} persistor={persistor}>
                     <ActionSheetProvider>
                         <PaperProvider theme={theme}>
-                            <NavigationContainer>
-                                <Drawer.Navigator initialRouteName="Main">
-                                    <Drawer.Screen name="Main" component={withTheme(MainScreen)} />
-                                    <Drawer.Screen name="Journal Library" component={withTheme(JournalLibraryScreen)} />
-                                    
-                                </Drawer.Navigator>
-                            </NavigationContainer>
+                            <SpaceWalk />
                         </PaperProvider>
                     </ActionSheetProvider>
                 </PersistGate>

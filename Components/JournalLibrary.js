@@ -37,7 +37,7 @@ const JournalLibrary = (props) => {
                 }}>
                 <View
                 style={{
-                    backgroundColor: props.theme.colors.background_sheet,
+                    backgroundColor: props.theme.colors.journalFormBackground,
                     borderRadius: 10,
                     height: "120%",
                     marginTop: 10

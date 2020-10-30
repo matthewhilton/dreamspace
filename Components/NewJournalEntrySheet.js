@@ -17,7 +17,7 @@ const NewJournalEntrySheet = (props) => {
 
     const styles = StyleSheet.create({
         button: {
-            backgroundColor: themeColors.background_sheet,
+            backgroundColor: themeColors.journalFormBackground,
             padding: 10,
             height: openHeight,
         },
@@ -65,7 +65,7 @@ const NewJournalEntrySheet = (props) => {
     )
 
     const newJournalEntry = () => (
-        <View style={{height: openHeight, backgroundColor: themeColors.background_sheet, padding: 10}}>
+        <View style={{height: openHeight, backgroundColor: themeColors.journalFormBackground, padding: 10}}>
             <SafeAreaView >
                 {open ? <OpenSheetContent onSubmit={() => onFormSubmit()}/> : <ClosedSheetContent />}
             </SafeAreaView>

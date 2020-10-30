@@ -1,8 +1,10 @@
 import React, {useEffect, useRef } from "react"
 import {View} from "react-native"
 import Animated, { Easing } from "react-native-reanimated";
+import MoonCartoonIcon from "../Images/MoonCartoonIcon"
 
-const AnimatedPlanet = ({isMoved, duration=500, startX=100, startY=100, endY=200, color="red"}) => {
+
+const AnimatedPlanet = ({isMoved, duration=500, startX=100, startY=100, endY=200, color="red", icon}) => {
     const circleVal = useRef(new Animated.Value(0)).current;
     
     const yVal = circleVal.interpolate({
@@ -30,7 +32,9 @@ const AnimatedPlanet = ({isMoved, duration=500, startX=100, startY=100, endY=200
     
     return(
         <Animated.View style={animStyle}>
-            <View style={{backgroundColor: color, width: 50, height: 50}} />
+            <View style={{height: 50, width: 50}}>
+                {icon}
+            </View>
         </Animated.View>
     )
 }

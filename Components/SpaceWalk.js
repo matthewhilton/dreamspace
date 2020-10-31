@@ -3,7 +3,7 @@ import { View, Dimensions, PanResponder, Animated } from "react-native";
 import { Button, IconButton, withTheme } from "react-native-paper"
 import { SafeAreaView } from "react-native-safe-area-context";
 import { circle } from "react-native/Libraries/Animated/src/Easing";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AnimatedPlanet from "./AnimatedPlanet";
 import AnimatedPopupForm from "./AnimatedPopupForm";
 import Circle from "./Circle";
@@ -14,20 +14,30 @@ import MoonCartoonIcon from "../Images/MoonCartoonIcon";
 import Planet2Icon from "../Images/Planet2Icon"
 import Planet3Icon from "../Images/Planet3Icon";
 import { PanGestureHandler } from "react-native-gesture-handler";
+import Planet from "../Planet";
 
 const SpaceWalk = (props) => {
     const screenHeight = Dimensions.get("screen").height;
 
-    const [planetPositions, setPlanetPositions] = useState([
-        {x: 10, y: 100, originX: 10, originY: 100, icon: <MoonCartoonIcon />},
-        {x: 20, y: 200, originX: 20, originY: 200, icon: <Planet3Icon />},
-        {x: 50, y: 300, originX: 50, originY: 300, icon: <MoonCartoonIcon />},
-        {x: 35, y: 500, originX: 35, originY: 500, icon: <Planet3Icon />}
-    ])
-
     const planetMovementOffset = 200;
 
     const dispatch = useDispatch();
+
+    const tags = useSelector(state => state.tags)
+  
+    const planets = useSelector(state => state.planets)
+
+    // Update the planets when the tags changes
+    useEffect(() => {
+        const newPlanets = matchTagsToPlanets(tags, planets)
+       // console.log("tags changed, ",tags,"updating planets to")
+     //   console.log(newPlanets)
+        dispatch({
+            object: "PLANET",
+            type: "REPLACE",
+            data: newPlanets
+        })
+    }, [tags])
 
     const [panResponderEnabled, _setPanResponderEnabled] = useState(true)
     const panResponderEnabledRef = useRef(panResponderEnabled)
@@ -57,8 +67,6 @@ const SpaceWalk = (props) => {
         _setPanResponderEnabled(data)
       }
 
-
-
     const pan = useRef(new Animated.ValueXY()).current;
     const panResponder = useRef(
         PanResponder.create({
@@ -71,8 +79,10 @@ const SpaceWalk = (props) => {
             //console.log(pan)
           },
           onPanResponderMove: (evt, gestureState) => {
+              
             if(panResponderEnabledRef.current){
-                let newPlanetPositions = [...planetPositions]
+            
+                let newPlanetPositions = [...planets]
 
                 for(var i = 0; i < newPlanetPositions.length; i++){
                     newPlanetPositions[i].x = newPlanetPositions[i].originX + gestureState.dx;
@@ -80,7 +90,12 @@ const SpaceWalk = (props) => {
                 }
     
                 if(atLeastOneVisible){
-                    setPlanetPositions(newPlanetPositions)
+                   
+                    dispatch({
+                        object: "PLANET",
+                        type: "REPLACE",
+                        data: newPlanetPositions
+                    })
                 }
             }
            
@@ -88,12 +103,17 @@ const SpaceWalk = (props) => {
           },
           onPanResponderRelease: () => {
             // Update the origin for each planet
-            let newPlanetPositions = [...planetPositions]
+            let newPlanetPositions = [...planets]
             for(const [i, position] of newPlanetPositions.entries()){
                 newPlanetPositions[i].originX = position.x;
                 newPlanetPositions[i].originY = position.y;
             }
-            setPlanetPositions(newPlanetPositions)
+
+            dispatch({
+                object: "PLANET",
+                type: "REPLACE",
+                data: newPlanetPositions
+            })
           }
         })
       ).current;
@@ -117,19 +137,51 @@ const SpaceWalk = (props) => {
         return false;
     }
 
+    // In the store, matches planets to tags, and adds/removes as necessary
+    // Returns a list of planets to store in the redux store
+    function matchTagsToPlanets(currentTags, currentPlanets){
+        let matchedPlanets = [];
+        const tagTagNames = [...currentTags].filter((item) => item.name)
+
+        // Go through every current planet and ensure there is a tag for it currently, add them to the matched planets
+        // Want to preserve the current planets
+        for(const planet of currentPlanets){
+            // If there is a tag still for this planet (preserve planet)
+            if(tagTagNames.includes(planet.tagName)){
+                matchedPlanets.push(planet)
+            }
+        }
+
+        const planetTagNames = [...matchedPlanets].filter((item) => item.tagName)
+                
+        // Now see if there are any new tags without planets (create new planet if this is the case)
+        for(const tag of currentTags){
+            // If there is no planet for this tag (create new planet)
+            if(!planetTagNames.includes(tag.name)){
+                let x = 50; // <--- TODO generate random position not occupied yet 
+                let y = 50;
+                let planetIcon = <Planet3Icon /> // <-- TODO generate image based on factors about tag
+
+                matchedPlanets.push(new Planet(x,y, tag.name, planetIcon));
+            }
+        }
+
+        return matchedPlanets;
+    }
+
     return(
             <View style={{height: "200%", backgroundColor: props.theme.colors.mainScreenBackground || "white"}} {...panResponder.panHandlers}>
             
                     <View style={{flexDirection: "row"}}>
-                        {planetPositions.map((coordinates, i) => (
+                        {planets.map((object, i) => (
                             <AnimatedPlanet 
                             key={i}
                             isMoved={backgroundScaledUpward} 
-                            startX={coordinates.x} 
-                            startY={coordinates.y} 
-                            endY={coordinates.y-(planetMovementOffset*((screenHeight-coordinates.y)/screenHeight*0.2))} 
+                            startX={object.x} 
+                            startY={object.y} 
+                            endY={object.y-(planetMovementOffset*((screenHeight-object.y)/screenHeight*0.2))} 
                             duration={300}
-                            icon={coordinates.icon}
+                            icon={object.image}
                             />
                         ))}
                     </View>

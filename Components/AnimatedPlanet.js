@@ -5,9 +5,8 @@ import MoonCartoonIcon from "../Images/MoonCartoonIcon"
 
 
 const AnimatedPlanet = ({isMoved, duration=500, startX=100, startY=100, endY=200, color="red", icon}) => {
-    const circleVal = useRef(new Animated.Value(0)).current;
-    
-    const yVal = circleVal.interpolate({
+    const positionRef = useRef(new Animated.Value(0)).current;
+    const yVal = positionRef.interpolate({
         inputRange: [0, 1],
         outputRange: [startY, endY],
     });
@@ -22,7 +21,7 @@ const AnimatedPlanet = ({isMoved, duration=500, startX=100, startY=100, endY=200
     };
 
     useEffect(() => {
-        Animated.timing(circleVal, {
+        Animated.timing(positionRef, {
             toValue: isMoved ? 1 : 0,
             duration: duration,
             useNativeDriver: true,

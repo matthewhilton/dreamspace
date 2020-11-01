@@ -11,7 +11,9 @@ const HorizontalGallery = (props) => {
         if(prevLength < props.children.length){
             // Delay to give time for ScrollView to render the new children
             setTimeout(() => {
-                galleryRef.current.scrollToEnd();
+                if(galleryRef.current != null){
+                    galleryRef.current.scrollToEnd();
+                }
             }, 50)
         }
         setPrevLength(props.children.length)

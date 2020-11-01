@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@dudigital/react-native-zoomable-view": "^1.0.15",
     "@expo/react-native-action-sheet": "^3.8.0",
     "@react-native-community/async-storage": "~1.12.0",
     "@react-native-community/datetimepicker": "3.0.0",
@@ -19,12 +20,14 @@
     "expo-sqlite": "~8.4.0",
     "expo-sqlite-orm": "^1.5.6",
     "lighten-darken-color": "^1.0.0",
+    "lottie-react-native": "~2.6.1",
     "react": "16.13.1",
     "react-apollo": "^3.1.5",
     "react-dom": "16.13.1",
     "react-hook-form": "^6.8.6",
     "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.3.tar.gz",
     "react-native-alert-async": "^1.0.5",
+    "react-native-anchor-point": "^1.0.1",
     "react-native-gesture-handler": "~1.7.0",
     "react-native-get-random-values": "^1.5.0",
     "react-native-haptic-feedback": "^1.10.0",
@@ -47,8 +50,7 @@
     "redux-persist-sqlite-storage": "^1.0.4",
     "retext": "^7.0.1",
     "retext-keywords": "^6.0.0",
-    "uuid": "^3.4.0",
-    "lottie-react-native": "~2.6.1"
+    "uuid": "^3.4.0"
   },
   "devDependencies": {
     "@babel/core": "7.9.0",

@@ -172,7 +172,7 @@ const SpaceWalk = (props) => {
         for(const tag of currentTags){
             // If there is no planet for this tag (create new planet)
             if(!planetTagNames.includes(tag.name)){
-                let emptyPosition = findEmptyPosition(matchedPlanets);
+                let emptyPosition = generateOrbitPositon(matchedPlanets);
                 let planetIcon = <Planet3Icon /> // <-- TODO generate image based on factors about tag
 
                 matchedPlanets.push(new Planet(emptyPosition.x,emptyPosition.y, tag.name, planetIcon));
@@ -182,6 +182,58 @@ const SpaceWalk = (props) => {
         return matchedPlanets;
     }
 
+    /*
+        Generates an "orbit" position similar to those in real orbits,
+        which form layers of rings extending further and further out.
+
+        returns an object with x,y properties corresponding to the screen coordinates
+    */
+    function generateOrbitPositon(currentPlanetPositions, gap=60, width=50){
+        let numOrbits = currentPlanetPositions.length;
+
+        // Find the middle of the screen to begin
+        let midX = Dimensions.get("screen").width / 2;
+        let midY = Dimensions.get("screen").height / 2;
+
+        // No calculations necessary
+        if(numOrbits == 0){
+            return({
+                x: midX,
+                y: midY
+            })
+        } else {
+            // Generate a random angle between 0 and 90 degrees (converted to radians), 
+            // and then use trigonometry to calculate the x,y coordinates
+            let theta = Math.random()*Math.PI*2;
+            let radius = numOrbits*gap;
+
+            // Calculate the x and y components, and then randomly flip them to get the full angle of 360 degrees
+            let unitCoordinate = generateUnitCoordinateFromAngle(theta);
+            return({
+                x: midX+(unitCoordinate.x*radius),
+                y: midY+(unitCoordinate.y*radius),
+            })
+        }
+    }
+
+    function generateUnitCoordinateFromAngle(theta){
+        let x = Math.sin(theta);
+        let y = Math.cos(theta);
+
+        return({
+            x,y
+        })
+    }
+
+    function generateFlip(){
+        const val = Math.random();
+        if(val > 0.5){
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+
     // Finds an empty spot, starting from the middle of the screen and going outwards radially.
     function findEmptyPosition(currentPlanetPositions){
         // Find the middle of the screen
@@ -189,36 +241,24 @@ const SpaceWalk = (props) => {
         let midY = Dimensions.get("screen").height / 2;
 
         let testPos = {x: midX, y: midY}
-        let radius = 1;
-        const radiusStep = 1;
-
-       
 
         // Now find an empty position
         while(true){
-            for(let degrees = 0; degrees <= 360; degrees += (45)){
-                // If spot is not empty, move around the radius to see if there is an empty spot along the radius
-                console.log(testPos)
-
-                if(!isEmptyPlanetPosition(testPos, currentPlanetPositions)){
-                    
-                    testPos.x = radius*Math.cos(degrees*Math.PI/180) // Converting degrees to radians
-                    testPos.y = radius*Math.sin(degrees*Math.PI/180)
-                } else {
-                    // Spot is empty, so return position
-                    console.log("^^^ empty: ")
-                    return testPos;
-                }
-            }
-
-            // Didn't find an empty spot in this radius, so increase the radius
-            radius += radiusStep;
+            // Add random steps of between -5 and 5
+            testPos.x += Math.floor(Math.random()*10-5)
+            testPos.y += Math.floor(Math.random()*10-5)
+            
+            if(isEmptyPlanetPosition(testPos, currentPlanetPositions)){
+                // Spot is empty, so return position
+                return testPos;
+            } 
         }
     }
 
     function isEmptyPlanetPosition(position, planetPositions){
+        const planetSize = 70;
         for(const planetPos of planetPositions){
-            if(isCoordinateWithin(position, planetPos.x - 40, planetPos.x + 60, planetPos.y - 40, planetPos.y + 60)){
+            if(isCoordinateWithin(position, planetPos, planetSize)){
                 return false;
             }
         }
@@ -226,8 +266,14 @@ const SpaceWalk = (props) => {
         return true;
     }
 
-    function isCoordinateWithin(coordinate, lowerX, upperX, lowerY, upperY){
-        if(coordinate.x > lowerX && coordinate.x < upperX && coordinate.y > lowerY && coordinate.y < upperY){
+    function isCoordinateWithin(testCoordinate, obstructionCoordinate, width){
+        // Test if their midpoints are within 'width' distance of each other
+        testCoordinate.x += width/2;
+        obstructionCoordinate.y += width/2;
+        testCoordinate.x += width/2;
+        obstructionCoordinate.y += width/2;
+
+        if(Math.abs(testCoordinate.x - obstructionCoordinate.x) < width && Math.abs(testCoordinate.y - obstructionCoordinate.y) < width){
             return true;
         } else {
             return false;
@@ -237,10 +283,11 @@ const SpaceWalk = (props) => {
     return(
             <View style={{height: "200%", backgroundColor: props.theme.colors.mainScreenBackground || "white"}} {...panResponder.panHandlers}>
             
-                    <View style={{flexDirection: "row"}}>
+                    <View>
                         {planets.length == planetOffsetPositions.length ? planets.map((object, i) => (
                             <AnimatedPlanet 
                             key={i}
+                            index={i}
                             isMoved={backgroundScaledUpward} 
                             startX={planetOffsetPositions[i].x} 
                             startY={planetOffsetPositions[i].y} 

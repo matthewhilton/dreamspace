@@ -1,9 +1,8 @@
+import { RECORDING_OPTION_IOS_BIT_RATE_STRATEGY_CONSTANT } from "expo-av/build/Audio";
 import React, {useEffect, useRef } from "react"
-import {View, Text, Animated, Easing} from "react-native"
-import MoonCartoonIcon from "../Images/MoonCartoonIcon"
+import {View, Text, TouchableWithoutFeedback, Animated, Easing} from "react-native"
 
-
-const AnimatedPlanet = ({radius=20, icon, debugText, startAngle, size=50, speedModifier=200}) => {
+const AnimatedPlanet = ({radius=20, icon, debugText, startAngle, size=50, speedModifier=200, highlighted, onPress=function(){}}) => {
     const positionRef = useRef(new Animated.Value(0)).current;
     const range = positionRef.interpolate({
         inputRange: [0,1],
@@ -27,32 +26,22 @@ const AnimatedPlanet = ({radius=20, icon, debugText, startAngle, size=50, speedM
         }]
     };
 
+    const slop = size/4;
 
-    /*
-    const positionRef = useRef(new Animated.Value(0)).current;
-    const yVal = positionRef.interpolate({
-        inputRange: [0, 1],
-        outputRange: [startY-size/2, endY-size/2],
-    });
-
-    
-
-    useEffect(() => {
-        Animated.timing(positionRef, {
-            toValue: isMoved ? 1 : 0,
-            duration: duration,
-            useNativeDriver: true,
-            easing: Easing.bezier(0.455, 0.03, 0.515, 0.955),
-          }).start();
-    }, [isMoved])*/
-
-    console.log(radius)
-    
     return(
-        <Animated.View style={[animStyle, {position: "absolute", width: radius+size, height: radius+size, backgroundColor: debugText ? "rgba(255,255,255,0.2)" : null}]}>
-            <View style={{height: size, width: size, position: "absolute"}}>
+        <Animated.View pointerEvents="box-none" style={[animStyle, {position: "absolute", width: radius+size, height: radius+size, backgroundColor: debugText ? "rgba(255,255,255,0.2)" : null}]}>
+           <TouchableWithoutFeedback onPress={onPress} hitSlop={{top: slop, bottom: slop, left: slop, right: slop}}>
+                <View style={{height: size, width: size, position: "absolute"}}>
                 {icon}
-            </View>
+                <View style={{
+                    height: size, 
+                    width: size,
+                    position: "absolute",
+                    backgroundColor: highlighted ? "rgba(255,255,0,0.2)" : null,
+                    borderRadius: size
+                    }} />
+                </View>
+            </TouchableWithoutFeedback>
             <Text style={{color: "black", position: "absolute"}}> {debugText} </Text>
         </Animated.View>
     )

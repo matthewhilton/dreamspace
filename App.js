@@ -32,7 +32,8 @@ const theme = {
         primary: "#e2856e",
         accent: "#E2856E",
         accent2: "#F39C6B",
-        recordingButton: "#db5a44"
+        recordingButton: "#db5a44",
+        orbit: "rgba(255,255,255,0.1)"
     }
 }
 

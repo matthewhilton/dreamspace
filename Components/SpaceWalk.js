@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect} from "react"
 import { View, Dimensions, PanResponder, Animated } from "react-native";
-import { Button, IconButton, withTheme } from "react-native-paper"
+import { Button, IconButton, withTheme, Text } from "react-native-paper"
 import { useDispatch, useSelector } from "react-redux";
 import AnimatedPlanet from "./AnimatedPlanet";
 import AnimatedPopupForm from "./AnimatedPopupForm";
@@ -8,6 +8,8 @@ import SectionedJournalEntryForm from "./SectionedJournalEntryForm";
 import Planet3Icon from "../Images/Planet3Icon";
 import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import MoonCartoonIcon from "../Images/MoonCartoonIcon"
+import PlanetSummaryBottomForm from "./PlanetSummaryBottomForm";
 
 const SpaceWalk = (props) => {
     const screenHeight = Dimensions.get("screen").height;
@@ -40,13 +42,11 @@ const SpaceWalk = (props) => {
     function formClose(){
         setIsScaledUpward(false)
         setBackgroundIsScaledUpward(false)
-        setPanResponderEnabled(true)
     }
 
     function openForm(){
         setIsScaledUpward(true)
         setBackgroundIsScaledUpward(true)
-        setPanResponderEnabled(false)
     }
 
     
@@ -56,14 +56,16 @@ const SpaceWalk = (props) => {
     function matchTagsToPlanets(tags){
         let planets = [];
 
-        const radiusStep = 80 // <-- TODO make this step dependent on the size of the planet
+        const radiusStep = 50 // <-- TODO make this step dependent on the size of the planet
         let currentRadius = 50; // Start at 50 so the centre can have custom icon inside
 
         for(const tag of tags){
-            let planetIcon = <Planet3Icon />; // <-- TODO generate image based on factors about tag such as size and color
+            
+            let planetIcon = Math.random()*10 > 5 ? <Planet3Icon /> : <MoonCartoonIcon />; // <-- TODO generate image based on factors about tag such as size and color
             let planetSize = 20 + Math.random()*40;
             
             currentRadius += Math.round(planetSize/2+1)
+            currentRadius += radiusStep;
 
             planets.push({
                 tag: tag.name,
@@ -71,17 +73,17 @@ const SpaceWalk = (props) => {
                 size: planetSize,
                 radius: currentRadius,
                 startAngle: Math.random()*360,
-            })
-
-            currentRadius += radiusStep;
+            }) 
         }
-
         return planets;
     }
+
+
     return(
             <View style={{height: "200%", backgroundColor: props.theme.colors.mainScreenBackground || "white"}}>
               
                 <View style={{height: screenHeight, width: screenHeight, alignSelf: 'center'}}>
+               
                     <ReactNativeZoomableView 
                     bindToBorders={false} 
                     movementSensibility={1}
@@ -98,11 +100,25 @@ const SpaceWalk = (props) => {
                                 startAngle={0}
                                 centreCoordinate={{x: midX, y: midY}}
                                 />
+
+                                {planetData.map((planet) => {
+                                    const circularOrbitSize = Math.sqrt(Math.pow(planet.radius,2)+Math.pow(planet.radius,2))
+                                    return(
+                                    <View style={{
+                                        position: "absolute",
+                                        width: circularOrbitSize,
+                                        height: circularOrbitSize,
+                                        borderRadius: circularOrbitSize,
+                                        borderColor: props.theme.colors.orbit || "white",
+                                        borderWidth: 2
+                                    }}
+                                />
+                                )})}
                             
                             {planetData.map((planet) => (
                                 <AnimatedPlanet
-                                highlighted={planet.tag == planetSelected}
-                                onPress={() => setPlanetSelected(planet.tag)}
+                                highlighted={planet.tag == (planetSelected ? planetSelected.tag : null)}
+                                onPress={() => setPlanetSelected(planet)}
                                 key={planet.tag}
                                 size={planet.size}
                                 radius={planet.radius}
@@ -116,7 +132,7 @@ const SpaceWalk = (props) => {
                     </ReactNativeZoomableView>
                 </View>
                 
-                {planetSelected === null ?
+            
                 <View style={{
                     flexDirection: "row", 
                     width: "100%", 
@@ -127,39 +143,26 @@ const SpaceWalk = (props) => {
                     left: 0,
                     right: 0,
                     padding: 10
-                    }}>
-                     
-                    <View style={{flex: 1, margin: 5}}>
+                    }}>                     
+                    <View style={{flex: 1, flexDirection: 'row'}}>
                         <Button onPress={() => {
                             openForm()
                             }} mode="contained" > New Entry </Button>
-                    </View>
-
-                    <View style={{margin: 5}}>
-                    <IconButton icon={"menu"} onPress={() => {dispatch({type: "NUKE"})}}/>
-                    </View>
-                        
+                            <IconButton icon={"menu"} onPress={() => {dispatch({type: "NUKE"})}}/>
+                    </View>   
                 </View>
-                    :   
-                <View style={{
-                    flexDirection: "row", 
-                    width: "100%", 
-                    alignItems: 'center', 
-                    position: "absolute", 
-                    width: "100%", 
-                    bottom: Dimensions.get("screen").height +20, 
-                    left: 0,
-                    right: 0,
-                    padding: 10
-                }}>
-                    {
-                        // TODO put some stuff in here with a pullup sheet on information about the "planet"
-                    }
-                    <Button> Planet Selected </Button>
-                    <Button onPress={() => setPlanetSelected(null)}> Close </Button>
-                </View>
-
-            }       
+                  
+                <AnimatedPopupForm isMoved={planetSelected !== null} startX={0} startY={screenHeight} endY={screenHeight - 200} duration={150}>
+                    <PlanetSummaryBottomForm 
+                    planet={planetSelected} 
+                    height={200} 
+                    onClose={() => setPlanetSelected(null)}
+                    onView={() => {
+                        ///TODO
+                    }}
+                    />
+                </AnimatedPopupForm>
+                  
 
                 <AnimatedPopupForm isMoved={isScaledUpward} startX={0} startY={screenHeight} endY={40} duration={300}>
                     <SectionedJournalEntryForm 

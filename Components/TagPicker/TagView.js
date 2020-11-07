@@ -33,8 +33,8 @@ const TagView = ({tags=[], emptyContent=<Text />,loading=false,onPressed=functio
                                       backgroundColor: item.selected ? item.color : Color(item.color).darken(0.5).hex(),
                                   }}
                                   selectedColor={Color(item.color).darken(0.9).hex()}
-                                  onPress={() => onPressed(item.name)}
-                                  onLongPress={() => onLongPressed(item.name)}
+                                  onPress={() => onPressed(item.uuid)}
+                                  onLongPress={() => onLongPressed(item.uuid)}
                                   selected={item.selected}
                                     mode={"flat"}
                             > {item.name} </Chip>

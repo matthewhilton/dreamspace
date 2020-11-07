@@ -8,6 +8,10 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import TagView from "./TagView";
 import AlertAsync from "react-native-alert-async"
 import KeyboardSpacer from "react-native-keyboard-spacer";
+
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
+
 const TagPickerForm = (props) => {
     const sheetRef = useRef(null)
     const sheetHeight = Dimensions.get("screen").height*0.8;
@@ -24,11 +28,11 @@ const TagPickerForm = (props) => {
         sheetRef.current.close();
     }
 
-    function tagPressed(tagPressedName){
+    function tagPressed(tagPressedUUID){
         // Get the currently selected tags (from props.value)
         let currentSelected = [...props.value]
         for(const [i, tag] of currentSelected.entries()){
-            if(tag.name == tagPressedName){
+            if(tag.uuid == tagPressedUUID){
                 // Is already in the list (so should remove it and update controller via props)
                 currentSelected.splice(i, 1);
                 props.onChange(currentSelected);
@@ -38,11 +42,11 @@ const TagPickerForm = (props) => {
 
         // Tag not found on list already, so add it (and then update controller via props)
         // First get the tag data 
-        const tagPressedData = tags.find(tag => tag.name == tagPressedName)
+        const tagPressedData = tags.find(tag => tag.uuid == tagPressedUUID)
         props.onChange([...props.value, tagPressedData])
     }
 
-    async function tagLongPressed(tagName){
+    async function tagLongPressed(tagUUID){
         // On long press, show alert to delete tag
 
         const choice = await AlertAsync(
@@ -59,11 +63,11 @@ const TagPickerForm = (props) => {
         }
 
         // Else continue on deleting tag
-        dispatch({type: "DELETE", object: "TAG", data: tagName})
+        dispatch({type: "DELETE", object: "TAG", data: tagUUID})
 
         // Also delete from prop controller if exists there
         let newValue = [...props.value]
-        newValue = newValue.filter((item) => {if(item.name != tagName) return item})
+        newValue = newValue.filter((item) => {if(item.uuid != tagUUID) return item})
         props.onChange(newValue)
     }
 
@@ -74,19 +78,22 @@ const TagPickerForm = (props) => {
         }
 
         // User typed a tag that is already in the list, so just select it
-        if(tags.some(item => item.name == customTagText)){
-            tagPressed(customTagText)
+        // First find the UUID to be able to select it
+        const tagPressedSearch = tags.find(item => item.name.toUpperCase() == customTagText.toUpperCase())
+        if(tagPressedSearch != null){
+            tagPressed(tagPressedSearch.uuid)
             setCustomTagText(null)
             return;
         }
 
-        const tagColor = "white"
+        const defaultTagColor = "white"
 
         // New tag - dispatch to redux store and add to list of tags selected
         const tagData = {
             name: customTagText,
             used: 0,
-            color: tagColor
+            color: defaultTagColor,
+            uuid: uuidv4(),
         }
 
         dispatch({type: "INSERT", object: "TAG", data: tagData})
@@ -108,11 +115,11 @@ const TagPickerForm = (props) => {
 
     function addDefaultTags() {
         const defaultTags = [
-            { name: "False Awakening", used: 0, selected: false, color: "#f27844" },
-            { name: "Flying", used: 0, selected: false, color: "#62e3dc" },
-            { name: "Recurring", used: 0, selected: false, color: "#5dde68" },
-            { name: "Nightmare", used: 0, selected: false, color: "#635c5c" },
-            { name: "Sleep Paralysis", used: 0, selected: false, color: "#b440cf" }
+            { name: "False Awakening", used: 0, selected: false, color: "#f27844", uuid: uuidv4() },
+            { name: "Flying", used: 0, selected: false, color: "#62e3dc", uuid: uuidv4() },
+            { name: "Recurring", used: 0, selected: false, color: "#5dde68", uuid: uuidv4() },
+            { name: "Nightmare", used: 0, selected: false, color: "#635c5c", uuid: uuidv4() },
+            { name: "Sleep Paralysis", used: 0, selected: false, color: "#b440cf", uuid: uuidv4() }
         ]
 
         // Dispatch all these to the redux store
@@ -157,8 +164,8 @@ const TagPickerForm = (props) => {
                             <TagView
                             title={""}
                             tags={tagsWithSelectedProperty}
-                            onPressed={(tagName) => tagPressed(tagName)}
-                            onLongPressed={(tagName) => tagLongPressed(tagName)}
+                            onPressed={(tagUUID) => tagPressed(tagUUID)}
+                            onLongPressed={(tagUUID) => tagLongPressed(tagUUID)}
                             emptyContent={
                                 <View style={{alignItems: "center"}}>
                                     <Text style={{textAlign: "center", color: props.theme.colors.subtext}}> Looks like you don't have any tags yet. Would you like to add some common ones? </Text>

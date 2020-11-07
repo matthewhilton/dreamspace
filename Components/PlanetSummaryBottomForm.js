@@ -11,7 +11,7 @@ const PlanetSummaryBottomForm = ({planet={}, height=200, onClose=function(){},on
     
     useEffect(() => {
         if(planet != null){
-            console.log(allTags)
+
             for(const tag of allTags){
                 if(tag.name === planet.tag){
                     setTagData(tag)
@@ -35,7 +35,7 @@ const PlanetSummaryBottomForm = ({planet={}, height=200, onClose=function(){},on
 
                 <View style={{flex: 2.5, flexDirection: 'column', justifyContent:"space-between"}}>
                     <View style={{flexDirection: "column"}}>
-                        <Title style={{fontWeight: 'bold', fontSize: "30"}}> {planet.tag} </Title>
+                        <Title style={{fontWeight: 'bold', fontSize: 30}}> {planet.tag} </Title>
                         <Text style={{marginLeft: 5}}> {tagData.used} dreams </Text> 
                     </View>
                     {

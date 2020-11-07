@@ -11,8 +11,6 @@ const JournalViewer = (props) => {
 
     const dispatch = useDispatch()
 
-    console.log(journal)
-
     return(
         <View>
             <Button mode="contained" onPress={() => dispatch({type: "NUKE"})}> Nuke Redux Store </Button>

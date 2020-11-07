@@ -62,13 +62,14 @@ const SpaceWalk = (props) => {
         for(const tag of tags){
             
             let planetIcon = Math.random()*10 > 5 ? <Planet3Icon /> : <MoonCartoonIcon />; // <-- TODO generate image based on factors about tag such as size and color
-            let planetSize = 20 + Math.random()*40;
+            let planetSize = 20 + tag.used*5; // TODO make this a logairthm / not linear function
             
             currentRadius += Math.round(planetSize/2+1)
             currentRadius += radiusStep;
 
             planets.push({
                 tag: tag.name,
+                tagUUID: tag.uuid,
                 icon: planetIcon,
                 size: planetSize,
                 radius: currentRadius,
@@ -104,7 +105,9 @@ const SpaceWalk = (props) => {
                                 {planetData.map((planet) => {
                                     const circularOrbitSize = Math.sqrt(Math.pow(planet.radius,2)+Math.pow(planet.radius,2))
                                     return(
-                                    <View style={{
+                                    <View 
+                                    key={planet.tag + "_orbit_view"}
+                                    style={{
                                         position: "absolute",
                                         width: circularOrbitSize,
                                         height: circularOrbitSize,

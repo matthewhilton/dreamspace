@@ -7,8 +7,19 @@ function tags(state = [], action){
 
             case "DELETE":
                 let filteredState = [...state]
-                filteredState = filteredState.filter((item) => {if(item.name != action.data) return item})
+                filteredState = filteredState.filter((item) => {if(item.uuid != action.data) return item})
                 return filteredState;
+
+            case "MODIFY":
+                let modifiedState = [...state]
+                let newData = action.data;
+                for(const [i, tag] of state.entries()){
+                    if(tag.uuid == action.tagToModifyUUID){
+                        modifiedState[i] = newData;
+                        break;
+                    }
+                }
+                return modifiedState;
         }
     }
 

@@ -2,7 +2,7 @@ import { RECORDING_OPTION_IOS_BIT_RATE_STRATEGY_CONSTANT } from "expo-av/build/A
 import React, {useEffect, useRef } from "react"
 import {View, Text, TouchableWithoutFeedback, Animated, Easing} from "react-native"
 
-const AnimatedPlanet = ({radius=20, icon, debugText, startAngle, size=50, speedModifier=200, highlighted, onPress=function(){}}) => {
+const AnimatedPlanet = ({radius=20, icon, debugText, startAngle, size=50, speedModifier=250, highlighted, onPress=function(){}}) => {
     const positionRef = useRef(new Animated.Value(0)).current;
     const range = positionRef.interpolate({
         inputRange: [0,1],
@@ -13,7 +13,7 @@ const AnimatedPlanet = ({radius=20, icon, debugText, startAngle, size=50, speedM
         Animated.loop(
             Animated.timing(positionRef, {
                 toValue: 1,
-                duration: radius*speedModifier,
+                duration: speedModifier*radius,
                 useNativeDriver: true,
                 easing: Easing.linear
             })

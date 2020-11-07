@@ -13,6 +13,7 @@ import DatePickerForm from "./DatePickerForm";
 import HorizontalRule from "./HorizontalRule";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import * as Haptics from 'expo-haptics';
+import {useDispatch} from "react-redux"
 import LottieView from 'lottie-react-native';
 
 import { FormResultsPreview } from "./FormResultsPreview";
@@ -36,9 +37,31 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
         shouldUnregister: false
     });
 
+    const dispatch = useDispatch();
+
     // Form functions
     const onSubmit = (data, e) => {
-        console.log("Form data, ", data)
+
+        dispatch({
+            object: "JOURNAL", 
+            type: "INSERT",
+            data: data,        
+        })
+
+        // Also update the tag usage stats
+        const newTagData = data.tags.map((tag) => {
+            tag.used += 1;
+            return tag;
+        })
+        for(const tag of newTagData){
+            dispatch({
+                object: "TAG", 
+                type: "MODIFY",
+                tagToModifyUUID: tag.uuid,
+                data: tag,
+            })
+        }
+
         // TODO save data to redux,
         const success = true;// <- get value from redux, test if stored correctly
 
@@ -76,7 +99,6 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
         if(keyboardSpacing != 0){
             setTimeout(() => storyScrollRef.current.scrollToEnd(), 300)
         }
-        
     }, [keyboardSpacing])
 
     async function shouldCloseForm(){
@@ -100,17 +122,9 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
     const storyScrollRef = useRef(null)
 
     const screenHeight = Dimensions.get("screen").height;
-    const screenWidth = Dimensions.get("screen").width;
     const [formHeight, setFormHeight] = useState("100%")
 
-    function successAnimationFinished(){
-        Haptics.notificationAsync("success")
-        setTimeout(() => props.onClose, 300)
-    }
-
-
     return(
-      
             <View style={{
                 width: "100%",
                 height: screenHeight-60,

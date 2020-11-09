@@ -8,7 +8,6 @@ export default MenuHamburger = () => {
             <IconButton 
             onPress={() => navigation.openDrawer()} 
             icon="menu"
-            size={35}
             />
     )
 }

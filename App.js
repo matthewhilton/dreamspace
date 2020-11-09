@@ -7,6 +7,7 @@ import { store, persistor } from "./Redux/store"
 import SpaceWalk from './Components/SpaceWalk';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer, DarkTheme } from '@react-navigation/native';
+import JournalLibrary from "./Components/JournalLibrary"
 
 const theme = {
 
@@ -49,6 +50,7 @@ export default function App() {
                             <NavigationContainer theme={CombinedDarkTheme}>
                                 <Drawer.Navigator initialRouteName="Home">
                                     <Drawer.Screen name="Home" component={SpaceWalk} />
+                                    <Drawer.Screen name="Journal" component={JournalLibrary} />
                                 </Drawer.Navigator>
                             </NavigationContainer>
                         </PaperProvider>

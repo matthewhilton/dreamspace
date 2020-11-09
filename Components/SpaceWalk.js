@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect} from "react"
-import { View, Dimensions, PanResponder, Animated } from "react-native";
+import { View, Dimensions, PanResponder, Animated, Image, ImageBackground} from "react-native";
 import { Button, IconButton, withTheme, Text } from "react-native-paper"
 import { useDispatch, useSelector } from "react-redux";
 import AnimatedPlanet from "./AnimatedPlanet";
@@ -52,8 +52,15 @@ const SpaceWalk = (props) => {
     }
 
     function openMenu(){
-        
         nav.dispatch(DrawerActions.openDrawer());
+    }
+
+    function planetPressed(planet){
+        if(planet === planetSelected){
+            setPlanetSelected(null)
+        } else {
+            setPlanetSelected(planet)
+        }
     }
 
     // In the store, matches planets to tags, and adds/removes as necessary
@@ -88,18 +95,21 @@ const SpaceWalk = (props) => {
 
 
     return(
-            <View style={{height: "200%", backgroundColor: props.theme.colors.mainScreenBackground || "white"}}>
-              
-                <View style={{height: screenHeight, width: screenHeight, alignSelf: 'center'}}>
+       
                
+            <View style={{height: "200%", backgroundColor: props.theme.colors.mainScreenBackground || "white"}}>
+                 
+
+                <View style={{height: screenHeight, width: screenHeight, alignSelf: 'center'}}>
                     <ReactNativeZoomableView 
-                    bindToBorders={false} 
+                    bindToBorders={false}
                     movementSensibility={1}
                     doubleTapDelay={0}
                     onZoomAfter={() => {}}
                     maxZoom={1.3}
                     minZoom={0.7}
                     >
+                        
                         <View style={{height: '100%', width: "100%", alignItems: "center", justifyContent: "center"}}>
                             <AnimatedPlanet 
                                 size={40}
@@ -128,7 +138,7 @@ const SpaceWalk = (props) => {
                             {planetData.map((planet) => (
                                 <AnimatedPlanet
                                 highlighted={planet.tag == (planetSelected ? planetSelected.tag : null)}
-                                onPress={() => setPlanetSelected(planet)}
+                                onPress={() => planetPressed(planet)}
                                 key={planet.tag}
                                 size={planet.size}
                                 radius={planet.radius}
@@ -139,6 +149,7 @@ const SpaceWalk = (props) => {
                             ))}
                         
                         </View>
+                 
                     </ReactNativeZoomableView>
                 </View>
                 
@@ -184,7 +195,10 @@ const SpaceWalk = (props) => {
                     onAnimationHasReducedSize={() => setBackgroundIsScaledUpward(false)}
                     />
                 </AnimatedPopupForm>
+
+              
             </View>
+            
     )
 }
 

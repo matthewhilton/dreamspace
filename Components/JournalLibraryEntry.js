@@ -20,7 +20,7 @@ const JournalLibaryEntry = ({data, theme}) => {
             }}
                 >
                 <View style={{flexDirection: "row", alignItems: "center", flex: 1}}>
-                    <Text style={{fontWeight: "bold", fontSize: 23}}> {data.title}</Text> 
+                    <Text style={{fontWeight: "bold"}}> {data.title || "untitled"}</Text> 
                     {data.drawings.length > 0 ? 
                         <Icon 
                             name={"file-image"} 

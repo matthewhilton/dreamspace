@@ -29,7 +29,7 @@ const JournalLibrary = (props) => {
     }
 
     return(
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, margin: 6}}>
             <HeaderWithNav />
             <View style={{
                 flex: 1, 
@@ -50,7 +50,6 @@ const JournalLibrary = (props) => {
                     />
                     <FlatList
                     style={{padding: 10}}
-                    scrollEnabled={false}
                     keyExtractor={item => item.date}
                         data={journalEntries.sort(dateFilter).filter(searchFilter)}
                         renderItem={({item}) => <JournalLibaryEntry data={item} />}

@@ -10,6 +10,7 @@ import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/R
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import MoonCartoonIcon from "../Images/MoonCartoonIcon"
 import PlanetSummaryBottomForm from "./PlanetSummaryBottomForm";
+import { DrawerActions, useNavigation } from "@react-navigation/native";
 
 const SpaceWalk = (props) => {
     const screenHeight = Dimensions.get("screen").height;
@@ -17,6 +18,7 @@ const SpaceWalk = (props) => {
     const [planetData, setPlanetData] = useState([])
 
     const dispatch = useDispatch();
+    const nav = useNavigation()
 
     const tags = useSelector(state => state.tags)
 
@@ -49,7 +51,10 @@ const SpaceWalk = (props) => {
         setBackgroundIsScaledUpward(true)
     }
 
-    
+    function openMenu(){
+        
+        nav.dispatch(DrawerActions.openDrawer());
+    }
 
     // In the store, matches planets to tags, and adds/removes as necessary
     // Returns a list of planets to store in the redux store
@@ -60,22 +65,24 @@ const SpaceWalk = (props) => {
         let currentRadius = 50; // Start at 50 so the centre can have custom icon inside
 
         for(const tag of tags){
-            
-            let planetIcon = Math.random()*10 > 5 ? <Planet3Icon /> : <MoonCartoonIcon />; // <-- TODO generate image based on factors about tag such as size and color
-            let planetSize = 20 + tag.used*5; // TODO make this a logairthm / not linear function
-            
-            currentRadius += Math.round(planetSize/2+1)
-            currentRadius += radiusStep;
-
-            planets.push({
-                tag: tag.name,
-                tagUUID: tag.uuid,
-                icon: planetIcon,
-                size: planetSize,
-                radius: currentRadius,
-                startAngle: Math.random()*360,
-            }) 
+            if(tag.used > 0){
+                let planetIcon = Math.random()*10 > 5 ? <Planet3Icon /> : <MoonCartoonIcon />; // <-- TODO generate image based on factors about tag such as size and color
+                let planetSize = 20 + tag.used*5; // TODO make this a logairthm / not linear function
+                
+                currentRadius += Math.round(planetSize/2+1)
+                currentRadius += radiusStep;
+    
+                planets.push({
+                    tag: tag.name,
+                    tagUUID: tag.uuid,
+                    icon: planetIcon,
+                    size: planetSize,
+                    radius: currentRadius,
+                    startAngle: Math.random()*360,
+                }) 
+            }
         }
+
         return planets;
     }
 
@@ -135,23 +142,27 @@ const SpaceWalk = (props) => {
                     </ReactNativeZoomableView>
                 </View>
                 
-            
                 <View style={{
                     flexDirection: "row", 
                     width: "100%", 
                     alignItems: 'center', 
                     position: "absolute", 
                     width: "100%", 
-                    bottom: Dimensions.get("screen").height +20, 
+                    bottom: Dimensions.get("screen").height + 30, 
                     left: 0,
                     right: 0,
-                    padding: 10
-                    }}>                     
-                    <View style={{flex: 1, flexDirection: 'row'}}>
-                        <Button onPress={() => {
-                            openForm()
-                            }} mode="contained" > New Entry </Button>
-                            <IconButton icon={"menu"} onPress={() => {dispatch({type: "NUKE"})}}/>
+                    padding: 20,
+                    flex: 1,       
+                    }}>              
+                    <View style={{flexDirection: 'row', width: "100%", justifyContent: "space-between", alignItems: 'center'}}>
+                        <IconButton icon={"menu"} onPress={openMenu}/>
+
+                        <Button 
+                        icon={"pencil"}
+                        onPress={openForm} 
+                        mode="contained"
+                        
+                        > New Entry </Button>
                     </View>   
                 </View>
                   
@@ -166,7 +177,6 @@ const SpaceWalk = (props) => {
                     />
                 </AnimatedPopupForm>
                   
-
                 <AnimatedPopupForm isMoved={isScaledUpward} startX={0} startY={screenHeight} endY={40} duration={300}>
                     <SectionedJournalEntryForm 
                     onClose={() => formClose()} 

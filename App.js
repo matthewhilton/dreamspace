@@ -1,19 +1,12 @@
 import * as React from 'react';
-import { View} from 'react-native';
-import NewJournalEntrySheet from "./Components/NewJournalEntrySheet";
-import { Button, DefaultTheme, withTheme, Provider as PaperProvider, Snackbar, Title} from 'react-native-paper';
+import { Button, DefaultTheme, withTheme, Provider as PaperProvider} from 'react-native-paper';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet'
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
-import JournalViewer from "./Components/JournalViewer"
 import { store, persistor } from "./Redux/store"
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import MenuHamburger from './Components/MenuHamburger';
-import JournalLibrary from './Components/JournalLibrary';
-import HeaderWithNav from './Components/HeaderWithNav';
 import SpaceWalk from './Components/SpaceWalk';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 
 const theme = {
 
@@ -37,6 +30,13 @@ const theme = {
     }
 }
 
+const CombinedDarkTheme = {
+    ...theme,
+    ...DarkTheme,
+    colors: { ...DarkTheme.colors, ...theme.colors },
+  };
+
+const Drawer = createDrawerNavigator();
 
 export default function App() {
 
@@ -45,8 +45,12 @@ export default function App() {
             <Provider store={store}>
                 <PersistGate loading={null} persistor={persistor}>
                     <ActionSheetProvider>
-                        <PaperProvider theme={theme}>
-                            <SpaceWalk />
+                        <PaperProvider theme={CombinedDarkTheme}>
+                            <NavigationContainer theme={CombinedDarkTheme}>
+                                <Drawer.Navigator initialRouteName="Home">
+                                    <Drawer.Screen name="Home" component={SpaceWalk} />
+                                </Drawer.Navigator>
+                            </NavigationContainer>
                         </PaperProvider>
                     </ActionSheetProvider>
                 </PersistGate>

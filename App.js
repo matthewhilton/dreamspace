@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, DefaultTheme, withTheme, Provider as PaperProvider} from 'react-native-paper';
+import { Button, DefaultTheme, withTheme, Provider as PaperProvider, configureFonts} from 'react-native-paper';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet'
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
@@ -38,10 +38,35 @@ const theme = {
     }
 }
 
+const fontConfig = {
+    default: {
+      regular: {
+        fontFamily: 'Helvetica Neue',
+        fontWeight: 'normal',
+      },
+      medium: {
+        fontFamily: 'Helvetica Neue',
+        fontWeight: 'normal',
+      },
+      light: {
+        fontFamily: 'Helvetica Neue',
+        fontWeight: 'normal',
+      },
+      thin: {
+        fontFamily: 'Helvetica Neue',
+        fontWeight: 'normal',
+      },
+    },
+  };
+
+  fontConfig.ios = fontConfig.default;
+  fontConfig.android = fontConfig.default;
+
 const CombinedDarkTheme = {
     ...theme,
     ...DarkTheme,
     colors: { ...DarkTheme.colors, ...theme.colors },
+    fonts: configureFonts(fontConfig)
   };
 
 const Drawer = createDrawerNavigator();

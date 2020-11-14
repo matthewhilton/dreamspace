@@ -56,7 +56,7 @@ const JournalLibrary = (props) => {
                     <FlatList
                     style={{padding: 10}}
                     keyExtractor={item => item.date}
-                        data={journalEntries.sort(dateFilter).filter(searchFilter)}
+                        data={journalEntries.sort(dateFilter).filter(searchFilter).reverse()}
                         renderItem={({item}) => <JournalLibaryEntry data={item} onPress={() => navigation.navigate("JournalEntryView", {
                             data: item
                         })} />}

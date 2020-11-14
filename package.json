@@ -52,7 +52,8 @@
     "retext": "^7.0.1",
     "retext-keywords": "^6.0.0",
     "undefined": "react-navigation/stack",
-    "uuid": "^3.4.0"
+    "uuid": "^3.4.0",
+    "expo-font": "~8.3.0"
   },
   "devDependencies": {
     "@babel/core": "7.9.0",

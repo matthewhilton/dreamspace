@@ -13,7 +13,7 @@ const JournalEntryView = ({route, navigation, theme}) => {
 
     useEffect(() => {
         navigation.setOptions({
-            title: data.title || "untitled"
+            title: ""
         })
 
         // Run functions to get statistics whenever the data changes
@@ -27,10 +27,10 @@ const JournalEntryView = ({route, navigation, theme}) => {
         <View style={{margin: 10}}>
             <View style={{marginBottom: 20}}>
                 <Text style={{fontWeight: "bold", fontSize: 40}}> {data.title || "untitled"} </Text>
-                <Text style={{color: theme.colors.subtext, fontSize: 15, marginLeft: 8}}>{new Date(data.date).toLocaleDateString()} ({Math.round(Math.abs((new Date() - new Date(data.date)) / oneDay))} DAYS AGO)</Text>
+                <Text style={{color: theme.colors.subtext, fontSize: 15, fontWeight: "bold", marginLeft: 10}}>{new Date(data.date).toLocaleDateString()} ({Math.round(Math.abs((new Date() - new Date(data.date)) / oneDay))} DAYS AGO)</Text>
             </View>
 
-            <View style={{flexDirection: 'row'}}> 
+            <View style={{flexDirection: 'row', marginHorizontal: 10}}> 
                 <DreamStatisticPoint icon="brain" value={data.memory} average={averages.memory} />
                 <DreamStatisticPoint icon="eye" value={data.lucidity} average={averages.lucidity}/>
                 <DreamStatisticPoint icon="sun" value={data.vividness} average={averages.vividness}/>

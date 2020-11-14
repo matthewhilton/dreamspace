@@ -1,6 +1,5 @@
 const getJournalAverages = (allJournalEntries) =>{
     const entries = [...allJournalEntries];
-    console.log("all entries: ", entries);
 
     const memory = entries.reduce((a,b) => a + b.memory, 0)
     const averageMemory = Math.round(memory / entries.length);

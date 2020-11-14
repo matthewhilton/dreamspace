@@ -6,9 +6,11 @@ import { Provider } from 'react-redux';
 import { store, persistor } from "./Redux/store"
 import SpaceWalk from './Components/SpaceWalk';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import JournalLibrary from "./Components/JournalLibrary"
-
+import useDispatch from "react-redux"
+import JournalEntryView from './Components/JournalEntryView';
 const theme = {
 
     ...DefaultTheme,
@@ -27,7 +29,12 @@ const theme = {
         accent: "#E2856E",
         accent2: "#F39C6B",
         recordingButton: "#db5a44",
-        orbit: "rgba(255,255,255,0.1)"
+        orbit: "rgba(255,255,255,0.1)",
+        statisticPoint: {
+            up: "#4dbd5c",
+            same: "#7a7a7a",
+            down: "#c74668"
+        }
     }
 }
 
@@ -38,6 +45,14 @@ const CombinedDarkTheme = {
   };
 
 const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
+
+const JournalLibraryNavigator = () => (
+    <Stack.Navigator initialRouteName="JournalLibrary">
+        <Stack.Screen name="JournalLibrary" component={JournalLibrary} options={{title: "Journal Library", headerShown: false}} />
+        <Stack.Screen name="JournalEntryView" component={JournalEntryView}/>
+    </Stack.Navigator>
+)
 
 export default function App() {
 
@@ -50,8 +65,9 @@ export default function App() {
                             <NavigationContainer theme={CombinedDarkTheme}>
                                 <Drawer.Navigator initialRouteName="Home">
                                     <Drawer.Screen name="Home" component={SpaceWalk} />
-                                    <Drawer.Screen name="Journal" component={JournalLibrary} />
+                                    <Drawer.Screen name="Journal" component={JournalLibraryNavigator} />
                                 </Drawer.Navigator>
+
                             </NavigationContainer>
                         </PaperProvider>
                     </ActionSheetProvider>

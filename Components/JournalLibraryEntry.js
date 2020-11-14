@@ -4,10 +4,10 @@ import { withTheme, Text } from "react-native-paper";
 import Icon from 'react-native-vector-icons/FontAwesome5';
 var Color = require('color');
 
-const JournalLibaryEntry = ({data, theme}) => {
+const JournalLibaryEntry = ({data, theme, onPress}) => {
 
     return(
-        <TouchableWithoutFeedback onPress={() => console.log("journal entry pressed")}>
+        <TouchableWithoutFeedback onPress={onPress}>
             <View style={{
                 flexDirection: "row", 
                 alignItems: "center", 
@@ -20,7 +20,7 @@ const JournalLibaryEntry = ({data, theme}) => {
             }}
                 >
                 <View style={{flexDirection: "row", alignItems: "center", flex: 1}}>
-                    <Text style={{fontWeight: "bold"}}> {data.title || "untitled"}</Text> 
+                    <Text style={{fontWeight: data.title ? "bold" : null, fontStyle: data.title ? null : "italic"}}> {data.title || "untitled"}</Text> 
                     {data.drawings.length > 0 ? 
                         <Icon 
                             name={"file-image"} 

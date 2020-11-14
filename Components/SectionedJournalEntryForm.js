@@ -15,6 +15,8 @@ import KeyboardSpacer from "react-native-keyboard-spacer";
 import * as Haptics from 'expo-haptics';
 import {useDispatch} from "react-redux"
 import LottieView from 'lottie-react-native';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 
 import { FormResultsPreview } from "./FormResultsPreview";
 
@@ -41,6 +43,7 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
 
     // Form functions
     const onSubmit = (data, e) => {
+        data.uuid = uuidv4()
 
         dispatch({
             object: "JOURNAL", 

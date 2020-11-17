@@ -298,7 +298,7 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
                                     name="date"
                                     control={control}
                                     rules={{required: true}}
-                                    defaultValue={new Date()}
+                                    defaultValue={new Date().toString()}
                                     render={(props) =>
                                         <DatePickerForm
                                             onChange={(date) => props.onChange(date)}

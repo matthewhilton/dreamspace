@@ -11,6 +11,8 @@ import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import JournalLibrary from "./Components/JournalLibrary"
 import useDispatch from "react-redux"
 import JournalEntryView from './Components/JournalEntryView';
+import SettingsPage from "./Components/SettingsPage"
+import DrawingModalPreview from "./Drawing/DrawingModalPreview"
 const theme = {
 
     ...DefaultTheme,
@@ -75,10 +77,10 @@ const Stack = createStackNavigator();
 const JournalLibraryNavigator = () => (
     <Stack.Navigator initialRouteName="JournalLibrary">
         <Stack.Screen name="JournalLibrary" component={JournalLibrary} options={{title: "Journal Library", headerShown: false}} />
-        <Stack.Screen name="JournalEntryView" component={JournalEntryView}/>
+        <Stack.Screen name="JournalEntryView" component={JournalEntryView} />
+        <Stack.Screen name="JournalImageView" options={{title: "Drawing Preview"}} component={DrawingModalPreview} />
     </Stack.Navigator>
 )
-
 export default function App() {
 
     return (
@@ -91,8 +93,8 @@ export default function App() {
                                 <Drawer.Navigator initialRouteName="Home">
                                     <Drawer.Screen name="Home" component={SpaceWalk} />
                                     <Drawer.Screen name="Journal" component={JournalLibraryNavigator} />
+                                    <Drawer.Screen name="Settings" component={SettingsPage} />
                                 </Drawer.Navigator>
-
                             </NavigationContainer>
                         </PaperProvider>
                     </ActionSheetProvider>

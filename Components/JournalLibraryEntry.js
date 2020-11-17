@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 var Color = require('color');
 
 const JournalLibaryEntry = ({data, theme, onPress}) => {
-
+    const dateString = new Date(data.date).toLocaleDateString()
     return(
         <TouchableWithoutFeedback onPress={onPress}>
             <View style={{
@@ -46,7 +46,9 @@ const JournalLibaryEntry = ({data, theme, onPress}) => {
                             />: null
                     } 
                 </View>
-                <Text style={{fontSize: 15}}> {new Date(data.date).toLocaleDateString()} </Text>
+                <Text style={{fontSize: 15}}> {dateString} </Text>
+
+                
             </View>
         </TouchableWithoutFeedback>
     )

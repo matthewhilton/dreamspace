@@ -6,6 +6,7 @@ import {LightenDarkenColor} from "lighten-darken-color";
 import ActionBar from "../ActionBar";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AlertAsync from "react-native-alert-async";
+import * as Haptics from 'expo-haptics';
 
 const AudioRecordingInput = (props) => {
     const [permissions, setPermissions] = useState({})
@@ -109,6 +110,7 @@ const AudioRecordingInput = (props) => {
     function submitRecording() {
         // Emit the new audio
         props.onChange(recordingData)
+        Haptics.impactAsync("heavy")
     }
 
     async function tryClose() {
@@ -126,14 +128,15 @@ const AudioRecordingInput = (props) => {
             if(choice == 'no'){
                 return;
             }
+            setRecordingData(null)
         }
-
+        
         props.onClose()
     }
 
 
     if(permissions.status == "denied"){
-        return(null);
+        return(<Text> Permissions Error </Text>);
     } else {
         return(
             <View style={{

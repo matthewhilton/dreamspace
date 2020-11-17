@@ -10,6 +10,10 @@ const AudioForm = (props) => {
     const [open, setOpen] = useState(false)
     const { showActionSheetWithOptions } = useActionSheet();
 
+    useEffect(() => {
+        props.onOpenChange(open)
+    }, [open])
+
     return(
         <>
 
@@ -41,7 +45,7 @@ const AudioForm = (props) => {
                                 (buttonIndex) => {
                                     if(buttonIndex == 1){
                                         // Button index 1 is delete button, so delete this image
-                                        let newArray = [...recordings];
+                                        let newArray = [...props.value];
                                         newArray.splice(index, 1);
                                         props.onChange(newArray);
                                     }

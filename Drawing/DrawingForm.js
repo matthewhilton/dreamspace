@@ -5,6 +5,7 @@ import {View} from "react-native";
 import DrawingPreview from "./DrawingPreview";
 import HorizontalGallery from "../Components/HorizontalGallery";
 import {useActionSheet} from "@expo/react-native-action-sheet";
+import * as Haptics from 'expo-haptics';
 
 const DrawingForm = (props) => {
     const [drawingOpen, setDrawingOpen] = useState(false)
@@ -26,6 +27,7 @@ const DrawingForm = (props) => {
                     onSubmit={(data) => {
                         props.onChange([...props.value, data])
                         setDrawingOpen(false)
+                        Haptics.impactAsync("heavy")
                     }}/> : <Button 
                                     icon="plus" 
                                     onPress={() => setDrawingOpen(true)} 
@@ -50,7 +52,7 @@ const DrawingForm = (props) => {
                                             (buttonIndex) => {
                                                 if(buttonIndex == 1){
                                                     // Button index 1 is delete button, so delete this image
-                                                    let newArray = [...drawings];
+                                                    let newArray = [...props.value];
                                                     newArray.splice(index, 1);
                                                     props.onChange(newArray);
                                                 }

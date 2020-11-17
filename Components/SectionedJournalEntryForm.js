@@ -17,7 +17,6 @@ import {useDispatch} from "react-redux"
 import LottieView from 'lottie-react-native';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
-
 import { FormResultsPreview } from "./FormResultsPreview";
 
 const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
@@ -25,6 +24,7 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
     const [section, setSection] = useState(0)
 
     const [drawingOpen, setDrawingOpen] = useState(false)
+    const [audioRecordingOpen, setAudioRecordingOpen] = useState(false)
 
     const [keyboardSpacing, setKeyboardSpacing] = useState(0)
 
@@ -94,7 +94,7 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
         }
     }, [section])
 
-    function continueForm(amount){
+    async function continueForm(amount){
         setSection(section + amount)
     }
 
@@ -126,6 +126,8 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
 
     const screenHeight = Dimensions.get("screen").height;
     const [formHeight, setFormHeight] = useState("100%")
+
+    const nextButtonDisabled = drawingOpen || audioRecordingOpen;
 
     return(
             <View style={{
@@ -187,10 +189,10 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
                                     <AudioForm
                                     onChange={(data) => props.onChange(data)}
                                     value={props.value}
+                                    onOpenChange={(val) => setAudioRecordingOpen(val)}
                                     />
                                 )}
                             />    
-                        
                         
                             <Controller
                                 name="description"
@@ -343,7 +345,7 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
                     
                             {(section > 0 && section != (sectionHeaders.length + 1))? <Button onPress={() => continueForm(-1)} > Back </Button> : null}
                             
-                            {section < sectionHeaders.length ? <Button onPress={() => continueForm(1)} style={{borderRadius: 30}} contentStyle={{padding: 2, borderRadius: 30}} labelStyle={{fontWeight: "bold", fontSize: 20}}  mode="contained" style={{flex: 1}} color={props.theme.colors.accent}> Next </Button> : null }
+                            {section < sectionHeaders.length ? <Button disabled={nextButtonDisabled} onPress={() => continueForm(1)} style={{borderRadius: 30}} contentStyle={{padding: 2, borderRadius: 30}} labelStyle={{fontWeight: "bold", fontSize: 20}}  mode="contained" style={{flex: 1}} color={props.theme.colors.accent}> Next </Button> : null }
                         
                             {section == sectionHeaders.length ? 
                                 <Button onPress={handleSubmit(onSubmit, onError)} style={{borderRadius: 30}} contentStyle={{padding: 2, borderRadius: 30}} labelStyle={{fontWeight: "bold", fontSize: 20}}  mode="contained" style={{flex: 1}} color={props.theme.colors.accent2 || "#ffffff"}> Submit </Button>

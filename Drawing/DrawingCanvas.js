@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Dimensions} from 'react-native';
-import ExpoPixi from 'expo-pixi';
+import ExpoPixi from 'expo-pixi-revived';
 import { withTheme} from "react-native-paper";
 import {LightenDarkenColor} from "lighten-darken-color";
 import SketchToolbar from "./SketchToolbar";

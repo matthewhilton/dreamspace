@@ -24,7 +24,9 @@ const AudioRecordingInput = (props) => {
         return () => {
             isMounted = false;
             // Close audio recording object (ignore result)
-            recording.stopAndUnloadAsync().then(r => {}).catch(e => console.log(e))
+            if(recording.isLoaded) {
+                recording.stopAndUnloadAsync().then(r => {}).catch(e => console.log(e))
+            }
         };
     }, [])
 

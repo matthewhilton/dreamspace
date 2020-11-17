@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { View } from 'react-native';
-import { Portal, Text, withTheme} from "react-native-paper";
+import { Paragraph, Title, Text, withTheme} from "react-native-paper";
 
 import { useSelector } from "react-redux";
 import getJournalAverages from "../Functions/getJournalAverages";
@@ -9,6 +9,7 @@ import HorizontalGallery from "./HorizontalGallery";
 import DrawingPreview from "../Drawing/DrawingPreview";
 import DrawingModalPreview from "../Drawing/DrawingModalPreview";
 import { createStackNavigator } from '@react-navigation/stack';
+import RecordingPreview from './VoiceRecording/RecordingPreview';
 
 const JournalEntryView = ({route, navigation, theme}) => {
     const data = route.params.data;
@@ -42,8 +43,20 @@ const JournalEntryView = ({route, navigation, theme}) => {
                     <DreamStatisticPoint icon="sun" value={data.vividness} average={averages.vividness}/>
                 </View>
 
-                <View>
-                    <HorizontalGallery>
+                <View style={{flexDirection: 'column', marginHorizontal: 10}}> 
+                    <Text style={{fontWeight: 'bold'}}> Description </Text>
+                    {data.description == "" ? 
+                    <Text style={{color: theme.colors.subtext}}> No description </Text> :  
+                    <Paragraph>
+                        {data.description}
+                    </Paragraph>}
+                </View>
+
+                <View style={{marginHorizontal: 10}}>
+                    <Text style={{fontWeight: 'bold'}}> Drawings </Text>
+                    {data.drawings.length == 0 ? 
+                    <Text> No Drawings </Text> : 
+                        <HorizontalGallery>
                         {data.drawings.map((drawing, index) => (
                             <DrawingPreview 
                             uri={drawing.uri} 
@@ -53,7 +66,21 @@ const JournalEntryView = ({route, navigation, theme}) => {
                             }} 
                             />
                         ))}
-                    </HorizontalGallery>
+                        </HorizontalGallery>}
+                </View>
+
+                <View style={{marginHorizontal: 10}}>
+                <Text style={{fontWeight: 'bold'}}> Recording </Text>
+                {data.audioRecordings.length == 0 ? 
+                    <Text> No Recordings </Text> : 
+                        <HorizontalGallery>
+                        {data.audioRecordings.map((recording, index) => (
+                            <RecordingPreview 
+                            data={recording} 
+                            key={recording.uri}
+                            />
+                        ))}
+                        </HorizontalGallery>}
                 </View>
             </View>
     )

@@ -13,6 +13,13 @@ import PlanetSummaryBottomForm from "./PlanetSummaryBottomForm";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 
 const SpaceWalk = (props) => {
+    
+    useEffect(() => {
+        if(props.route.params && props.route.params.autoOpenForm === true){
+            openForm();
+        }
+    }, [props.route.params])
+
     const screenHeight = Dimensions.get("screen").height;
   
     const [planetData, setPlanetData] = useState([])

@@ -1,7 +1,7 @@
 import React, {useRef, useEffect, useState} from 'react';
 import { ScrollView } from 'react-native';
 
-const HorizontalGallery = (props) => {
+const HorizontalGallery = ({autoScrollToEnd=true, ...props}) => {
     const galleryRef = useRef();
 
     const [prevLength, setPrevLength] = useState(-1)
@@ -11,7 +11,7 @@ const HorizontalGallery = (props) => {
         if(prevLength < props.children.length){
             // Delay to give time for ScrollView to render the new children
             setTimeout(() => {
-                if(galleryRef.current != null){
+                if(galleryRef.current != null && autoScrollToEnd){
                     galleryRef.current.scrollToEnd();
                 }
             }, 50)
@@ -24,6 +24,7 @@ const HorizontalGallery = (props) => {
         <ScrollView
             horizontal={true}
             ref={galleryRef}
+            showsHorizontalScrollIndicator={false}
         >
             {props.children}
         </ScrollView>

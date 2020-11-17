@@ -1,13 +1,14 @@
 import React from "react";
-import { View,TouchableWithoutFeedback } from "react-native";
+import { View,TouchableWithoutFeedback, TouchableOpacity } from "react-native";
 import { withTheme, Text } from "react-native-paper";
 import Icon from 'react-native-vector-icons/FontAwesome5';
+
 var Color = require('color');
 
 const JournalLibaryEntry = ({data, theme, onPress}) => {
     const dateString = new Date(data.date).toLocaleDateString()
     return(
-        <TouchableWithoutFeedback onPress={onPress}>
+        <TouchableOpacity onPress={onPress} style={{flex: 1}}>
             <View style={{
                 flexDirection: "row", 
                 alignItems: "center", 
@@ -50,7 +51,7 @@ const JournalLibaryEntry = ({data, theme, onPress}) => {
 
                 
             </View>
-        </TouchableWithoutFeedback>
+        </TouchableOpacity>
     )
 }
 

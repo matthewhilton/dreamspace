@@ -44,7 +44,7 @@ const JournalLibrary = (props) => {
 
     const [shouldCarouselShow, setShouldCarouselShow] = useState(true)
 
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    LayoutAnimation.configureNext(LayoutAnimation.create(200, LayoutAnimation.Types.keyboard, LayoutAnimation.Properties.opacity));
 
     const carouselItemHeight = Dimensions.get('screen').height*0.2;
     return(
@@ -69,11 +69,21 @@ const JournalLibrary = (props) => {
                     
 
                     <Searchbar 
-                        style={{backgroundColor: props.theme.colors.journalFormBackground}}
+                                style={{backgroundColor: props.theme.colors.journalFormBackground}}
                                 placeholder="Search"
                                 onChangeText={val => {
                                     setSearchQuery(val)
                                     if(val === ""){
+                                        setShouldCarouselShow(true)
+                                    } else {
+                                        setShouldCarouselShow(false)
+                                    }
+                                }}
+                                onFocus={() => {
+                                    setShouldCarouselShow(false)
+                                }}
+                                onBlur={() => {
+                                    if(searchQuery == ""){
                                         setShouldCarouselShow(true)
                                     } else {
                                         setShouldCarouselShow(false)

@@ -21,7 +21,13 @@ const JournalLibaryEntry = ({data, theme, onPress}) => {
             }}
                 >
                 <View style={{flexDirection: "row", alignItems: "center", flex: 1}}>
-                    <Text style={{fontWeight: data.title ? "bold" : null, fontStyle: data.title ? null : "italic"}}> {data.title || "untitled"}</Text> 
+                    <Text style={{
+                        fontWeight: "bold", 
+                        fontStyle: data.title ? null : "italic",
+                        fontSize: 18
+                        }}> 
+                        {data.title || "untitled"}
+                    </Text> 
                     {data.drawings.length > 0 ? 
                         <Icon 
                             name={"file-image"} 

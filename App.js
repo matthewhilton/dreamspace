@@ -33,6 +33,7 @@ const theme = {
         recordingButton: "#db5a44",
         orbit: "rgba(255,255,255,0.1)",
         journalCarouselItem: "#292929",
+        journalListDivider: "#292929",
         statisticPoint: {
             up: "#4dbd5c",
             same: "#7a7a7a",

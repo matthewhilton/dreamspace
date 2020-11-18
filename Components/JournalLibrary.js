@@ -1,6 +1,6 @@
 import React, {useState, useRef} from "react"
 import { Searchbar, Text, Button, withTheme, FAB } from "react-native-paper"
-import { View, FlatList,Dimensions, Animated } from "react-native"
+import { View, FlatList ,Dimensions, UIManager, LayoutAnimation } from "react-native"
 import HeaderWithNav from "./HeaderWithNav"
 import { useSelector, useDispatch } from "react-redux"
 import JournalLibaryEntry from "./JournalLibraryEntry"
@@ -10,20 +10,21 @@ import RecentEntryCarousel from "./RecentEntryCarousel"
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 
+if (
+    Platform.OS === "android" &&
+    UIManager.setLayoutAnimationEnabledExperimental
+  ) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
 
 
 const JournalLibrary = (props) => {
     const [searchQuery, setSearchQuery] = useState("")
 
-    let journalEntries = useSelector(store => store.journal)
-    const dispatch = useDispatch();
-    if(journalEntries === undefined) journalEntries = [];
-
     const dateFilter = (a,b) => {
         var dateA = new Date(a.date), dateB = new Date(b.date);
         return dateA - dateB;
     }
-
     const searchFilter = (item) => {
         if(searchQuery === "") {
             return true;
@@ -34,22 +35,18 @@ const JournalLibrary = (props) => {
         return false;
     }
 
-    // Add two dummy journal entries to end (which become at the start because they are reversed)
-    // So that the header components can override them in the flatlist, allowing for only the second
-    // header item in the flat list to the stickied (not the first one)
-    let listJournalEntries = [...journalEntries.sort(dateFilter).filter(searchFilter), {
-        uuid: uuidv4() + " DUMMY",
-        drawings: [],
-        audioRecordings: [],
-    }, {
-        uuid: uuidv4() + " DUMMY",
-        drawings: [],
-        audioRecordings: [],
-    }];
+    let allEntries = useSelector(store => store.journal)
+    let journalEntries = [...allEntries].filter((item) => searchFilter(item)).sort((a,b) => dateFilter(a,b)).reverse();
 
-    console.log(listJournalEntries)
+    if(journalEntries === undefined) journalEntries = [];
 
     const navigation = useNavigation();
+
+    const [shouldCarouselShow, setShouldCarouselShow] = useState(true)
+
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+
+    const carouselItemHeight = Dimensions.get('screen').height*0.2;
     return(
         <View style={{flex: 1, margin: 6}}>
             <HeaderWithNav />
@@ -64,39 +61,52 @@ const JournalLibrary = (props) => {
                     marginTop: 10,
                     height: Dimensions.get("screen").height-200
                 }}>
-   
-                    <FlatList
-                    stickyHeaderIndices={[1]}
-                    style={{height: "100%"}}
-                    keyExtractor={item => item.uuid}
-                        data={listJournalEntries.reverse()}
-                        renderItem={({item, index}) => {
-                        if(index >= 2){
-                            return (
-                                <JournalLibaryEntry data={item} onPress={() => {
-                                    navigation.navigate("JournalEntryView", {
-                                        data: item
-                                    })
-                            }} />
-                            )
-                        } else if(index == 1){
-                            return(
-                                <Searchbar 
-                                placeholder="Search"
-                                onChangeText={val => setSearchQuery(val)}
-                                value={searchQuery}
-                                />
-                            )
-                        } else {
-                            return(
-                                <RecentEntryCarousel entries={journalEntries} onPress={(item) => navigation.navigate("JournalEntryView", {
+                     {shouldCarouselShow ?  <RecentEntryCarousel shouldAnimate={true} entries={allEntries} onPress={(item) => navigation.navigate("JournalEntryView", {
                                     data: item
                                 })} 
-                                itemHeight={Dimensions.get('screen').height*0.2}/>
-                            )
+                                itemHeight={carouselItemHeight}/> : null}
+                    
+                    
+
+                    <Searchbar 
+                        style={{backgroundColor: props.theme.colors.journalFormBackground}}
+                                placeholder="Search"
+                                onChangeText={val => {
+                                    setSearchQuery(val)
+                                    if(val === ""){
+                                        setShouldCarouselShow(true)
+                                    } else {
+                                        setShouldCarouselShow(false)
+                                    }
+                                }}
+                                value={searchQuery}
+                                />
+
+                    <FlatList
+                    onScroll={(e) => {
+                        const scrollY = e.nativeEvent.contentOffset.y;
+                        if(scrollY > 0 && scrollY > carouselItemHeight/3){
+                            setShouldCarouselShow(false)
+                        }
+
+                        if(scrollY < 0 && Math.abs(scrollY) > carouselItemHeight/2.5){
+                            setShouldCarouselShow(true)
                         }
                     }}
+                    contentContainerStyle={{paddingBottom: 100}}
+                    scrollEventThrottle={5}
+                    style={{height: "100%"}}
+                    keyExtractor={item => item.uuid}
+                        data={journalEntries}
+                        renderItem={({item, index}) => (
+                            <JournalLibaryEntry data={item} key={item.uuid} onPress={() => {
+                                navigation.navigate("JournalEntryView", {
+                                    data: item
+                                })
+                        }} />
+                        )}
                     />
+
                 </View>
 
                 <FAB

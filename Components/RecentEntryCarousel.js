@@ -1,11 +1,11 @@
-import React from 'react'
-import { View, Dimensions, TouchableOpacity } from 'react-native'
+import React, { useEffect, useRef} from 'react'
+import { View, Dimensions, TouchableOpacity, Animated} from 'react-native'
 import {withTheme, Text} from "react-native-paper"
 import HorizontalGallery from "./HorizontalGallery"
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import days from "../Functions/dayNames"
 
-const RecentEntryCarousel = ({entries, theme, onPress=function(){}, itemHeight=400}) => {
+const RecentEntryCarousel = ({entries, theme, onPress=function(){}, itemHeight=400, shouldAnimate=false}) => {
     const maxRecentEntries = 5;
 
     const data = [...entries]
@@ -19,20 +19,23 @@ const RecentEntryCarousel = ({entries, theme, onPress=function(){}, itemHeight=4
 
     return (
         entries.length > 0 ? 
-        <View style={{marginLeft: 10}}>         
-            <HorizontalGallery
-            autoScrollToEnd={false}>
-                {filteredEntries.map((entry, i) => (
-                    <JournalCarouselItem entry={entry} theme={theme} key={entry.uuid} itemHeight={itemHeight} onPress={() => onPress(entry)}/>
-                ))}
-            </HorizontalGallery> 
-         </View>
+      
+            <View style={{marginLeft: 10}}>         
+                <HorizontalGallery
+                autoScrollToEnd={false}>
+                    {filteredEntries.map((entry, i) => (
+                        <JournalCarouselItem entry={entry} theme={theme} key={entry.uuid} itemHeight={itemHeight} onPress={() => onPress(entry)}/>
+                    ))}
+                </HorizontalGallery> 
+            </View>
+     
         : null
     )
 }
 
 const JournalCarouselItem = ({entry, theme, onPress=function(){}, itemHeight, ...props}) => {
     return(
+        
         <TouchableOpacity onPress={onPress}>
             <View style={{
                 height: itemHeight,
@@ -84,6 +87,7 @@ const JournalCarouselItem = ({entry, theme, onPress=function(){}, itemHeight, ..
                 </View>
             </View>
         </TouchableOpacity>
+      
     )
 }
 

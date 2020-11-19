@@ -55,6 +55,7 @@
     "redux-persist-sqlite-storage": "^1.0.4",
     "retext": "^7.0.1",
     "retext-keywords": "^6.0.0",
+    "sentry-expo": "^3.0.3",
     "undefined": "react-navigation/stack",
     "uuid": "^3.4.0"
   },

@@ -1,0 +1,17 @@
+{
+    "expo": {
+      "hooks": {
+        "postPublish": [
+          {
+            "file": "sentry-expo/upload-sourcemaps",
+            "config": {
+              "organization": "matt-4c",
+              "project": "dreamspace",
+              "authToken": "1b6bb2c21e1a4cd89e292400d47c0a7f3a59b81628774a44b784ef5368be4595"
+            }
+          }
+        ]
+      }
+    }
+  }
+  

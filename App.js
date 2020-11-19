@@ -14,6 +14,14 @@ import JournalEntryView from './Components/JournalEntryView';
 import SettingsPage from "./Components/SettingsPage"
 import DrawingModalPreview from "./Drawing/DrawingModalPreview"
 import JournalEditor from './Components/JournalEditor';
+import * as Sentry from 'sentry-expo';
+
+Sentry.init({
+  dsn: 'https://4e5375445d0445acbf0086a7876e7f4e@o286831.ingest.sentry.io/5522741',
+  enableInExpoDevelopment: true,
+  debug: true, // Sentry will try to print out useful debugging information if something goes wrong with sending an event. Set this to `false` in production.
+});
+
 const theme = {
 
     ...DefaultTheme,
@@ -95,7 +103,6 @@ if (
   }
 
 export default function App() {
-
     return (
         <>
             <Provider store={store}>

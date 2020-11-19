@@ -11,13 +11,12 @@ const JournalLibaryEntry = ({data, theme, onPress}) => {
         <TouchableOpacity onPress={onPress} style={{flex: 1}}>
             <View style={{
                 flexDirection: "row", 
-                alignItems: "center", 
+                alignItems: "flex-start", 
                 justifyContent:"space-between", 
                 padding: 13, 
-                backgroundColor: Color(theme.colors.journalFormBackground).darken(0.05).hex(),
                 borderRadius: 5,
-                marginBottom: 5,
-                flex: 1
+                marginVertical: 8,
+                flex: 1,
             }}
                 >
                 <View style={{flexDirection: "row", alignItems: "center", flex: 1}}>

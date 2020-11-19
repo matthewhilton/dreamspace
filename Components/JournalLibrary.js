@@ -56,7 +56,6 @@ const JournalLibrary = (props) => {
           data: groupedEntries[key]  
         })
     }
-    console.log("Grouped entries: ", groupedEntriesSectioned);
 
     if(journalEntries === undefined) journalEntries = [];
 
@@ -85,33 +84,31 @@ const JournalLibrary = (props) => {
                                     data: item
                                 })} 
                                 itemHeight={carouselItemHeight}/> : null}
-                    
-                    
-
-                    <Searchbar 
-                                style={{backgroundColor: props.theme.colors.journalFormBackground}}
-                                placeholder="Search"
-                                onChangeText={val => {
-                                    setSearchQuery(val)
-                                    if(val === ""){
-                                        setShouldCarouselShow(true)
-                                    } else {
-                                        setShouldCarouselShow(false)
-                                    }
-                                }}
-                                onFocus={() => {
+                        <Searchbar 
+                            style={{backgroundColor: props.theme.colors.journalFormBackground}}
+                            placeholder="Search"
+                            onChangeText={val => {
+                                console.log("text change")
+                                setSearchQuery(val)
+                                if(val === ""){
+                                    setShouldCarouselShow(true)
+                                } else {
                                     setShouldCarouselShow(false)
-                                }}
-                                onBlur={() => {
-                                    if(searchQuery == ""){
-                                        setShouldCarouselShow(true)
-                                    } else {
-                                        setShouldCarouselShow(false)
-                                    }
-                                }}
-                                value={searchQuery}
-                                />
-
+                                }
+                            }}
+                            onFocus={() => {
+                                setShouldCarouselShow(false)
+                            }}
+                            onBlur={() => {
+                                if(searchQuery == ""){
+                                    setShouldCarouselShow(true)
+                                } else {
+                                    setShouldCarouselShow(false)
+                                }
+                            }}
+                            value={searchQuery}
+                            />
+    <View style={{marginHorizontal: 10}}>
                     <SectionList
                         onScroll={(e) => {
                             const scrollY = e.nativeEvent.contentOffset.y;
@@ -138,14 +135,13 @@ const JournalLibrary = (props) => {
                         renderSectionHeader={({section: {title}}) => (
                             <View style={{
                                 backgroundColor: props.theme.colors.journalListDivider,
-                                padding: 10,
-                                borderRadius: 5
+                                padding: 5,
                                 }}>
                                 <Text style={{fontWeight: "bold", color: props.theme.colors.subtext}}> {title} </Text>
                             </View>
                         )}
                     />
-
+</View>
                 </View>
 
                 <FAB

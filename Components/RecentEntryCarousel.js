@@ -83,7 +83,13 @@ const JournalCarouselItem = ({entry, theme, onPress=function(){}, itemHeight, ..
                         color: theme.colors.subtext, 
                         fontSize: 13
                     }}>{days[new Date(entry.date).getDay()].toUpperCase()}</Text> 
-                    <Text style={{fontWeight: "bold", fontSize: 22, fontStyle: entry.title == "" ? "italic" : null}}>{entry.title || "untitled"}</Text> 
+                    <Text style={{
+                        fontWeight: "bold", fontSize: 22, 
+                        fontStyle: entry.title == "" ? "italic" : null,
+                        }}
+                        numberOfLines={3}
+                        ellipsizeMode="tail"
+                        >{entry.title || "untitled"}</Text> 
                 </View>
             </View>
         </TouchableOpacity>

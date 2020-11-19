@@ -34,6 +34,7 @@ const theme = {
         orbit: "rgba(255,255,255,0.1)",
         journalCarouselItem: "#292929",
         journalListDivider: "#141414",
+        journalViewCard: "#141414",
         statisticPoint: {
             up: "#4dbd5c",
             same: "#7a7a7a",
@@ -83,6 +84,14 @@ const JournalLibraryNavigator = () => (
         <Stack.Screen name="JournalImageView" options={{title: "Drawing Preview"}} component={DrawingModalPreview} />
     </Stack.Navigator>
 )
+
+if (
+    Platform.OS === "android" &&
+    UIManager.setLayoutAnimationEnabledExperimental
+  ) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+
 export default function App() {
 
     return (

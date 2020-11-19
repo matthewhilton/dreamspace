@@ -19,15 +19,22 @@ const JournalLibaryEntry = ({data, theme, onPress}) => {
                 flex: 1,
             }}
                 >
-                <View style={{flexDirection: "row", alignItems: "center", flex: 1}}>
+                <View style={{flexDirection: "row", alignItems: "center", flex: 1, flexWrap: "false"}}>
                     <Text style={{
                         fontWeight: "bold", 
                         fontStyle: data.title ? null : "italic",
                         fontSize: 18
-                        }}> 
+                        }}
+                        numberOfLines={1}
+                        
+                        > 
                         {data.title || "untitled"}
                     </Text> 
-                    {data.drawings.length > 0 ? 
+                    
+                </View>
+
+                <View style={{flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
+                {data.drawings.length > 0 ? 
                         <Icon 
                             name={"file-image"} 
                             color={theme.colors.placeholder} 
@@ -53,8 +60,6 @@ const JournalLibaryEntry = ({data, theme, onPress}) => {
                     } 
                 </View>
                 <Text style={{fontSize: 15}}> {dateString} </Text>
-
-                
             </View>
         </TouchableOpacity>
     )

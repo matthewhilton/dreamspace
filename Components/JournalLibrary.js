@@ -11,13 +11,6 @@ import groupBy from "../Functions/groupBy"
 import months from "../Functions/monthNames"
 var Color = require('color');
 
-if (
-    Platform.OS === "android" &&
-    UIManager.setLayoutAnimationEnabledExperimental
-  ) {
-    UIManager.setLayoutAnimationEnabledExperimental(true);
-  }
-
 
 const JournalLibrary = (props) => {
     const [searchQuery, setSearchQuery] = useState("")
@@ -88,7 +81,6 @@ const JournalLibrary = (props) => {
                             style={{backgroundColor: props.theme.colors.journalFormBackground}}
                             placeholder="Search"
                             onChangeText={val => {
-                                console.log("text change")
                                 setSearchQuery(val)
                                 if(val === ""){
                                     setShouldCarouselShow(true)

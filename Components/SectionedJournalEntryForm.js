@@ -13,13 +13,20 @@ import DatePickerForm from "./DatePickerForm";
 import HorizontalRule from "./HorizontalRule";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import * as Haptics from 'expo-haptics';
-import {useDispatch} from "react-redux"
+import {useDispatch, useSelector} from "react-redux"
 import LottieView from 'lottie-react-native';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 import { FormResultsPreview } from "./FormResultsPreview";
+var equal = require('fast-deep-equal');
 
-const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
+const SectionedJournalEntryForm = ({isVisible=true, prefillData=null,...props}) => {
+
+    useEffect(() => {
+        if(prefillData != null){
+            reset(prefillData);
+        }
+    }, [prefillData, reset]);
 
     const [section, setSection] = useState(0)
 
@@ -34,23 +41,35 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
         'General'
     ]
 
-    const { control, handleSubmit, errors, formState, getValues} = useForm({
+    const { control, handleSubmit, errors, formState, getValues, reset} = useForm({
         mode: "all",
         shouldUnregister: false
     });
 
+    const journal = useSelector(state => state.journal)
     const dispatch = useDispatch();
 
     // Form functions
     const onSubmit = (data, e) => {
-        data.uuid = uuidv4()
+        // Only add new UUID if it is not prefill
+        if(prefillData == null){
+            data.uuid = uuidv4()
 
-        dispatch({
-            object: "JOURNAL", 
-            type: "INSERT",
-            data: data,        
-        })
-
+            dispatch({
+                object: "JOURNAL", 
+                type: "INSERT",
+                data: data,        
+            })
+        } else {
+            console.log("prefill data exists, replacing", data.uuid)
+            dispatch({
+                object: "JOURNAL", 
+                type: "REPLACE",
+                data: data, 
+                uuid: data.uuid      
+            })
+        }
+        
         // Also update the tag usage stats
         const newTagData = data.tags.map((tag) => {
             tag.used += 1;
@@ -65,21 +84,13 @@ const SectionedJournalEntryForm = ({isVisible=true, ...props}) => {
             })
         }
 
-        // TODO save data to redux,
-        const success = true;// <- get value from redux, test if stored correctly
+        // Continue the form to the success animation
+        continueForm(1)
+        setTimeout(() => Haptics.notificationAsync("success"), 700);
 
-        if(success){
-            // Continue the form to the success animation
-            continueForm(1)
-            setTimeout(() => Haptics.notificationAsync("success"), 700);
-
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-            setFormHeight("10%")
-            props.onAnimationHasReducedSize()
-        } else {
-            // TODO something with the error - alert maybe? Shouldn't ever error here really
-            Haptics.notificationAsync("error")
-        }
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        setFormHeight("10%")
+        props.onAnimationHasReducedSize() 
     }
 
     const onError = (data, e) => {

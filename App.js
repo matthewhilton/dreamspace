@@ -13,6 +13,7 @@ import useDispatch from "react-redux"
 import JournalEntryView from './Components/JournalEntryView';
 import SettingsPage from "./Components/SettingsPage"
 import DrawingModalPreview from "./Drawing/DrawingModalPreview"
+import JournalEditor from './Components/JournalEditor';
 const theme = {
 
     ...DefaultTheme,
@@ -82,6 +83,7 @@ const JournalLibraryNavigator = () => (
         <Stack.Screen name="JournalLibrary" component={JournalLibrary} options={{title: "Journal Library", headerShown: false}} />
         <Stack.Screen name="JournalEntryView" component={JournalEntryView} />
         <Stack.Screen name="JournalImageView" options={{title: "Drawing Preview"}} component={DrawingModalPreview} />
+        <Stack.Screen name="JournalEditor" component={JournalEditor} />
     </Stack.Navigator>
 )
 

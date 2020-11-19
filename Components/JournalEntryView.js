@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import { View, StyleSheet, ScrollView, LayoutAnimation} from 'react-native';
-import { Paragraph, Title, Text, withTheme, Subheading} from "react-native-paper";
+import { Paragraph, Title, Text, withTheme, Subheading, Button, IconButton} from "react-native-paper";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import getJournalAverages from "../Functions/getJournalAverages";
 import DreamStatisticPoint from "./DreamStatisticPoint";
 import HorizontalGallery from "./HorizontalGallery";
@@ -13,24 +13,60 @@ import RecordingPreview from './VoiceRecording/RecordingPreview';
 import HorizontalRule from './HorizontalRule';
 import TagView from './TagPicker/TagView';
 import Delayed from './Delayed';
+import AlertAsync from 'react-native-alert-async';
 
 
 const JournalEntryView = ({route, navigation, theme}) => {
-    const data = route.params.data;
+    const entryUUID = route.params.data.uuid;
     const journalSelector = useSelector(state => state.journal)
+    const data = useSelector(state => state.journal.find((item) => item.uuid == entryUUID));
+    const dispatch = useDispatch();
     const [averages, setAverages] = useState({})
-
-    const [previewItem, setPreviewItem] = useState(null)
 
     useEffect(() => {
         navigation.setOptions({
-            title: ""
+            title: "",
+            headerRight: () => (
+                <View style={{flexDirection: "row"}}>
+                    <IconButton icon="pencil" onPress={editEntry} />
+                    <IconButton icon="delete" onPress={deleteEntry} />
+                    <IconButton icon="export-variant" />
+                </View>
+            )
         })
 
         // Run functions to get statistics whenever the data changes
         setAverages(getJournalAverages(journalSelector))
         // TODO some more functions, e.g. maybe a ML model to find trends?
     }, [data])
+
+    const deleteEntry = async () => {
+        // Double check the user wants to delete
+        const choice = await AlertAsync(
+            "Delete Journal Entry",
+            "Are you sure you want to delete this journal entry?",
+            [
+                {text: 'Delete', onPress: () => 'delete', style: 'destructive'},
+                {text: 'Cancel', onPress: () => 'dont', style: 'cancel'},
+            ],
+        )
+        if(choice == "dont"){
+            return;
+        }
+
+        // Run the deletion function
+        navigation.navigate("JournalLibrary");
+
+        dispatch({
+            object: "JOURNAL", 
+            type: "DELETE", 
+            data: data.uuid,
+        })
+    }
+
+    const editEntry = () => {
+        navigation.navigate("JournalEditor", { data: data })
+    }
 
     const oneDay = 24 * 60 * 60 * 1000;
 

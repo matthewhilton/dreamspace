@@ -32,7 +32,8 @@ export const FormResultsPreview = ({formData={}}) => {
                 <Seperator>
                     <Text style={{fontWeight: "bold"}}> Drawings </Text>
                     <View>
-                        <HorizontalGallery>
+                        <HorizontalGallery
+                        autoScrollToEnd={false}>
                             {
                                 formData.drawings.map((data) => (
                                     <DrawingPreview
@@ -50,7 +51,8 @@ export const FormResultsPreview = ({formData={}}) => {
                     
                         <Text style={{fontWeight: "bold"}}> Recordings </Text>
                         <View>
-                            <HorizontalGallery>
+                            <HorizontalGallery
+                            autoScrollToEnd={false}>
                                 {formData.audioRecordings.map((data, index) => (
                                     <RecordingPreview
                                         key={data.uri || null}

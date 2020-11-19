@@ -202,8 +202,6 @@ const SpaceWalk = (props) => {
                     onAnimationHasReducedSize={() => setBackgroundIsScaledUpward(false)}
                     />
                 </AnimatedPopupForm>
-
-              
             </View>
             
     )

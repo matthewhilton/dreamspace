@@ -184,10 +184,10 @@ const SpaceWalk = (props) => {
                     </View>   
                 </View>
                   
-                <AnimatedPopupForm isMoved={planetSelected !== null} startX={0} startY={screenHeight} endY={screenHeight - 200} duration={150}>
+                <AnimatedPopupForm isMoved={planetSelected !== null} startX={0} startY={screenHeight} endY={screenHeight - 210} duration={150}>
                     <PlanetSummaryBottomForm 
                     planet={planetSelected} 
-                    height={200} 
+                    height={210} 
                     onClose={() => setPlanetSelected(null)}
                     onView={() => {
                         ///TODO

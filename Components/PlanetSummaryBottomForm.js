@@ -22,28 +22,20 @@ const PlanetSummaryBottomForm = ({planet={}, height=200, onClose=function(){},on
     }, [planet, allTags])
 
     return(
-        <View style={{height: height, width: "100%", backgroundColor: theme.colors.journalFormBackground || "black", flexDirection: "column"}}>
-            
+        <View style={{height: height, width: "100%", backgroundColor: theme.colors.journalFormBackground || "black", flexDirection: "column", borderRadius: 20, padding: 5}}>
             <View style={{flexDirection: 'row', justifyContent: "flex-end"}}>
-                <IconButton onPress={onClose} style={{alignSelf: 'flex-end'}} icon="close" />
+                <IconButton onPress={onClose} icon="close" />
             </View>
             
-            <View style={{flexDirection: 'row', flex: 1, marginBottom: 30, marginLeft: 10, marginRight: 10}}>
-                <View style={{flex: 1, marginRight: 10}}>
-                    {planet.icon}
-                </View>
+            <View style={{flexDirection: 'row'}}>
+                <View style={{flexDirection: 'column', height: 100, width: 100, marginRight: 10}}>{planet.icon}</View>
 
-                <View style={{flex: 2.5, flexDirection: 'column', justifyContent:"space-between"}}>
-                    <View style={{flexDirection: "column"}}>
-                        <Title style={{fontWeight: 'bold', fontSize: 30}}> {planet.tag} </Title>
-                        <Text style={{marginLeft: 5}}> {tagData.used} dreams </Text> 
-                    </View>
-                    {
-                        // TODO some more data here like recently used etc maybe?
-                    }
-                    <Button mode="outlined" style={{marginBottom: 10}} onPress={onView}> View </Button>
+                <View style={{flexDirection: 'column', flex: 2, justifyContent: 'space-between'}} >
+                    <Title style={{fontWeight: 'bold', fontSize: 25}} numberOfLines={1}>{planet.tag}</Title>
+                    <Text>{tagData.used} dreams</Text> 
+                    <Button mode="contained" onPress={onView}> View </Button>
                 </View>
-            </View> 
+            </View>
         </View>
     );
 }

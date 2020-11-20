@@ -3,7 +3,7 @@ import { View } from 'react-native'
 import { Title, withTheme, Text, IconButton, Button} from 'react-native-paper'
 import { useSelector } from 'react-redux';
 
-const PlanetSummaryBottomForm = ({planet={}, height=200, onClose=function(){},onView=function(){}, theme}) => {
+const PlanetSummaryBottomForm = ({planet={}, height=200, onClose=function(){},onView=function(){}, theme, navigation}) => {
     const [tagData, setTagData] = useState({})
     if(planet == null) planet = {}
 
@@ -27,8 +27,8 @@ const PlanetSummaryBottomForm = ({planet={}, height=200, onClose=function(){},on
                 <IconButton onPress={onClose} icon="close" />
             </View>
             
-            <View style={{flexDirection: 'row'}}>
-                <View style={{flexDirection: 'column', height: 100, width: 100, marginRight: 10}}>{planet.icon}</View>
+            <View style={{flexDirection: 'row', marginHorizontal: 20}}>
+                <View style={{flexDirection: 'column', height: 90, width: 90, marginRight: 20}}>{planet.icon}</View>
 
                 <View style={{flexDirection: 'column', flex: 2, justifyContent: 'space-between'}} >
                     <Title style={{fontWeight: 'bold', fontSize: 25}} numberOfLines={1}>{planet.tag}</Title>

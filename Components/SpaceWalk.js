@@ -12,7 +12,7 @@ import MoonCartoonIcon from "../Images/MoonCartoonIcon"
 import PlanetSummaryBottomForm from "./PlanetSummaryBottomForm";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 
-const SpaceWalk = (props) => {
+const SpaceWalk = ({navigation, ...props}) => {
     
     useEffect(() => {
         if(props.route.params && props.route.params.autoOpenForm === true){
@@ -190,7 +190,8 @@ const SpaceWalk = (props) => {
                     height={210} 
                     onClose={() => setPlanetSelected(null)}
                     onView={() => {
-                        ///TODO
+                        console.log(planetSelected);
+                        navigation.navigate("Tags", { screen: 'TagDetailView', params: { tagUUID: planetSelected.tagUUID}});
                     }}
                     />
                 </AnimatedPopupForm>

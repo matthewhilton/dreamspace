@@ -15,6 +15,8 @@ import SettingsPage from "./Components/SettingsPage"
 import DrawingModalPreview from "./Drawing/DrawingModalPreview"
 import JournalEditor from './Components/JournalEditor';
 import * as Sentry from 'sentry-expo';
+import TagOverview from './Components/TagOverview';
+import TagDetailView from './Components/TagDetailView';
 
 Sentry.init({
   dsn: 'https://4e5375445d0445acbf0086a7876e7f4e@o286831.ingest.sentry.io/5522741',
@@ -95,6 +97,13 @@ const JournalLibraryNavigator = () => (
     </Stack.Navigator>
 )
 
+const TagNavigator = () => (
+  <Stack.Navigator initialRouteName="TagOverview">
+      <Stack.Screen name="TagOverview" component={TagOverview} options={{title: "Tags", headerShown: false}} />
+      <Stack.Screen name="TagDetailView" component={TagDetailView} options={{title: "Tags", headerShown: false}} />
+  </Stack.Navigator>
+)
+
 if (
     Platform.OS === "android" &&
     UIManager.setLayoutAnimationEnabledExperimental
@@ -113,6 +122,7 @@ export default function App() {
                                 <Drawer.Navigator initialRouteName="Home">
                                     <Drawer.Screen name="Home" component={SpaceWalk} />
                                     <Drawer.Screen name="Journal" component={JournalLibraryNavigator} />
+                                    <Drawer.Screen name="Tags" component={TagNavigator} />
                                     <Drawer.Screen name="Settings" component={SettingsPage} />
                                 </Drawer.Navigator>
                             </NavigationContainer>

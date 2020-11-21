@@ -20,6 +20,9 @@ function tags(state = [], action){
                     }
                 }
                 return modifiedState;
+
+            case "REPLACE":
+                return action.data;
         }
     }
 

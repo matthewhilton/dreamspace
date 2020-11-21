@@ -11,6 +11,7 @@ import KeyboardSpacer from "react-native-keyboard-spacer";
 
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
+import useTags from "../../Hooks/UseTags"
 
 const TagPickerForm = (props) => {
     const sheetRef = useRef(null)
@@ -21,8 +22,8 @@ const TagPickerForm = (props) => {
 
     // Connect to redux store
     const dispatch = useDispatch()
-    let tags = useSelector(state => state.tags)
-    if(tags == null) tags = [];
+
+    let {tags, createTag} = useTags();
 
     function submitForm(){
         sheetRef.current.close();
@@ -88,15 +89,9 @@ const TagPickerForm = (props) => {
 
         const defaultTagColor = "white"
 
-        // New tag - dispatch to redux store and add to list of tags selected
-        const tagData = {
-            name: customTagText,
-            used: 0,
-            color: defaultTagColor,
-            uuid: uuidv4(),
-        }
+        // TODO determine icon randomly, or some other method?
+        const tagData = createTag(customTagText, defaultTagColor, Math.random()*10 > 5 ? 1 : 0)
 
-        dispatch({type: "INSERT", object: "TAG", data: tagData})
         // Also update controller via props
         props.onChange([...props.value, tagData])
 
@@ -115,16 +110,16 @@ const TagPickerForm = (props) => {
 
     function addDefaultTags() {
         const defaultTags = [
-            { name: "False Awakening", used: 0, selected: false, color: "#f27844", uuid: uuidv4() },
-            { name: "Flying", used: 0, selected: false, color: "#62e3dc", uuid: uuidv4() },
-            { name: "Recurring", used: 0, selected: false, color: "#5dde68", uuid: uuidv4() },
-            { name: "Nightmare", used: 0, selected: false, color: "#635c5c", uuid: uuidv4() },
-            { name: "Sleep Paralysis", used: 0, selected: false, color: "#b440cf", uuid: uuidv4() }
+            { name: "False Awakening", color: "#f27844"},
+            { name: "Flying", color: "#62e3dc"},
+            { name: "Recurring", color: "#5dde68"},
+            { name: "Nightmare", color: "#635c5c"},
+            { name: "Sleep Paralysis", color: "#b440cf"}
         ]
 
         // Dispatch all these to the redux store
         defaultTags.forEach((defaultTag) => {
-            dispatch({type: "INSERT", object: "TAG", data: defaultTag})
+            createTag(defaultTag.name, defaultTag.color, Math.random()*10 > 5 ? 1 : 0)
         })
     }
 

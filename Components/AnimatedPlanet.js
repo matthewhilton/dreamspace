@@ -1,7 +1,9 @@
 import { RECORDING_OPTION_IOS_BIT_RATE_STRATEGY_CONSTANT } from "expo-av/build/Audio";
 import React, {useEffect, useRef } from "react"
 import {View, Text, TouchableWithoutFeedback, Animated, Easing} from "react-native"
-
+import MoonCartoonIcon from "../Images/MoonCartoonIcon";
+import Planet3Icon from "../Images/Planet3Icon";
+import Icon from 'react-native-vector-icons/FontAwesome5';
 const AnimatedPlanet = ({radius=20, icon, debugText, startAngle, size=50, speedModifier=250, highlighted, onPress=function(){}}) => {
     const positionRef = useRef(new Animated.Value(0)).current;
     const range = positionRef.interpolate({
@@ -32,7 +34,12 @@ const AnimatedPlanet = ({radius=20, icon, debugText, startAngle, size=50, speedM
         <Animated.View pointerEvents="box-none" style={[animStyle, {position: "absolute", width: radius+size, height: radius+size, backgroundColor: debugText ? "rgba(255,255,255,0.2)" : null}]}>
            <TouchableWithoutFeedback onPress={onPress} hitSlop={{top: slop, bottom: slop, left: slop, right: slop}}>
                 <View style={{height: size, width: size, position: "absolute"}}>
-                {icon}
+                    {
+                        // TODO use a function to return the object
+                    }
+                    {icon == -1 ? <Icon name="brain" style={{color: "white"}} size={35} /> : null}
+                {icon == 0 ? <Planet3Icon /> : null}
+                {icon == 1 ? <MoonCartoonIcon /> : null}
                 <View style={{
                     height: size, 
                     width: size,

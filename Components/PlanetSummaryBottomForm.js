@@ -1,25 +1,13 @@
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import { View } from 'react-native'
 import { Title, withTheme, Text, IconButton, Button} from 'react-native-paper'
-import { useSelector } from 'react-redux';
+import usePlanets from "../Hooks/UsePlanets"
 
-const PlanetSummaryBottomForm = ({planet={}, height=200, onClose=function(){},onView=function(){}, theme, navigation}) => {
-    const [tagData, setTagData] = useState({})
-    if(planet == null) planet = {}
+const PlanetSummaryBottomForm = ({uuid, height=200, onClose=function(){},onView=function(){}, theme, navigation}) => {
+    const data = usePlanets().find((tag) => tag.uuid == uuid);
+    console.log("planet summary data: ", data)
 
-    const allTags = useSelector(state => state.tags)
-    
-    useEffect(() => {
-        if(planet != null){
-
-            for(const tag of allTags){
-                if(tag.name === planet.tag){
-                    setTagData(tag)
-                    break;
-                }
-            }
-        }
-    }, [planet, allTags])
+    if(data == null) return null;
 
     return(
         <View style={{height: height, width: "100%", backgroundColor: theme.colors.journalFormBackground || "black", flexDirection: "column", borderRadius: 20, padding: 5}}>
@@ -28,11 +16,11 @@ const PlanetSummaryBottomForm = ({planet={}, height=200, onClose=function(){},on
             </View>
             
             <View style={{flexDirection: 'row', marginHorizontal: 20}}>
-                <View style={{flexDirection: 'column', height: 90, width: 90, marginRight: 20}}>{planet.icon}</View>
+                <View style={{flexDirection: 'column', height: 90, width: 90, marginRight: 20}}><Text>{data.planet.icon}</Text></View>
 
                 <View style={{flexDirection: 'column', flex: 2, justifyContent: 'space-between'}} >
-                    <Title style={{fontWeight: 'bold', fontSize: 25}} numberOfLines={1}>{planet.tag}</Title>
-                    <Text>{tagData.used} dreams</Text> 
+                    <Title style={{fontWeight: 'bold', fontSize: 25}} numberOfLines={1}>{data.name}</Title>
+                    <Text>{data.used} dreams</Text> 
                     <Button mode="contained" onPress={onView}> View </Button>
                 </View>
             </View>

@@ -5,7 +5,7 @@ import planets from './planetReducer'
 
 function rootReducer(state = {}, action){
     if(action.type == "NUKE"){
-        return(undefined)
+        state=undefined;
     }
     
     return appReducer(state, action);

@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useState, useEffect} from "react"
 
 export default useSettings = () => {
-    const [settings, setSettings] = useState(null)
+    const [settings, setSettings] = useState([])
     const [settingsUpdate, setSettingsUpdate] = useState(0)
 
     useEffect(() => {
@@ -45,5 +45,5 @@ export default useSettings = () => {
 }
 
 const settingsStructure = [
-    {name: "JournalAuthenticationLockEnabled", defaultValue: true},
+    {name: "JournalAuthenticationLockEnabled", defaultValue: false},
 ]

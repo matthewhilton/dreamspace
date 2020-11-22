@@ -1,17 +1,77 @@
-import React from 'react'
-import { SafeAreaView } from 'react-native'
+import React, {useEffect, useState} from 'react'
+import { Alert, SafeAreaView} from 'react-native'
 import { useDispatch } from "react-redux"
-import { Button } from 'react-native-paper'
+import { Button, IconButton, List, Switch, useTheme } from 'react-native-paper'
 import useSettings from "../Hooks/UseSettings"
+import HeaderWithNav from './HeaderWithNav'
+import AlertAsync from 'react-native-alert-async'
+import * as Haptics from "expo-haptics"
 
 const SettingsPage = () => {
     const dispatch = useDispatch()
-    const { resetSettings } = useSettings();
+    const { settings, resetSettings, setSetting } = useSettings();
+
+    const authLock = settings.find(setting => (setting.name == "JournalAuthenticationLockEnabled"))
+    const authLockEnabled = authLock ? authLock.value : null;
+
+    const theme = useTheme();
+
+    const confirmResetData = async () => {
+        const choice = await AlertAsync(
+            "Confirm Delete",
+            "Are you sure you want to delete all your data? This action cannot be undone.",
+            [
+                {text: 'Delete', onPress: () => 'delete', style: 'destructive'},
+                {text: 'Cancel', onPress: () => 'dont', style: 'cancel'},
+            ],
+        )
+        if(choice == "dont"){
+            return;
+        }
+
+        dispatch({type: "NUKE"})
+    }
 
     return (
         <SafeAreaView>
-            <Button onPress={() => dispatch({type: "NUKE"})}> Nuke Store </Button>
-            <Button onPress={() => resetSettings()}> Reset settings </Button>
+            <HeaderWithNav title="Settings" />
+            <List.Section>
+                <List.Subheader>Journal</List.Subheader>
+                <List.Item title="Require Authentication" left={() => 
+                    <Switch
+                    disabled={authLockEnabled == null}
+                    value={authLockEnabled} 
+                    onValueChange={() => setSetting("JournalAuthenticationLockEnabled", !authLockEnabled)}
+                    />
+                }
+                description={"Use FaceID/Fingerprint/Passcode authentication to view journal"}/>
+
+                <List.Subheader>Legal</List.Subheader>
+                <List.Item title="Acknowledgements" left={() => 
+                    <IconButton icon="file-document-outline" />
+                }/>
+                <List.Item title="License" left={() => 
+                    <IconButton icon="file-document-outline" />
+                }/>
+                <List.Item title="Privacy Policy" left={() => 
+                    <IconButton icon="file-document-outline" />
+                }/>
+                <List.Item title="Terms of Use" left={() => 
+                    <IconButton icon="file-document-outline" />
+                }/>
+
+                <List.Subheader>Reset</List.Subheader>
+                <List.Item title="Reset to default settings" left={() => 
+                    <IconButton icon="delete" onPress={() => {
+                        resetSettings();
+                        Haptics.notificationAsync("success")
+                        Alert.alert("Settings were reset successfully");
+                    }} /> 
+                }/>
+                <List.Item title="Reset data" titleStyle={{color: theme.colors.error}} left={() => 
+                    <IconButton icon="delete-forever" onPress={confirmResetData} color={theme.colors.error} />
+                }/>
+            </List.Section>
         </SafeAreaView>
     )
 }

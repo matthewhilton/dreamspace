@@ -6,10 +6,13 @@ import useSettings from "../Hooks/UseSettings"
 import AlertAsync from "react-native-alert-async";
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useIsFocused } from '@react-navigation/native';
 
 const AuthenticationView = ({children, errorScreen}) => {
     const [shown, setShown] = useState(null)
     const {getSettings, setSetting } = useSettings()
+
+    const isFocused = useIsFocused();
 
     const effect = async () => {
         const settings = await getSettings();
@@ -28,8 +31,11 @@ const AuthenticationView = ({children, errorScreen}) => {
     }
 
     useEffect(() => {
-        effect();
-    }, [])
+        if(isFocused == true){
+            effect();
+        }
+       
+    }, [isFocused])
 
     if(errorScreen == null){
         errorScreen = <DefaultScreen onRefresh={effect} />

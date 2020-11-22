@@ -67,7 +67,7 @@ const JournalLibrary = (props) => {
     return(
         <View style={{flex: 1, margin: 6, height: "100%"}}>
             
-            <HeaderWithNav />
+            <HeaderWithNav title={"Journal Library"} />
             <AuthenticationView>
             <View style={{
                 margin: 0,

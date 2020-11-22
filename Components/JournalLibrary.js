@@ -10,6 +10,8 @@ import 'react-native-get-random-values';
 import groupBy from "../Functions/groupBy"
 import months from "../Functions/monthNames"
 import useSettings from "../Hooks/UseSettings"
+import * as LocalAuthentication from 'expo-local-authentication';
+import AuthenticationView from "./AuthenticationView"
 
 const JournalLibrary = (props) => {
     
@@ -62,13 +64,15 @@ const JournalLibrary = (props) => {
 
     const {settings} = useSettings()
 
-    console.log("settings", settings)
     return(
-        <View style={{flex: 1, margin: 6}}>
+        <View style={{flex: 1, margin: 6, height: "100%"}}>
+            
             <HeaderWithNav />
+            <AuthenticationView>
             <View style={{
                 margin: 0,
                 }}>
+                      
                 <View
                 style={{
                     backgroundColor: props.theme.colors.journalFormBackground,
@@ -137,8 +141,13 @@ const JournalLibrary = (props) => {
                             </View>
                         )}
                     />
+                    
 </View>
+
+
                 </View>
+                
+                
 
                 <FAB
                     icon="plus"
@@ -150,6 +159,8 @@ const JournalLibrary = (props) => {
                     }}
                 />
             </View>
+            </AuthenticationView>
+            
         </View>
     )
 }

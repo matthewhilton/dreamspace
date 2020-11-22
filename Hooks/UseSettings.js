@@ -3,17 +3,22 @@ import {useState, useEffect} from "react"
 
 export default useSettings = () => {
     const [settings, setSettings] = useState(null)
+    const [settingsUpdate, setSettingsUpdate] = useState(0)
 
     useEffect(() => {
+        updateSettings()
+    }, [settingsUpdate])
+
+    const updateSettings = () => {
         getSettings().then((val) => {
             setSettings(val)
         });
-    }, [])
+    }
 
     const getSettings = async () => {
         let settings = [];
         for(const setting of settingsStructure){
-            let value = await AsyncStorage.getItem(setting.name);
+            let value = JSON.parse(await AsyncStorage.getItem(setting.name));
 
             settings.push({ 
                 name: setting.name,
@@ -23,10 +28,22 @@ export default useSettings = () => {
         return settings;
     }
 
-    return { settings };
+    const setSetting = async (name, value) => {
+        await AsyncStorage.setItem(name, JSON.stringify(value))
+        setSettingsUpdate(settingsUpdate + 1)
+        return;
+    }
+
+    const resetSettings = async () => {
+        for(const setting of settingsStructure){
+            await setSetting(setting.name, setting.defaultValue);
+        }
+        console.log("reset settings")
+    }
+
+    return { settings, getSettings, setSetting, resetSettings };
 }
 
 const settingsStructure = [
-    {name: "JournalAuthenticationLockEnabled", defaultValue: false},
-    {name: "HasAskedUserJournalAuthenticationLock", defaultValue: false},
+    {name: "JournalAuthenticationLockEnabled", defaultValue: true},
 ]

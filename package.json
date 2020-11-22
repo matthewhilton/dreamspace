@@ -2,6 +2,7 @@
   "dependencies": {
     "@dudigital/react-native-zoomable-view": "^1.0.15",
     "@expo/react-native-action-sheet": "^3.8.0",
+    "@react-native-async-storage/async-storage": "^1.13.2",
     "@react-native-community/async-storage": "~1.12.0",
     "@react-native-community/datetimepicker": "3.0.0",
     "@react-native-community/masked-view": "0.1.10",
@@ -17,6 +18,7 @@
     "expo-font": "~8.3.0",
     "expo-gl": "~9.1.1",
     "expo-haptics": "~8.3.0",
+    "expo-local-authentication": "^9.3.0",
     "expo-pixi-revived": "^1.2.0",
     "expo-random": "~9.0.0",
     "expo-sqlite": "~8.4.0",

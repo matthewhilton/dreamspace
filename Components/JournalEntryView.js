@@ -81,6 +81,8 @@ const JournalEntryView = ({route, navigation, theme}) => {
 
     const delayedAnimation = LayoutAnimation.create(200, LayoutAnimation.Types.easeIn, LayoutAnimation.Properties.opacity);
     
+    if(data == undefined) return(null);
+    
     return (
         <ScrollView style={{margin: 15}} showsVerticalScrollIndicator={false}>
                 <View style={styles.containerCard}>

@@ -25,7 +25,6 @@ const SpaceWalk = ({navigation, ...props}) => {
 
     const screenHeight = Dimensions.get("screen").height;
     const nav = useNavigation()
-    const {tags} = useTags();
     const tagsWithPlanets = usePlanets();
 
     const [planetSelected, setPlanetSelected] = useState(null)
@@ -64,9 +63,6 @@ const SpaceWalk = ({navigation, ...props}) => {
 
     return(  
             <View style={{height: "200%", backgroundColor: props.theme.colors.mainScreenBackground || "white"}}>
-                
-                 
-
                 <View style={{height: screenHeight, width: screenHeight, alignSelf: 'center'}}>
                     <ReactNativeZoomableView 
                     bindToBorders={false}

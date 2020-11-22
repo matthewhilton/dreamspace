@@ -26,11 +26,9 @@ const JournalLibaryEntry = ({data, theme, onPress}) => {
                         fontSize: 18
                         }}
                         numberOfLines={1}
-                        
                         > 
                         {data.title || "untitled"}
-                    </Text> 
-                    
+                    </Text>
                 </View>
 
                 <View style={{flexDirection: "row", alignItems: "center", justifyContent: "center"}}>

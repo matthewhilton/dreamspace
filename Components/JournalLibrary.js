@@ -9,10 +9,10 @@ import RecentEntryCarousel from "./RecentEntryCarousel"
 import 'react-native-get-random-values';
 import groupBy from "../Functions/groupBy"
 import months from "../Functions/monthNames"
-var Color = require('color');
-
+import useSettings from "../Hooks/UseSettings"
 
 const JournalLibrary = (props) => {
+    
     const [searchQuery, setSearchQuery] = useState("")
 
     const dateFilter = (a,b) => {
@@ -59,6 +59,10 @@ const JournalLibrary = (props) => {
     LayoutAnimation.configureNext(LayoutAnimation.create(300, LayoutAnimation.Types.keyboard, LayoutAnimation.Properties.opacity));
 
     const carouselItemHeight = Dimensions.get('screen').height*0.2;
+
+    const {settings} = useSettings()
+
+    console.log("settings", settings)
     return(
         <View style={{flex: 1, margin: 6}}>
             <HeaderWithNav />

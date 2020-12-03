@@ -2,6 +2,8 @@ import React, {useEffect, useRef, useState} from 'react';
 import {ScrollView} from 'react-native';
 
 const HorizontalGallery = ({autoScrollToEnd=true, ...props}) => {
+    if(!props.children) return null;
+    
     const galleryRef = useRef();
 
     const [prevLength, setPrevLength] = useState(-1)
@@ -18,7 +20,6 @@ const HorizontalGallery = ({autoScrollToEnd=true, ...props}) => {
         }
         setPrevLength(props.children.length)
     }, [props.children.length])
-
 
     return(
         <ScrollView

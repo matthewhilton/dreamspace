@@ -1,4 +1,3 @@
-import * as SQLite from 'expo-sqlite';
 import Entry from './Models/EntriesModel.js';
 import Drawing from './Models/DrawingsModel.js';
 import Recording from "./Models/RecordingModel.js"

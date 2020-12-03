@@ -4,19 +4,19 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet'
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
 import { store, persistor } from "./Redux/store"
-import SpaceWalk from './Components/SpaceWalk';
+import SpaceWalk from './Components/Pages/DreamSpaceExplorePage';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer, DarkTheme } from '@react-navigation/native';
-import JournalLibrary from "./Components/JournalLibrary"
+import JournalLibrary from "./Components/Pages/JournalLibrary"
 import useDispatch from "react-redux"
-import JournalEntryView from './Components/JournalEntryView';
-import SettingsPage from "./Components/SettingsPage"
-import DrawingModalPreview from "./Drawing/DrawingModalPreview"
-import JournalEditor from './Components/JournalEditor';
+import JournalEntryView from './Components/Pages/JournalEntryView';
+import SettingsPage from "./Components/Pages/SettingsPage"
+import DrawingModalPreview from "./Components/Journal/Drawing/DrawingModalPreview"
+import JournalEditor from './Components/Pages/JournalEditor';
 import * as Sentry from 'sentry-expo';
-import TagOverview from './Components/TagOverview';
-import TagDetailView from './Components/TagDetailView';
+import TagOverview from './Components/Tags/TagOverview';
+import TagDetailView from './Components/Tags/TagDetailView';
 
 /*Sentry.init({
   dsn: 'https://4e5375445d0445acbf0086a7876e7f4e@o286831.ingest.sentry.io/5522741',

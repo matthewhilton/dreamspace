@@ -1,5 +1,8 @@
-import { useMemo } from "react";
+import React, { useMemo } from "react";
+import MoonCartoonIcon from "../Images/MoonCartoonIcon";
+import Planet3Icon from "../Images/Planet3Icon";
 import useTags from "./UseTags"
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export default usePlanets = () => {
     const {tags} = useTags();
@@ -36,7 +39,20 @@ export default usePlanets = () => {
 
         return outputTags;
     }
-    
+
     // Memoize it as it is fairly expensive
-    return useMemo(() => calculatePlanetsFromTags(tags), [tags])
+    const generatedPlanets = useMemo(() => calculatePlanetsFromTags(tags), [tags])
+    
+    const getPlanetIcon = (iconNumber) => {
+        switch(iconNumber){
+            case -1:
+                return <Icon name="brain" style={{color: "white"}} size={35} />
+            case 0:
+                return <MoonCartoonIcon />
+            case 1:
+                return <Planet3Icon />
+        }
+    }
+
+    return { generatedPlanets, getPlanetIcon }
 }

@@ -8,10 +8,8 @@ const TagView = ({tags=[], emptyContent=<Text />,loading=false,onPressed=functio
 
     const filteredTags = tags.filter((item) => {
         if(filter == null && antiFilter == null) return true;
-
         if(filter != null && item.grouping == filter) return true;
         if(antiFilter != null && item.grouping != antiFilter) return true;
-
         return false;
     })
 

@@ -148,16 +148,18 @@ const JournalLibrary = (props) => {
                 
                 
 
-                <FAB
+               
+            </View>
+
+            <FAB
                     icon="plus"
                     onPress={() => navigation.navigate("Home", {autoOpenForm: true})}
                     style={{
                         position: 'absolute',
                         right: 20, 
-                        bottom: 20,
+                        bottom: 40,
                     }}
                 />
-            </View>
             </AuthenticationView>
             
         </View>

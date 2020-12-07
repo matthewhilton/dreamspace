@@ -4,9 +4,9 @@ import {Button, IconButton, Text, Title, withTheme} from 'react-native-paper'
 import usePlanets from "../../Hooks/UsePlanets"
 
 const PlanetSummaryBottomForm = ({uuid, height=200, onClose=function(){},onView=function(){}, theme, navigation}) => {
-    const data = usePlanets().find((tag) => tag.uuid == uuid);
-    console.log("planet summary data: ", data)
-
+    const { generatedPlanets, getPlanetIcon } = usePlanets();
+    const data = generatedPlanets.find((tag) => tag.uuid == uuid);
+ 
     if(data == null) return null;
 
     return(
@@ -16,7 +16,7 @@ const PlanetSummaryBottomForm = ({uuid, height=200, onClose=function(){},onView=
             </View>
             
             <View style={{flexDirection: 'row', marginHorizontal: 20}}>
-                <View style={{flexDirection: 'column', height: 90, width: 90, marginRight: 20}}><Text>{data.planet.icon}</Text></View>
+                <View style={{flexDirection: 'column', height: 90, width: 90, marginRight: 20}}>{getPlanetIcon(data.planet.icon)}</View>
 
                 <View style={{flexDirection: 'column', flex: 2, justifyContent: 'space-between'}} >
                     <Title style={{fontWeight: 'bold', fontSize: 25}} numberOfLines={1}>{data.name}</Title>

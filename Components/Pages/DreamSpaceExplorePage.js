@@ -20,7 +20,7 @@ const DreamSpaceExplorePage = ({navigation, ...props}) => {
 
     const screenHeight = Dimensions.get("screen").height;
     const nav = useNavigation()
-    const tagsWithPlanets = usePlanets();
+    const {generatedPlanets} = usePlanets();
 
     const [planetSelected, setPlanetSelected] = useState(null)
 
@@ -54,7 +54,6 @@ const DreamSpaceExplorePage = ({navigation, ...props}) => {
         navigation.navigate("Tags", { screen: 'TagDetailView', params: { tagUUID: planetSelected.uuid}})
     }
 
-    console.log("tags with planets: ", tagsWithPlanets)
 
     return(  
             <View style={{height: "200%", backgroundColor: props.theme.colors.mainScreenBackground || "white"}}>
@@ -78,7 +77,7 @@ const DreamSpaceExplorePage = ({navigation, ...props}) => {
                                 centreCoordinate={{x: midX, y: midY}}
                                 />
 
-                                {tagsWithPlanets.map((tagWithPlanet) => {
+                                {generatedPlanets.map((tagWithPlanet) => {
                                     const circularOrbitSize = Math.sqrt(Math.pow(tagWithPlanet.planet.radius,2)+Math.pow(tagWithPlanet.planet.radius,2))
                                     return(
                                         <View 
@@ -94,7 +93,7 @@ const DreamSpaceExplorePage = ({navigation, ...props}) => {
                                     />)
                                 })}
                             
-                            {tagsWithPlanets.map((tagWithPlanet) =>  (
+                            {generatedPlanets.map((tagWithPlanet) =>  (
                                 <AnimatedPlanet
                                 highlighted={planetSelected ? tagWithPlanet.uuid == planetSelected.uuid : false}
                                 onPress={() => planetPressed(tagWithPlanet)}

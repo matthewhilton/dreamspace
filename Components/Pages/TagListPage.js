@@ -7,7 +7,7 @@ import usePlanets from "../../Hooks/UsePlanets"
 import Icon from 'react-native-vector-icons/FontAwesome5';
 var Color = require('color');
 
-const TagListPage = () => {
+const TagListPage = ({navigation}) => {
     const { tags, createTag } = useTags();
 
     // Sort by most used first
@@ -21,7 +21,9 @@ const TagListPage = () => {
          
             <ScrollView style={{marginHorizontal: 10}}>
                 {tags.map(tag => (
-                    <TagListItem tag={tag} key={tag.uuid} onPress={() => console.log(tag.uuid)} />
+                    <TagListItem tag={tag} key={tag.uuid} onPress={() => {
+                        navigation.navigate("Tags", { screen: 'TagDetailView', params: { tagUUID: tag.uuid}})
+                    }} />
                 ))}
             </ScrollView>
             

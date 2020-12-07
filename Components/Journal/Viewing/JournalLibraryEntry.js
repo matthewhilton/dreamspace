@@ -1,7 +1,7 @@
 import React from "react";
 import {TouchableOpacity, View} from "react-native";
 import {Text, withTheme} from "react-native-paper";
-import Icon from 'react-native-vector-icons/FontAwesome5';
+
 import dayNames, {nth} from '../../../Functions/dayNames'
 
 var Color = require('color');

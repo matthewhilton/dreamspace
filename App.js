@@ -15,8 +15,8 @@ import SettingsPage from "./Components/Pages/SettingsPage"
 import DrawingModalPreview from "./Components/Journal/Drawing/DrawingModalPreview"
 import JournalEditor from './Components/Pages/JournalEditor';
 import * as Sentry from 'sentry-expo';
-import TagDetailView from './Components/Tags/TagDetailView';
 import TagListPage from './Components/Pages/TagListPage';
+import TagDetailPage from './Components/Pages/TagDetailPage';
 
 /*Sentry.init({
   dsn: 'https://4e5375445d0445acbf0086a7876e7f4e@o286831.ingest.sentry.io/5522741',
@@ -100,7 +100,7 @@ const JournalLibraryNavigator = () => (
 const TagNavigator = () => (
   <Stack.Navigator initialRouteName="TagOverview">
       <Stack.Screen name="TagOverview" component={TagListPage} options={{title: "Tags", headerShown: false}} />
-      <Stack.Screen name="TagDetailView" component={TagDetailView} options={{title: "Tags", headerShown: false}} />
+      <Stack.Screen name="TagDetailView" component={TagDetailPage} options={{title: "Tags", headerShown: false}} />
   </Stack.Navigator>
 )
 

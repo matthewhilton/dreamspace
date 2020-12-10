@@ -1,16 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import {LayoutAnimation, ScrollView, StyleSheet, View} from 'react-native';
-import {IconButton, Paragraph, Subheading, Text, withTheme} from "react-native-paper";
-
-import {useDispatch, useSelector} from "react-redux";
+import React, { useEffect, useState } from 'react';
+import { LayoutAnimation, ScrollView, StyleSheet, View } from 'react-native';
+import AlertAsync from 'react-native-alert-async';
+import { IconButton, Paragraph, Subheading, Text, withTheme } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
 import getJournalAverages from "../../Functions/getJournalAverages";
-import DreamStatisticPoint from "../Journal/Viewing/DreamStatisticPoint";
+import Delayed from '../Containers/Delayed';
 import HorizontalGallery from "../Containers/HorizontalGallery";
 import DrawingPreview from "../Journal/Drawing/DrawingPreview";
+import DreamStatisticPoint from "../Journal/Viewing/DreamStatisticPoint";
 import RecordingPreview from '../Journal/VoiceRecording/RecordingPreview';
 import TagView from '../Tags/TagPicker/TagView';
-import Delayed from '../Containers/Delayed';
-import AlertAsync from 'react-native-alert-async';
+
 
 
 const JournalEntryView = ({route, navigation, theme}) => {

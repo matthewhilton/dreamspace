@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Dimensions, ScrollView, View } from 'react-native';
+import {
+    ContributionGraph
+} from "react-native-chart-kit";
 import { IconButton, List, Text, useTheme } from 'react-native-paper';
 import { useSelector } from "react-redux";
+import { hexAlpha } from "../../Functions/decimalToHex";
+import groupBy from '../../Functions/groupBy';
 import usePlanets from "../../Hooks/UsePlanets";
 import JournalLibraryEntry from "../Journal/Viewing/JournalLibraryEntry";
-import {
-    ContributionGraph,
-    LineChart,
-    ProgressChart
-} from "react-native-chart-kit";
-import groupBy from '../../Functions/groupBy';
-import Normalise from "../../Functions/normalise";
-
+import TagRelationsChart from "../Tags/TagRelationChart"
+var Color = require('color');
 
 const TagDetailPage = ({route, navigation}) => {
     const tagUUID = route.params.tagUUID;
@@ -21,7 +20,6 @@ const TagDetailPage = ({route, navigation}) => {
     const [dreamsWithThisTag, setDreamsWithThisTag] = useState([])
     const [dreamStatistics, setDreamStatistics] = useState({})
     const [dreamGroupings, setDreamGroupings] = useState([])
-    const [relatedTags, setRelatedTags] = useState({})
  
     if(tagUUID == undefined) {
         console.error("No Tag UUID given. Navigation error likely.")
@@ -32,8 +30,8 @@ const TagDetailPage = ({route, navigation}) => {
     const chartConfig = {
         backgroundColor: theme.colors.journalFormBackground,
         decimalPlaces: 2, // optional, defaults to 2dp
-        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-        labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+        color: (opacity=1) => hexAlpha("#ffffff", opacity),
+        labelColor: (opacity=1) => hexAlpha("#ffffff", opacity),
         style: {
           borderRadius: 16
         },
@@ -92,22 +90,6 @@ const TagDetailPage = ({route, navigation}) => {
             count: groupedDreams[key].length
         }))
         setDreamGroupings(groupedDreams)
-
-        // Find common other tags that are linked with this one
-        let tagRelations = {}
-        filteredDreams.forEach(dream => {
-            dream.tags.forEach(tag => {
-                if(tag.name != tagData.name){
-                    if(tagRelations.hasOwnProperty(tag.name)) {
-                        tagRelations[tag.name] += 1;
-                    } else {
-                        tagRelations[tag.name] = 1;
-                    }
-                }
-            })
-            
-        })
-        setRelatedTags(tagRelations)
     }, [tagData, setDreamsWithThisTag, setDreamStatistics])
 
     return (
@@ -119,31 +101,30 @@ const TagDetailPage = ({route, navigation}) => {
                         {tagData.name}
                     </Text>
                 </View>
-                
-
                 <View style={{
                     margin: 10,
-                    width: 50, 
-                    height: 50
+                    width: 90, 
+                    height: 90, 
+                    backgroundColor: Color(tagData.color).darken(0.3).hex(),
+                    padding: 10,
+                    borderRadius: 10,
                     }}>
                     {getPlanetIcon(tagData.planet.icon)}
                 </View>
             </View>
             
-            
-
-            <View style={{height: 200}}>
-                <ContributionGraph
-                    values={dreamGroupings}
-                    endDate={new Date()}
-                    numDays={90}
-                    chartConfig={chartConfig}
-                />
-            </View>
-        
             <List.Section>
+                <List.Subheader>Usage</List.Subheader>
+                <View style={{height: 210}}>
+                    <ContributionGraph
+                        values={dreamGroupings}
+                        endDate={new Date()}
+                        numDays={90}
+                        chartConfig={chartConfig}
+                    />
+                </View>
+
                 <List.Subheader>Statistics</List.Subheader>
-                
                 <View style={{marginLeft: 15}}>
                     <BigStatistic top={tagData.used} bottom={"used"} />
                 </View>
@@ -158,27 +139,9 @@ const TagDetailPage = ({route, navigation}) => {
                <TagStatisticView leftText={dreamStatistics.averageLucidity || "-"} title="Average Lucidity" />
                 <TagStatisticView leftText={dreamStatistics.averageVividness || "-"} title="Average Vividness" />
                 */
-            }
-
-                {relatedTags != {} ?  
-                <ProgressChart 
-                    data={{
-                        labels: Object.keys(relatedTags).slice(0,3), 
-                        // Normalise these values to get values between 0 and 1
-                        data: Normalise(Object.values(relatedTags)).slice(0,3)
-                    }}
-                    width={Dimensions.get("screen").width*0.9}
-                    height={200}
-                    strokeWidth={16}
-                    radius={32} 
-                    chartConfig={{
-                        backgroundGradientFrom: theme.colors.background,
-                        backgroundGradientTo: theme.colors.background,
-                        decimalPlaces: 2, // optional, defaults to 2dp
-                        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                        labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                        }}
-                /> : null}
+            }   
+                <List.Subheader>Links to Other Tags</List.Subheader>
+                <TagRelationsChart targetTagUUID={tagData.uuid}/>
                
                 {dreamsWithThisTag.length > 0 ? 
                     <List.Accordion
@@ -209,7 +172,7 @@ const TagStatisticView = ({leftText, title, data, axis}) => {
             
 
             <View onLayout={event => setWidth(event.nativeEvent.layout.width)}>
-                <LineChart 
+                {/* <LineChart 
                 data={{
                     labels: axis,
                     datasets: [
@@ -220,12 +183,13 @@ const TagStatisticView = ({leftText, title, data, axis}) => {
                 }}
                 height={200}
                 chartConfig={{
-                    color: () => "rgba(255,255,255,1)",
-                    backgroundColor: "rgba(255,255,0,1)",
+                    color: () => Color("#ffffff").hex(),
+                    backgroundColor: () => Color("#ffffff").hex(),
                 }}
                 width={width}
                 bezier
-            />
+            />*/
+}
             </View>
         </View>
     )

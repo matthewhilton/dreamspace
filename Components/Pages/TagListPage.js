@@ -5,6 +5,7 @@ import useTags from "../../Hooks/UseTags";
 import HeaderWithNav from '../Controls/HeaderWithNav';
 import usePlanets from "../../Hooks/UsePlanets"
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import TagEditorPage from '../Tags/TagEditorPage';
 var Color = require('color');
 
 const TagListPage = ({navigation}) => {
@@ -29,7 +30,7 @@ const TagListPage = ({navigation}) => {
             
             <FAB
                 icon="plus"
-                onPress={() => console.log("hello world")}
+                onPress={() => navigation.navigate("Tags", { screen: 'TagEditor', params: { mode: "new"}})}
                 style={{
                     position: 'absolute',
                     right: 20, 

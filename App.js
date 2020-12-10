@@ -17,7 +17,7 @@ import JournalEditor from './Components/Pages/JournalEditor';
 import * as Sentry from 'sentry-expo';
 import TagListPage from './Components/Pages/TagListPage';
 import TagDetailPage from './Components/Pages/TagDetailPage';
-
+import TagEditorPage from "./Components/Tags/TagEditorPage"
 /*Sentry.init({
   dsn: 'https://4e5375445d0445acbf0086a7876e7f4e@o286831.ingest.sentry.io/5522741',
   enableInExpoDevelopment: true,
@@ -101,6 +101,7 @@ const TagNavigator = () => (
   <Stack.Navigator initialRouteName="TagOverview">
       <Stack.Screen name="TagOverview" component={TagListPage} options={{title: "Tags", headerShown: false}} />
       <Stack.Screen name="TagDetailView" component={TagDetailPage} options={{title: "Tags", headerShown: false}} />
+      <Stack.Screen name="TagEditor" component={TagEditorPage} options={{title: "Tag Editor", headerShown: true}} />
   </Stack.Navigator>
 )
 

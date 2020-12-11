@@ -105,7 +105,7 @@ const TagDetailPage = ({route, navigation}) => {
                     margin: 10,
                     width: 90, 
                     height: 90, 
-                    backgroundColor: Color(tagData.color).darken(0.3).hex(),
+                    backgroundColor: tagData.color,
                     padding: 10,
                     borderRadius: 10,
                     }}>

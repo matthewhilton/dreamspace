@@ -46,6 +46,7 @@ const theme = {
         journalCarouselItem: "#292929",
         journalListDivider: "#141414",
         journalViewCard: "#242424",
+        tagPreviewBackground: "#292929",
         statisticPoint: {
             up: "#4dbd5c",
             same: "#7a7a7a",

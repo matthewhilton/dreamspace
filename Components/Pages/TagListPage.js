@@ -66,7 +66,7 @@ const TagListItem = ({tag, onPress=function(){}}) => {
                     <Icon name="tag" solid style={{color: tag.color}}/>
                 </View>
                 
-                <View style={{width: 60, height: 60, backgroundColor: Color(tag.color).darken(0.3).hex(), padding: 5, borderRadius: 8}}>
+                <View style={{width: 60, height: 60, backgroundColor: tag.color, padding: 5, borderRadius: 8}}>
                     {getPlanetIcon(tag.planet.icon)}
                 </View>
             </View>

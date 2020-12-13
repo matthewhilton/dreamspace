@@ -54,5 +54,7 @@ export default usePlanets = () => {
         }
     }
 
-    return { generatedPlanets, getPlanetIcon }
+    const iconKeyList = [0,1];
+
+    return { generatedPlanets, getPlanetIcon, iconKeyList }
 }

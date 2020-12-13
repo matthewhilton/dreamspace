@@ -3,6 +3,7 @@ import { View } from 'react-native'
 import {Text, useTheme } from "react-native-paper"
 import usePlanets from "../../Hooks/UsePlanets"
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import PlanetIconPreview from '../Display/PlanetIconPreview';
 var Color = require('color');
 
 interface Props {
@@ -37,16 +38,14 @@ const TagPreview: React.FC<Props> = ({name, color, planetNumber}) => {
                         numberOfLines={2}>{name}</Text>
                     <Icon name="tag" solid style={{color: color, margin: 5, fontSize: 15}}/>
                 </View>
+            
+                <PlanetIconPreview 
+                    size={100}
+                    backgroundColor={color}
+                    iconNumber={planetNumber}
+                    borderRadius={10}
+                />
 
-                <View style={{
-                    width: 100,
-                    height: 100,
-                    backgroundColor: color,
-                    padding: 10,
-                    borderRadius: 10
-                }}>
-                    {getPlanetIcon(planetNumber)}
-                </View>
         </View>
     )
 }

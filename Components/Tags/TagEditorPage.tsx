@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { View } from 'react-native';
-import { Button, List, Text, TextInput, useTheme } from 'react-native-paper';
+import useTags from "../../Hooks/UseTags"
+import { Button, IconButton, List, Text, TextInput, useTheme } from 'react-native-paper';
 import RBSheet from "react-native-raw-bottom-sheet";
 import ColorPickerForm from "../Controls/ColorPickerForm";
+import PlanetPickerForm from '../Controls/PlanetPickerForm';
 import TagPreview from './TagPreview';
 var Color = require('color');
 
@@ -18,10 +20,12 @@ interface Props {
 
 const TagEditorPage: React.FC<Props> = ({route, navigation}) => {
     const { mode } = route.params;
+    const { createTag } = useTags();
 
     const theme = useTheme()
 
-    const sheetRef = React.useRef();
+    const colorPickerSheetRef = React.useRef();
+    const planetPickerSheetRef = React.useRef();
 
     const { control, handleSubmit, errors, formState, watch, reset} = useForm({
         mode: "all",
@@ -30,10 +34,23 @@ const TagEditorPage: React.FC<Props> = ({route, navigation}) => {
 
     useEffect(() => {
         navigation.setOptions({
-            title: mode == "new" ? "Create New Tag" : "Edit Tag"
+            title: mode == "new" ? "Create New Tag" : "Edit Tag",
         })
     }, [mode])
 
+    const onSubmit = (data) => {
+        if(mode == "new"){
+            createTag(data.name, data.color, data.planetNumber)
+            navigation.goBack();
+            // TODO success notification
+        }
+        // TODO edit mode 
+    }
+
+    const onError = (error) => {
+        // TODO alert user
+        console.error("Error saving tag data: ", error)
+    }
     return (
         <View>
             <List.Section>
@@ -42,10 +59,10 @@ const TagEditorPage: React.FC<Props> = ({route, navigation}) => {
                     <TagPreview 
                     name={watch("name", "Tag Name")} 
                     color={watch("color", "#FFFFFF")} 
-                    planetNumber={1} />
+                    planetNumber={watch("planetNumber", 0)} />
                 </View>
                 <RBSheet 
-                ref={sheetRef} 
+                ref={colorPickerSheetRef} 
                 closeOnDragDown={true} 
                 animationType="fade" openDuration={200}
                 customStyles={{
@@ -88,6 +105,28 @@ const TagEditorPage: React.FC<Props> = ({route, navigation}) => {
                     </View>
                 </RBSheet>
 
+                <RBSheet
+                ref={planetPickerSheetRef} 
+                closeOnDragDown={true} 
+                animationType="fade" openDuration={200}
+                customStyles={{
+                    container: {
+                        backgroundColor: theme.colors.background,
+                        borderRadius: 10
+                    }
+                }}
+                height={500}>
+                    <Controller
+                    name="planetNumber"
+                    control={control}
+                    defaultValue={0}
+                    render={({value, onChange}) => (
+                        <View>
+                            <PlanetPickerForm value={value} onChange={onChange} />
+                        </View>
+                    )} />
+                </RBSheet>
+
                 <List.Subheader> Edit Properties </List.Subheader>
                 
                 <View
@@ -95,17 +134,30 @@ const TagEditorPage: React.FC<Props> = ({route, navigation}) => {
                     <Controller 
                         name="name"
                         control={control}
-                        defaultValue=""
+                        defaultValue={null}
+                        rules={{required: true}}
                         render={({value, onChange}) => <TextInput mode="outlined" label="Tag Name" value={value} onChangeText={onChange}  />}
                         />
                     
-                    <Button 
-                    mode={"contained"} 
-                    onPress={() => sheetRef.current.open()}
-                    style={{marginVertical:15}}
-                    >Select Color</Button>
+                        <Button 
+                        mode={"contained"} 
+                        onPress={() => colorPickerSheetRef.current.open()}
+                        style={{marginVertical:15}}
+                        >
+                            Select Color
+                        </Button>
+
+                        <Button 
+                        mode={"contained"} 
+                        onPress={() => planetPickerSheetRef.current.open()}
+                        style={{marginVertical:15}}
+                        >
+                            Select Planet Icon
+                        </Button>
                 </View>
             </List.Section>
+
+            <Button onPress={handleSubmit(onSubmit, onError)} disabled={!formState.isValid}> Save </Button>
         </View>
     )
 }

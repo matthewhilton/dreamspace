@@ -22,6 +22,16 @@ export default useTags = () => {
         return tagData;
     }
 
+    const editTag = (tagUUID, name, color, planetNumber) => {
+        // Ensure we only edit the correct values
+        let tagState = tags.find((tag) => tag.uuid === tagUUID);
+        tagState.name = name;
+        tagState.color = color;
+        tagState.planet.icon = planetNumber;
+
+        dispatch({type: "MODIFY", object: "TAG", data: tagState, tagToModifyUUID: tagUUID})
+        return tagState;
+    }
     
-    return {tags, createTag};
+    return {tags, createTag, editTag};
 }

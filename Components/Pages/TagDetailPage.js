@@ -45,6 +45,11 @@ const TagDetailPage = ({route, navigation}) => {
     const tagData = useSelector(state => state.tags.find((tag) => tag.uuid == tagUUID))
     const allDreams = useSelector(state => state.journal)
 
+    const onEdit = () => {
+        // Navigate to the editor with mode "edit" using the current tagUUID
+        navigation.navigate("Tags", { screen: "TagEditor", params: { mode: "edit", tagUUID: tagUUID}})
+    }
+
     // Whenever tagdata changes, update the page options such as title, etc
     useEffect(() => {
         navigation.setOptions({
@@ -52,7 +57,7 @@ const TagDetailPage = ({route, navigation}) => {
             headerShown: true,
             headerRight: () => (
                 <View style={{flexDirection: "row"}}>
-                    <IconButton icon="pencil" />
+                    <IconButton icon="pencil" onPress={onEdit}/>
                     <IconButton icon="delete" />
                 </View>
             )

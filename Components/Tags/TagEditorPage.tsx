@@ -13,6 +13,7 @@ interface Props {
     route: {
         params: {
             mode: "new" | "edit"
+            tagUUID?: number
         }
     }
     navigation: any
@@ -20,7 +21,7 @@ interface Props {
 
 const TagEditorPage: React.FC<Props> = ({route, navigation}) => {
     const { mode } = route.params;
-    const { createTag } = useTags();
+    const { tags, createTag, editTag } = useTags();
 
     const theme = useTheme()
 
@@ -36,6 +37,17 @@ const TagEditorPage: React.FC<Props> = ({route, navigation}) => {
         navigation.setOptions({
             title: mode == "new" ? "Create New Tag" : "Edit Tag",
         })
+
+        if(mode == "edit"){
+            // Prefill the form data with the data from the given tag tagUUID
+            const tagEditUUID = route.params.tagUUID;
+            const prefillData = tags.find((tag) => tag.uuid === tagEditUUID)
+            reset({
+                color: prefillData.color,
+                name: prefillData.name,
+                planetNumber: prefillData.planet.icon,
+            })
+        }
     }, [mode])
 
     const onSubmit = (data) => {
@@ -43,6 +55,9 @@ const TagEditorPage: React.FC<Props> = ({route, navigation}) => {
             createTag(data.name, data.color, data.planetNumber)
             navigation.goBack();
             // TODO success notification
+        } else if(mode == "edit"){
+            editTag(route.params.tagUUID, data.name, data.color, data.planetNumber)
+            navigation.goBack();
         }
         // TODO edit mode 
     }
